@@ -184,7 +184,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 
   # Description of the sampling plan:
   if (is.null(jaspContainer[["description"]])) {
-    description <- createJaspHtml(text = sprintf("If the number of defective items out of %d sampled is <= %d, accept the lot. Reject otherwise.", n, c), position = 3)
+    description <- createJaspHtml(text = gettextf("If the number of defective items out of %1$d sampled is <= %2$d, accept the lot. Reject otherwise.", n, c), position = 3)
     jaspContainer[["description"]] <- description
   }
 }
