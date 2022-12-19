@@ -105,7 +105,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   if (type == "Single") {
     # Single plan table
     plan_table$addColumnInfo(name = "table_1_col_1", title = "", type = "string")
-    plan_table$addColumnInfo(name = "table_1_col_2", title = "Value", type = "integer")
+    plan_table$addColumnInfo(name = "table_1_col_2", title = gettext("Value"), type = "integer")
     plan_table$addRows(list("table_1_col_1" = "Sample size", "table_1_col_2" = n))
     plan_table$addRows(list("table_1_col_1" = "Acceptance number", "table_1_col_2" = c))
   } else {
