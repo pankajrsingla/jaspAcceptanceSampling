@@ -38,7 +38,7 @@ AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   N <- options$lotSize
   n <- options$sampleSize
   k <- options$kValue
-  sd <- if (options[["sd"]]) "unknown" else "known"
+  sd <- if (options[["sd"]]) "known" else "unknown"
   
   # Initialize the plan table
   plan_table <- createJaspTable(title = gettextf("Variable Sampling Plan (Standard deviation assumed to be <b>%s</b>)", sd))

@@ -752,7 +752,7 @@ getStageProbabilityHelper <- function(pd, n, c, r, dist, N=10000) {
 #' The calculation of stagewise probability is done independently for every value in the vector 'pd', which has a range of quality levels.
 ##------------------------------------------------------------------------
 getStageProbability <- function(pd, n, c, r, dist, N=10000) {
-  stage_probs <- sapply(pd, FUN=getStageProbabilityHelper, n=n, c=c, r=r, dist=dist, N=N)
+  stage_probs <- vapply(pd, FUN=getStageProbabilityHelper, n=n, c=c, r=r, dist=dist, N=N, FUN.VALUE=list(matrix,matrix))
   acc <- matrix(unlist(stage_probs[1,]), byrow=FALSE, nrow=length(n))
   rej <- matrix(unlist(stage_probs[2,]), byrow=FALSE, nrow=length(n))
   return (list(acc,rej))
