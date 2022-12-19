@@ -147,7 +147,7 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
   # 3. Both LSL and USL are available.
   if (options$lsl && options$usl) {
     if (options$upper_spec < options$lower_spec) {
-      lotContainer$setError(sprintf("USL can not be lower than LSL."))
+      lotContainer$setError(gettext("USL can not be lower than LSL."))
       return ()
     }
     # When both LSL and USL are specified, we need to decide based on standard deviation.
