@@ -46,6 +46,5 @@ Analyze Attribute Plan
 
 ## R Packages
 -------
-- jaspGraphs
 - ggplot2
 - AcceptanceSampling
