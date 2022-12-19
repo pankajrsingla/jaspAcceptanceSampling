@@ -75,7 +75,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   pa_prod <- round((1 - options$prod_risk), 3)
   pa_cons <- round(options$cons_risk, 3)
   if (pa_prod <= pa_cons) {
-    createContainer$setError(sprintf("1 - α (Producer's risk) has to be greater than β (consumer's risk)."))
+    createContainer$setError(gettext("1 - α (Producer's risk) has to be greater than β (consumer's risk)."))
     return ()
   }
   # Sanity checks done. Let's find a plan that satisfies the constraints.
