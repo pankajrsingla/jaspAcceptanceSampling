@@ -67,7 +67,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   
   # Error handling for AQL/RQL
   if (aql >= rql) {
-    createContainer$setError(sprintf("AQL (Acceptable Quality Level) value should be lower than RQL (Rejectable Quality Level) value."))
+    createContainer$setError(gettext("AQL (Acceptable Quality Level) value should be lower than RQL (Rejectable Quality Level) value."))
     return ()
   }
 
@@ -75,7 +75,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   pa_prod <- round((1 - options$prod_risk), 3)
   pa_cons <- round(options$cons_risk, 3)
   if (pa_prod <= pa_cons) {
-    createContainer$setError(gettext("1 - α (Producer's risk) has to be greater than β (consumer's risk)."))
+    createContainer$setError(gettext("1 - \u03B1 (Producer's risk) has to be greater than \u03B2 (consumer's risk)."))
     return ()
   }
   # Sanity checks done. Let's find a plan that satisfies the constraints.
@@ -125,7 +125,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   df_plan <- data.frame(PD = pd, PA = plan@paccept)
   df_plan <- na.omit(df_plan)
   if (nrow(df_plan) == 0) {
-    jaspContainer$setError(sprintf("No valid values found in the plan. Check the inputs."))
+    jaspContainer$setError(gettext("No valid values found in the plan. Check the inputs."))
     return ()
   }
   # Fill the output tables for the created plan.

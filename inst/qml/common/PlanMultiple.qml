@@ -21,96 +21,96 @@ import JASP.Controls 1.0
 
 Group
 {
-    IntegerField
-    { 
-        name: "lotSizeMult"; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1
-    }
+	IntegerField
+	{ 
+		name: "lotSizeMult"; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1
+	}
 
-    IntegerField
-    {
-        name: "numberOfStages"; id: numberOfStages; label: qsTr("Number of stages"); defaultValue: 2; min: 2; max: 100; onEditingFinished: stages.values = value
-    }
+	IntegerField
+	{
+		name: "numberOfStages"; id: numberOfStages; label: qsTr("Number of stages"); defaultValue: 2; min: 2; max: 100; onEditingFinished: stages.values = value
+	}
 
-    ColumnLayout
-    {
-        spacing: 0
-        RowLayout
-        {
-            Label { text: qsTr("Stage");					Layout.leftMargin: 5 * preferencesModel.uiScale; Layout.preferredWidth: 42 * preferencesModel.uiScale}
-            Label { text: qsTr("Sample size (n)");			Layout.preferredWidth: 150 * preferencesModel.uiScale}
-            Label { text: qsTr("Acceptance number (c)");	Layout.preferredWidth: 150 * preferencesModel.uiScale}
-            Label { text: qsTr("Rejection number (r)");		Layout.preferredWidth: 150 * preferencesModel.uiScale}
-        }
+	ColumnLayout
+	{
+		spacing: 0
+		RowLayout
+		{
+			Label { text: qsTr("Stage");					Layout.leftMargin: 5 * preferencesModel.uiScale; Layout.preferredWidth: 42 * preferencesModel.uiScale}
+			Label { text: qsTr("Sample size (n)");			Layout.preferredWidth: 150 * preferencesModel.uiScale}
+			Label { text: qsTr("Acceptance number (c)");	Layout.preferredWidth: 150 * preferencesModel.uiScale}
+			Label { text: qsTr("Rejection number (r)");		Layout.preferredWidth: 150 * preferencesModel.uiScale}
+		}
 
-        ComponentsList
-        {
-            id:                                 stages
-            name:								"stages"
-            addItemManually:                    false
-            values:                             numberOfStages.defaultValue
+		ComponentsList
+		{
+			id:									stages
+			name:								"stages"
+			addItemManually:					false
+			values:								numberOfStages.defaultValue
 
-            rowComponent: 						RowLayout
-            {
-                Row
-                {
-                    spacing:					5 * preferencesModel.uiScale
-                    Layout.preferredWidth:		40 * preferencesModel.uiScale
-                    Label
-                    {
-                        text: 					rowIndex + 1
-                    }
-                }
-                Row
-                {
-                    spacing:					5 * preferencesModel.uiScale
-                    Layout.preferredWidth:		150 * preferencesModel.uiScale
+			rowComponent: 						RowLayout
+			{
+				Row
+				{
+					spacing:					5 * preferencesModel.uiScale
+					Layout.preferredWidth:		40 * preferencesModel.uiScale
+					Label
+					{
+						text: 					rowIndex + 1
+					}
+				}
+				Row
+				{
+					spacing:					5 * preferencesModel.uiScale
+					Layout.preferredWidth:		150 * preferencesModel.uiScale
 
-                    IntegerField
-                    {
-                        id:						sampleSizeMult
-                        label: 					""
-                        name: 					"sampleSizeMult"
-                        defaultValue:           30
-                        min:                    1
-                        placeholderText:		qsTr("n") + (rowIndex + 1)
-                        fieldWidth:				50 * preferencesModel.uiScale
-                        useExternalBorder:		false
-                        showBorder:				true
-                    }
-                }
-                Row
-                {
-                    spacing:					5 * preferencesModel.uiScale
-                    Layout.preferredWidth:		150 * preferencesModel.uiScale
-                    IntegerField
-                    {
-                        label: 					""
-                        name: 					"acceptNumberMult"
-                        defaultValue:           rowIndex * 3
-                        min:                    0
-                        placeholderText:		qsTr("c") + (rowIndex + 1)
-                        fieldWidth:				50 * preferencesModel.uiScale
-                        useExternalBorder:		false
-                        showBorder:				true
-                    }
-                }
-                Row
-                {
-                    spacing:					5 * preferencesModel.uiScale
-                    Layout.preferredWidth:		150 * preferencesModel.uiScale
-                    IntegerField
-                    {
-                        label: 					""
-                        name: 					"rejectNumberMult"
-                        defaultValue:           (rowIndex + 1) == numberOfStages.value ? (rowIndex * 3 + 1) : (rowIndex * 3 + 2)
-                        min:                    1
-                        placeholderText:		qsTr("r") + (rowIndex + 1)
-                        fieldWidth:				50 * preferencesModel.uiScale
-                        useExternalBorder:		false
-                        showBorder:				true
-                    }
-                }
-            }
-        }
-    }
+					IntegerField
+					{
+						id:						sampleSizeMult
+						label: 					""
+						name: 					"sampleSizeMult"
+						defaultValue:			30
+						min:					1
+						placeholderText:		qsTr("n %d").arg(rowIndex + 1)
+						fieldWidth:				50 * preferencesModel.uiScale
+						useExternalBorder:		false
+						showBorder:				true
+					}
+				}
+				Row
+				{
+					spacing:					5 * preferencesModel.uiScale
+					Layout.preferredWidth:		150 * preferencesModel.uiScale
+					IntegerField
+					{
+						label: 					""
+						name: 					"acceptNumberMult"
+						defaultValue:			rowIndex * 3
+						min:					0
+						placeholderText:		qsTr("c %d").arg(rowIndex + 1)
+						fieldWidth:				50 * preferencesModel.uiScale
+						useExternalBorder:		false
+						showBorder:				true
+					}
+				}
+				Row
+				{
+					spacing:					5 * preferencesModel.uiScale
+					Layout.preferredWidth:		150 * preferencesModel.uiScale
+					IntegerField
+					{
+						label: 					""
+						name: 					"rejectNumberMult"
+						defaultValue:			(rowIndex + 1) == numberOfStages.value ? (rowIndex * 3 + 1) : (rowIndex * 3 + 2)
+						min:					1
+						placeholderText:		qsTr("r %d").arg(rowIndex + 1)
+						fieldWidth:				50 * preferencesModel.uiScale
+						useExternalBorder:		false
+						showBorder:				true
+					}
+				}
+			}
+		}
+	}
 }

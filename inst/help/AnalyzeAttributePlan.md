@@ -19,8 +19,8 @@ Analyze Attribute Plan
     <u>Quality constraints</u>: user-specified constraints associated with AQL and RQL. All values have to lie between 0 and 1, both exclusive.
  - *Acceptable Quality Level (AQL)*: the smallest proportion of non-conforming items that makes the lot definitely acceptable.
  - *Rejectable Quality Level (RQL / LTPD)*: the proportion of non-conforming items in the lot that is unacceptable to the consumer.
- - *Producer's Risk (α)*: Risk associated with the rejection of a lot that has acceptable quality. Equals the probability of rejecting a lot at AQL.
- - *Consumer's Risk (β)*: The probability of accepting an RQL quality lot.
+ - *Producer's Risk (\u03B1)*: Risk associated with the rejection of a lot that has acceptable quality. Equals the probability of rejecting a lot at AQL.
+ - *Consumer's Risk (\u03B2)*: The probability of accepting an RQL quality lot.
 - **Proportion non-conforming items**: the range of quality levels at which the plan will be analyzed.
  - *From*: lower bound of the quality level range.
  - *To*: upper bound of the quality level range.

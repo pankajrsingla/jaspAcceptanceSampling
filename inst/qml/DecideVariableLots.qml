@@ -61,13 +61,13 @@ Form
 	}
 
 	Group
-    {
+	{
 		title: qsTr("Quality constraints")
 		enabled: lsl.checked && usl.checked && sd.checked
 		columns: 2
-        Text { text: qsTr("Acceptable Quality Level (AQL)") }
-        DoubleField{ name: "aql"; label: qsTr(""); negativeValues: false; defaultValue: 0.05; min: 0; max: 1; inclusive: JASP.None }
-        Text { text: qsTr("Rejectable Quality Level (RQL / LTPD)") }
-        DoubleField { name: "rql"; label: qsTr(""); negativeValues: false; defaultValue: 0.15; min: 0; max: 1; inclusive: JASP.None }
+		Text { text: qsTr("Acceptable Quality Level (AQL)") }
+		DoubleField{ name: "aql"; label: qsTr(""); negativeValues: false; defaultValue: 0.05; min: 0; max: 1; inclusive: JASP.None }
+		Text { text: qsTr("Rejectable Quality Level (RQL / LTPD)") }
+		DoubleField { name: "rql"; label: qsTr(""); negativeValues: false; defaultValue: 0.15; min: 0; max: 1; inclusive: JASP.None }
 	}
 }

@@ -23,7 +23,7 @@ import "./common" as Common
 Form
 {
 	columns: 1
-	IntegerField { name: "lotSize"; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1}
+	IntegerField { name: "lotSizeXXX"; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1}
 	Common.RiskPoints {}
 	Common.ProbDefect {}
 	Common.Distribution {}	

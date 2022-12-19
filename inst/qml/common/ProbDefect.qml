@@ -21,16 +21,16 @@ import JASP.Controls 1.0
 
 Group
 {
-    title: qsTr("Proportion non-conforming items")
-    property string suffix: ""
-    Group
-    {
-        columns: 2
-        Text { text: qsTr("From") }
-        DoubleField{ name: "pd_lower" + suffix; label: qsTr(""); negativeValues: false; defaultValue: 0; min: 0; max: 1 }
-        Text { text: qsTr("To") }
-        DoubleField{ name: "pd_upper" + suffix; label: qsTr(""); negativeValues: false; defaultValue: 0.15; min: 0; max: 1 }
-        Text { text: qsTr("Step size") }
-        DoubleField{ name: "pd_step" + suffix; label: qsTr(""); negativeValues: false; defaultValue: 0.01; min: 0; max: 1 }
-    }
+	title: qsTr("Proportion non-conforming items")
+	property string suffix: ""
+	Group
+	{
+		columns: 2
+		Text { text: qsTr("From") }
+		DoubleField{ name: "pd_lower" + suffix; label: qsTr(""); negativeValues: false; defaultValue: 0; min: 0; max: 1 }
+		Text { text: qsTr("To") }
+		DoubleField{ name: "pd_upper" + suffix; label: qsTr(""); negativeValues: false; defaultValue: 0.15; min: 0; max: 1 }
+		Text { text: qsTr("Step size") }
+		DoubleField{ name: "pd_step" + suffix; label: qsTr(""); negativeValues: false; defaultValue: 0.01; min: 0; max: 1 }
+	}
 }

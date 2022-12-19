@@ -35,25 +35,25 @@ Form
 		}
 
 		Group
-    	{
+		{
 			CheckBox { name: "assessPlanSingle"; label: qsTr("Assess attribute plan"); id: assessSingle }
 			Common.RiskPoints
 			{
-			    suffix: "Single"
-			    enabled: assessSingle.checked
+				suffix: "Single"
+				enabled: assessSingle.checked
 			}
-    	}
+		}
 
 		Common.ProbDefect
-        {
-            suffix: "Single"
-        }
+		{
+			suffix: "Single"
+		}
 
-        Common.OutputOptions
-        {
-            output_suffix: "Single"
-        }
-    }
+		Common.OutputOptions
+		{
+			output_suffix: "Single"
+		}
+	}
 
 	Section
 	{
@@ -68,23 +68,23 @@ Form
 		}
 
 		Group
-    	{
+		{
 			CheckBox { name: "assessPlanMult"; label: qsTr("Assess sampling plan"); id: assessMult }
 			Common.RiskPoints
 			{
-			    suffix: "Mult"
-			    enabled: assessMult.checked
+				suffix: "Mult"
+				enabled: assessMult.checked
 			}
-    	}
+		}
 
 		Common.ProbDefect
-        {
-            suffix: "Mult"            
-        }
+		{
+			suffix: "Mult"
+		}
 		
-        Common.OutputOptions
-        {
-            output_suffix: "Mult"
-        }
+		Common.OutputOptions
+		{
+			output_suffix: "Mult"
+		}
 	}
 }
