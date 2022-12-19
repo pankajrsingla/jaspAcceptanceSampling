@@ -55,7 +55,7 @@ AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
 
   # Error check for n (sample size)
   if (!options$sd && (n <= 1)) {
-    analyzeVarContainer$setError(sprintf("If historical standard deviation is unknown, sample size has to be > 1."))
+    analyzeVarContainer$setError(gettext("If historical standard deviation is unknown, sample size has to be > 1."))
     return ()
   }
 
