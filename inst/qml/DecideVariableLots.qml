@@ -48,9 +48,9 @@ Form
 		title: qsTr("Specification limits")
 		columns: 2
 		CheckBox { name: "lsl"; label: qsTr("Lower Specification Limit (LSL)"); id: lsl; checked: false }
-		DoubleField{ name: "lower_spec"; label: qsTr(""); defaultValue: 0; enabled: lsl.checked; negativeValues: true }
+		DoubleField{ name: "lower_spec"; label: qsTr(""); id: lower_spec; defaultValue: 0; enabled: lsl.checked; negativeValues: true; max: upper_spec.value; inclusive: JASP.MaxOnly }
 		CheckBox { name: "usl"; label: qsTr("Upper Specification Limit (USL)"); id: usl; checked: false }
-		DoubleField { name: "upper_spec"; label: qsTr(""); enabled: usl.checked; negativeValues: true }
+		DoubleField { name: "upper_spec"; label: qsTr(""); id: upper_spec; defaultValue: 1; enabled: usl.checked; negativeValues: true; min: lower_spec.value; inclusive: JASP.MinOnly }
 	}
 
 	Group

@@ -28,7 +28,7 @@ Group
 
 	IntegerField
 	{
-		name: "numberOfStages"; id: numberOfStages; label: qsTr("Number of stages"); defaultValue: 2; min: 2; max: 100; onEditingFinished: stages.values = value
+		name: "numberOfStages"; label: qsTr("Number of stages"); id: numberOfStages; defaultValue: 2; min: 2; max: 100; onEditingFinished: stages.values = value
 	}
 
 	ColumnLayout
@@ -44,8 +44,8 @@ Group
 
 		ComponentsList
 		{
-			id:									stages
 			name:								"stages"
+			id:									stages
 			addItemManually:					false
 			values:								numberOfStages.defaultValue
 
@@ -67,9 +67,9 @@ Group
 
 					IntegerField
 					{
-						id:						sampleSizeMult
-						label: 					""
 						name: 					"sampleSizeMult"
+						label: 					""
+						id:						sampleSizeMult
 						defaultValue:			30
 						min:					1
 						placeholderText:		qsTr("n %d").arg(rowIndex + 1)
@@ -84,8 +84,8 @@ Group
 					Layout.preferredWidth:		150 * preferencesModel.uiScale
 					IntegerField
 					{
-						label: 					""
 						name: 					"acceptNumberMult"
+						label: 					""
 						defaultValue:			rowIndex * 3
 						min:					0
 						placeholderText:		qsTr("c %d").arg(rowIndex + 1)
@@ -100,8 +100,8 @@ Group
 					Layout.preferredWidth:		150 * preferencesModel.uiScale
 					IntegerField
 					{
-						label: 					""
 						name: 					"rejectNumberMult"
+						label: 					""
 						defaultValue:			(rowIndex + 1) == numberOfStages.value ? (rowIndex * 3 + 1) : (rowIndex * 3 + 2)
 						min:					1
 						placeholderText:		qsTr("r %d").arg(rowIndex + 1)

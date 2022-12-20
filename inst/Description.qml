@@ -6,7 +6,7 @@ Description
 	name		: "jaspAcceptanceSampling"
 	title		: qsTr("Acceptance Sampling")
 	description	: qsTr("Sampling for acceptance")
-	icon		: "acceptance_sampling.png"
+	icon		: "acceptance_sampling.svg"
 	version		: "0.16.4"
 	author		: "JASP Team"
 	maintainer	: "JASP Team <info@jasp-stats.org>"
@@ -16,7 +16,7 @@ Description
 	GroupTitle
 	{
 		title:	qsTr("Attribute Sampling")
-		icon:	"attribute.png"
+		icon:	"attribute.svg"
 	}
 
 	Analysis
@@ -40,7 +40,7 @@ Description
 	GroupTitle
 	{
 		title:	qsTr("Variable Sampling")
-		icon:	"variable.png"
+		icon:	"variable.svg"
 	}
 
 	Analysis
