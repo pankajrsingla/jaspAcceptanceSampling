@@ -606,11 +606,11 @@ getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, n, c,
 #' @examples
 #' getStageProbabilityHelper(pd, n=c(20,30), c=c(4,10), r=c(7,11), dist="hypergeom", N=500)
 #' @notes
-##-------------------------------------------------------------------------------------------
 #' Part of the code in this function has been re-used from the R package AcceptanceSampling written by Andreas Kiermeier.
 #' Specifically, from the following functions:
 #' 1) calc.OCbinomial.pdi 2) calc.OChypergeom.pdi 3) calc.OCpoisson.pdi
 #' https://github.com/cran/AcceptanceSampling/blob/master/R/code_twoclass.R
+#' @importFrom stats dbinom pbinom dpois ppois dhyper phyper
 ##-------------------------------------------------------------------------------------------
 getStageProbabilityHelper <- function(pd, n, c, r, dist, N=10000) {
   D <- pd * N # Number of defects = quality level * lot size
