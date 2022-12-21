@@ -61,7 +61,8 @@ Description
 
 	Analysis
 	{
-		title:	qsTr("Accept/Reject Lots")
+		menu:	qsTr("Accept/Reject Lots")
+		title:	qsTr("Accept/Reject Lots (k-method)")
 		qml:	"DecideVariableLots.qml"
 		func:	"DecideVariableLots"
 		requiresData: false

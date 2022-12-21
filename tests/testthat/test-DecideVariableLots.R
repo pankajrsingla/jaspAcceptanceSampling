@@ -159,7 +159,7 @@ test_that("Decide lots - dataset, lsl", {
   options$lower_spec <- 0.1
   results <- jaspTools::runAnalysis("DecideVariableLots", "test.csv", options)
   lotTableUnknown <- results[["results"]][["lotContainer"]][["collection"]][["lotContainer_decision_table"]][["data"]]
-  jaspTools::expect_equal_tables(lotTableUnknown, list(100, 0.1887, 1.058, 0.1, 0.084, 1.309))
+  jaspTools::expect_equal_tables(lotTableUnknown, list(100, -0.1887, 1.058, 0.1, -0.273, 1.309))
   lotDecisionUnknownReject <- results[["results"]][["lotContainer"]][["collection"]][["lotContainer_decision_output"]][["rawtext"]]
   expect_that(lotDecisionUnknownReject, equals("<u>Decision:</u> <b>Reject</b> lot."))
 
@@ -169,9 +169,9 @@ test_that("Decide lots - dataset, lsl", {
   options$lower_spec <- 0
   results <- jaspTools::runAnalysis("DecideVariableLots", "test.csv", options)
   lotTableKnown <- results[["results"]][["lotContainer"]][["collection"]][["lotContainer_decision_table"]][["data"]]
-  jaspTools::expect_equal_tables(lotTableKnown, list(100, 0.1887, 1.058, 0.1, 0, 1.887, 1.309))
+  jaspTools::expect_equal_tables(lotTableKnown, list(100, -0.1887, 1.058, 0.1, 0, -1.887, 1.309))
   lotDecisionKnownAccept <- results[["results"]][["lotContainer"]][["collection"]][["lotContainer_decision_output"]][["rawtext"]]
-  expect_that(lotDecisionKnownAccept, equals("<u>Decision:</u> <b>Accept</b> lot."))
+  expect_that(lotDecisionKnownAccept, equals("<u>Decision:</u> <b>Reject</b> lot."))
 })
 
 ##---------------------------------------------------------------

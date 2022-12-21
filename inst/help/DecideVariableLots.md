@@ -1,6 +1,6 @@
 Accept/Reject Lots 
 ==========================
-*Accept/Reject Lots* allows you to decide whether to accept or to reject a given lot, using pre-specified constraints and data collected from sample measurements.
+*Accept/Reject Lots* allows you to decide whether to accept or to reject a given lot, using pre-specified constraints and data collected from sample measurements. The decision is made using [the k-method](https://bookdown.org/lawson/an_introduction_to_acceptance_sampling_and_spc_with_r26/variables-sampling-plans.html#the-k-method).
 
 ## Input
 -------

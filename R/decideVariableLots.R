@@ -65,8 +65,6 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
       }
     }
   }
-  # Todo: Check - are negative values of sample mean to be allowed?
-  mean_sample <- abs(mean_sample)
   
   # Initializing the lot decision table
   decision_table <- createJaspTable(title = gettextf("Accept or Reject Lot %s", ifelse(!is.null(var_name), paste0("(Variable: <b>", var_name, "</b>)"), "")))
