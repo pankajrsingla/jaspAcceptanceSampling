@@ -35,7 +35,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 
     # Check if the container already exists. Create it if it doesn't.
     if (is.null(jaspResults[["singleContainer"]]) || jaspResults[["singleContainer"]]$getError()) {
-      singleContainer <- createJaspContainer(title = "Single Sampling Plan")
+      singleContainer <- createJaspContainer(title = gettext("Single Sampling Plan"))
       # Common dependencies for all single plans
       singleContainer$dependOn(c(plan_vars_single, pd_vars_single))
       jaspResults[["singleContainer"]] <- singleContainer
@@ -52,7 +52,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
     pd_vars_mult <- paste0(pd_vars, "Mult")
     # Check if the container already exists. Create it if it doesn't.
     if (is.null(jaspResults[["multContainer"]]) || jaspResults[["multContainer"]]$getError()) {
-      multContainer <- createJaspContainer(title = "Multiple Sampling Plan")
+      multContainer <- createJaspContainer(title = gettext("Multiple Sampling Plan"))
       # Common dependencies for all multiple plans
       multContainer$dependOn(c(plan_vars_mult, pd_vars_mult))
       jaspResults[["multContainer"]] <- multContainer
@@ -75,7 +75,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 #' @seealso AnalyzeAttributePlan()
 ##---------------------------------------------------------------
 .handleAttributePlan <- function(jaspContainer, pos, plan_vars, pd_vars, options, type) {
-  plan_table <- createJaspTable(title = "Acceptance Sampling Plan")
+  plan_table <- createJaspTable(title = gettext("Acceptance Sampling Plan"))
   if (type == "Single") {
     plan_table$dependOn(paste0(c("sampleSize", "acceptNumber", "rejectNumber"), type))
   } else {
@@ -104,18 +104,18 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   # Sampling plan table
   if (type == "Single") {
     # Single plan table
-    plan_table$addColumnInfo(name = "table_1_col_1", title = "", type = "string")
+    plan_table$addColumnInfo(name = "table_1_col_1", title = gettext(""), type = "string")
     plan_table$addColumnInfo(name = "table_1_col_2", title = gettext("Value"), type = "integer")
     plan_table$addRows(list("table_1_col_1" = "Sample size", "table_1_col_2" = n))
     plan_table$addRows(list("table_1_col_1" = "Acceptance number", "table_1_col_2" = c))
   } else {
     # Multiple plan table
     stages <- options[["stages"]]
-    plan_table$addColumnInfo(name = "table_1_col_1", title = "Sample", type = "integer")
-    plan_table$addColumnInfo(name = "table_1_col_2", title = "Sample Size", type = "integer")
-    plan_table$addColumnInfo(name = "table_1_col_3", title = "Cum. Sample Size", type = "integer")
-    plan_table$addColumnInfo(name = "table_1_col_4", title = "Acc. Number", type = "integer")
-    plan_table$addColumnInfo(name = "table_1_col_5", title = "Rej. Number", type = "integer")
+    plan_table$addColumnInfo(name = "table_1_col_1", title = gettext("Sample"), type = "integer")
+    plan_table$addColumnInfo(name = "table_1_col_2", title = gettext("Sample Size"), type = "integer")
+    plan_table$addColumnInfo(name = "table_1_col_3", title = gettext("Cum. Sample Size"), type = "integer")
+    plan_table$addColumnInfo(name = "table_1_col_4", title = gettext("Acc. Number"), type = "integer")
+    plan_table$addColumnInfo(name = "table_1_col_5", title = gettext("Rej. Number"), type = "integer")
     plan_table$setData(list(table_1_col_1 = 1:length(stages), table_1_col_2 = n, table_1_col_3 = cumsum(n),
                             table_1_col_4 = c, table_1_col_5 = r))
   }

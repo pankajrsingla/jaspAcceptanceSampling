@@ -32,7 +32,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 
   # Check if the container already exists. Create it if it doesn't.
   if (is.null(jaspResults[["createContainer"]]) || jaspResults[["createContainer"]]$getError()) {
-    createContainer <- createJaspContainer(title = "")
+    createContainer <- createJaspContainer(title = gettext(""))
     createContainer$dependOn(depend_vars)
     jaspResults[["createContainer"]] <- createContainer
   } else {
@@ -40,26 +40,26 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   }
 
   # Plan table outline
-  plan_table <- createJaspTable(title = "Generated Sampling Plan")
-  plan_table$addColumnInfo(name = "col_1", title = "", type = "string")
-  plan_table$addColumnInfo(name = "col_2", title = "Value", type = "integer")
+  plan_table <- createJaspTable(title = gettext("Generated Sampling Plan"))
+  plan_table$addColumnInfo(name = "col_1", title = gettext(""), type = "string")
+  plan_table$addColumnInfo(name = "col_2", title = gettext("Value"), type = "integer")
   plan_table[["col_1"]] <- c("Sample size", "Acceptance number")
   plan_table$position <- 1
   createContainer[["findPlanTable"]] <- plan_table
 
   # Probability table outline
-  prob_table <- createJaspTable(title = "Acceptance probabilities at AQL and RQL")
-  prob_table$addColumnInfo(name = "col_1", title = "", type = "string")
-  prob_table$addColumnInfo(name = "col_2", title = "Proportion Non-conforming", type = "number")
-  prob_table$addColumnInfo(name = "col_3", title = "Acceptance Probability", type = "number")
-  prob_table$addColumnInfo(name = "col_4", title = "Rejection Probability", type = "number")
+  prob_table <- createJaspTable(title = gettext("Acceptance probabilities at AQL and RQL"))
+  prob_table$addColumnInfo(name = "col_1", title = gettext(""), type = "string")
+  prob_table$addColumnInfo(name = "col_2", title = gettext("Proportion Non-conforming"), type = "number")
+  prob_table$addColumnInfo(name = "col_3", title = gettext("Acceptance Probability"), type = "number")
+  prob_table$addColumnInfo(name = "col_4", title = gettext("Rejection Probability"), type = "number")
   prob_table[["col_1"]] <- c("AQL", "RQL")
   prob_table$position <- 2
   createContainer[["findProbTable"]] <- prob_table
   
   # Error handling for hypergeometric distribution
-  aql <- round(options$aql, 3)
-  rql <- round(options$rql, 3)
+  aql <- options$aql
+  rql <- options$rql
   checkHypergeom(createContainer, pd_vars, options, type="", aql, rql)
   if (createContainer$getError()) {
     return ()
@@ -72,8 +72,8 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   }
 
   # Error handling for Producer's and Consumer's Risk
-  pa_prod <- round((1 - options$prod_risk), 3)
-  pa_cons <- round(options$cons_risk, 3)
+  pa_prod <- (1 - options$prod_risk)
+  pa_cons <- options$cons_risk
   if (pa_prod <= pa_cons) {
     createContainer$setError(gettext("1 - \u03B1 (Producer's risk) has to be greater than \u03B2 (consumer's risk)."))
     return ()
@@ -101,7 +101,6 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   pd <- seq(pd_lower, pd_upper, pd_step)
   # Add AQL and RQL to quality range.
   pd <- c(pd, aql, rql)
-  pd <- round(pd, 3)
   pd <- pd[!duplicated(pd)]
   pd <- sort(pd)
   dist <- options$distribution

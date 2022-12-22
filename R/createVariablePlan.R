@@ -29,7 +29,7 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   
   # Check if the container already exists. Create it if it doesn't.
   if (is.null(jaspResults[["createVarContainer"]]) || jaspResults[["createVarContainer"]]$getError()) {
-    createVarContainer <- createJaspContainer(title = "Create Variable Plan")
+    createVarContainer <- createJaspContainer(title = gettext("Create Variable Plan"))
     # Common dependencies
     createVarContainer$dependOn(risk_vars)
     jaspResults[["createVarContainer"]] <- createVarContainer
@@ -52,18 +52,18 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   plan_table$transpose <- TRUE
   plan_table$transposeWithOvertitle <- FALSE
   plan_table$dependOn(c(risk_vars, "sd"))
-  plan_table$addColumnInfo(name = "col_0", title = "", type = "string") # Dummy row
-  plan_table$addColumnInfo(name = "col_1", title = "Sample size", type = "integer")
-  plan_table$addColumnInfo(name = "col_2", title = "Critical Distance (k)", type = "number")
+  plan_table$addColumnInfo(name = "col_0", title = gettext(""), type = "string") # Dummy row
+  plan_table$addColumnInfo(name = "col_1", title = gettext("Sample size"), type = "integer")
+  plan_table$addColumnInfo(name = "col_2", title = gettext("Critical Distance (k)"), type = "number")
   plan_table$showSpecifiedColumnsOnly <- TRUE
   plan_table$position <- 2
   createVarContainer[["plan_table"]] <- plan_table
   
   # Plan constraints
-  aql <- round(options$aql, 3)
-  rql <- round(options$rql, 3)
-  pa_prod <- round(1 - options$prod_risk, 3)
-  pa_cons <- round(options$cons_risk, 3)
+  aql <- options$aql
+  rql <- options$rql
+  pa_prod <- 1 - options$prod_risk
+  pa_cons <- options$cons_risk
 
   # Error handling for AQL/RQL
   if (aql >= rql) {
@@ -89,7 +89,6 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   # Add AQL and RQL to quality range
   pd <- c(pd, aql, rql)
   pd <- sort(pd)
-  pd <- round(pd, 3)
   pd <- pd[!duplicated(pd)]
   
   # Sanity checks done. Let's find a plan that satisfies the constraints.
@@ -100,8 +99,8 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
     createVarContainer$setError(gettext("Variable plan generated for the current quality constraints is invalid. Modify the quality constraints."))
     return ()
   }
-  n <- round(var_plan$n, 3)
-  k <- round(var_plan$k, 3)
+  n <- var_plan$n
+  k <- var_plan$k
   # Error checks for n
   if (is.null(n) || is.na(n) || is.infinite(n) || is.nan(n) || (n <= 0) || (!options$sd && (n <= 1))) {
     createVarContainer$setError(gettext("Variable plan generated for the current quality constraints has an invalid sample size (n). Modify the quality constraints."))
@@ -121,7 +120,7 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   }
   
   # Plan dataframe
-  df_plan <- data.frame(PD = pd, PA = round(oc_var@paccept, 3))
+  df_plan <- data.frame(PD = pd, PA = oc_var@paccept)
   df_plan <- na.omit(df_plan)
   if (nrow(df_plan) == 0) {
     createVarContainer$setError(gettext("No valid values found in the plan. Check the inputs."))

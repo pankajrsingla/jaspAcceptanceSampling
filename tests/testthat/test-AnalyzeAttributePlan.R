@@ -60,7 +60,7 @@ test_that("Analyze attribute plan single - assess table match", {
   assessTableTitle <- results[["results"]][["singleContainer"]][["collection"]][["singleContainer_riskTable"]][["title"]]
   expect_that(assessTableTitle, equals("Current plan <b>CAN NOT</b> meet the specified risk point(s)."))
   assessTable <- results[["results"]][["singleContainer"]][["collection"]][["singleContainer_riskTable"]][["data"]]
-  jaspTools::expect_equal_tables(assessTable, list("AQL", 0.05, 0.95, 0.5, "RQL", 0.15, 0.1, 0.002))
+  jaspTools::expect_equal_tables(assessTable, list("AQL", 0.05, 0.95, 0.5, "RQL", 0.15, 0.1, 0.0019))
   assessExplanation <- results[["results"]][["singleContainer"]][["collection"]][["singleContainer_explanation"]][["rawtext"]]
   expect_that(assessExplanation, equals("Probability of acceptance (0.500) at AQL (0.050) is <b>lower</b> than the required probability of acceptance (0.950) at AQL."))
 })
@@ -250,7 +250,7 @@ test_that("Analyze attribute plan Mult - assess table match", {
   assessTableTitle <- results[["results"]][["multContainer"]][["collection"]][["multContainer_riskTable"]][["title"]]
   expect_that(assessTableTitle, equals("Current plan <b>CAN NOT</b> meet the specified risk point(s)."))
   assessTable <- results[["results"]][["multContainer"]][["collection"]][["multContainer_riskTable"]][["data"]]
-  jaspTools::expect_equal_tables(assessTable, list("AQL", 0.05, 0.95, 0.126, "RQL", 0.15, 0.1, 0.001))
+  jaspTools::expect_equal_tables(assessTable, list("AQL", 0.05, 0.95, 0.1258, "RQL", 0.15, 0.1, 6e-04))
   assessExplanation <- results[["results"]][["multContainer"]][["collection"]][["multContainer_explanation"]][["rawtext"]]
   expect_that(assessExplanation, equals("Probability of acceptance (0.126) at AQL (0.050) is <b>lower</b> than the required probability of acceptance (0.950) at AQL."))
 })

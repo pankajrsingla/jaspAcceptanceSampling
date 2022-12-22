@@ -53,19 +53,17 @@ test_that("Create plan - summary table match", {
   options$sd <- TRUE
   results <- jaspTools::runAnalysis("CreateVariablePlan", "test.csv", options)
   summaryTableKnown <- results[["results"]][["createVarContainer"]][["collection"]][["createVarContainer_summaryTable"]][["data"]]
-  jaspTools::expect_equal_tables(summaryTableKnown,
-          list(0.05, 0.85, 0.2, 0.362, 0.25, 0.26, 0.3, 0.183, 0.35, 0.126, 0.4,
-              0.085, 0.45, 0.055, 0.5, 0.035, 0.55, 0.021, 0.6, 0.012, 0.65,
-              0.007, 0.7, 0.003, 0.75, 0.001, 0.8, 0.001))
+  jaspTools::expect_equal_tables(summaryTableKnown, list(
+    0.05, 0.85, 0.2, 0.3614, 0.25, 0.2597, 0.3, 0.1829, 0.35, 0.1261, 0.35, 0.1261, 0.4, 0.0848, 0.45, 0.0554, 0.5, 0.035, 0.55,
+    0.0212, 0.6, 0.0122, 0.65, 0.0066, 0.7, 0.0033, 0.75, 0.0014, 0.8, 5e-04))
   
   # 2.2 SD unknown
   options$sd <- FALSE
   results <- jaspTools::runAnalysis("CreateVariablePlan", "test.csv", options)
   summaryTableUnknown <- results[["results"]][["createVarContainer"]][["collection"]][["createVarContainer_summaryTable"]][["data"]]
-  jaspTools::expect_equal_tables(summaryTableUnknown,
-          list(0.05, 0.85, 0.2, 0.428, 0.25, 0.328, 0.3, 0.248, 0.35, 0.183,
-              0.4, 0.132, 0.45, 0.092, 0.5, 0.063, 0.55, 0.041, 0.6, 0.025,
-              0.65, 0.015, 0.7, 0.008, 0.75, 0.004, 0.8, 0.002))
+  jaspTools::expect_equal_tables(summaryTableUnknown, list(
+    0.05, 0.85, 0.2, 0.4276, 0.25, 0.3283, 0.3, 0.2475, 0.35, 0.1827, 0.35, 0.1827, 0.4, 0.1317, 0.45, 0.0923, 0.5, 0.0625, 0.55,
+    0.0407, 0.6, 0.0252, 0.65, 0.0147, 0.7, 0.0079, 0.75, 0.0038, 0.8, 0.0015))
 })
 
 ##----------------------------------------------------------------

@@ -57,19 +57,17 @@ test_that("Analyze plan - summary table match", {
   options$sd <- TRUE
   results <- jaspTools::runAnalysis("AnalyzeVariablePlan", "test.csv", options)
   summaryTableKnown <- results[["results"]][["analyzeVarContainer"]][["collection"]][["analyzeVarContainer_summaryTable"]][["data"]]
-  jaspTools::expect_equal_tables(summaryTableKnown,
-          list(0.2, 0.362, 0.25, 0.26, 0.3, 0.183, 0.35, 0.126, 0.4,
-              0.085, 0.45, 0.055, 0.5, 0.035, 0.55, 0.021, 0.6, 0.012, 0.65,
-              0.007, 0.7, 0.003, 0.75, 0.001, 0.8, 0.001))
+  jaspTools::expect_equal_tables(summaryTableKnown, list(
+    0.2, 0.3617, 0.25, 0.26, 0.3, 0.1831, 0.35, 0.1262, 0.4, 0.0849, 0.45, 0.0555, 0.5, 0.035, 0.55, 0.0212, 0.6, 0.0122, 0.65, 0.0066,
+    0.7, 0.0033, 0.75, 0.0014, 0.8, 5e-04))
   
   # 2.2 SD unknown
   options$sd <- FALSE
   results <- jaspTools::runAnalysis("AnalyzeVariablePlan", "test.csv", options)
   summaryTableUnknown <- results[["results"]][["analyzeVarContainer"]][["collection"]][["analyzeVarContainer_summaryTable"]][["data"]]
-  jaspTools::expect_equal_tables(summaryTableUnknown,
-          list(0.2, 0.466, 0.25, 0.379, 0.3, 0.304, 0.35, 0.24, 0.4, 0.187, 0.45,
-              0.142, 0.5, 0.106, 0.55, 0.076, 0.6, 0.053, 0.65, 0.035, 0.7,
-              0.022, 0.75, 0.013, 0.8, 0.006))
+  jaspTools::expect_equal_tables(summaryTableUnknown, list(
+    0.2, 0.4664, 0.25, 0.3786, 0.3, 0.3036, 0.35, 0.2401, 0.4, 0.1867, 0.45, 0.1423, 0.5, 0.1059, 0.55, 0.0764, 0.6, 0.0532, 0.65, 0.0353,
+    0.7, 0.0221, 0.75, 0.0127, 0.8, 0.0064))
 })
 
 ##---------------------------------------------------------------
@@ -100,7 +98,7 @@ test_that("Analyze plan - assess table match", {
   assessTableTitle <- results[["results"]][["analyzeVarContainer"]][["collection"]][["analyzeVarContainer_riskTable"]][["title"]]
   expect_that(assessTableTitle, equals("Current plan <b>CAN NOT</b> meet the specified risk point(s)."))
   assessTableKnown <- results[["results"]][["analyzeVarContainer"]][["collection"]][["analyzeVarContainer_riskTable"]][["data"]]
-  jaspTools::expect_equal_tables(assessTableKnown, list("AQL", 0.001, 0.85, 1, "RQL", 0.09, 0.23, 0.912))
+  jaspTools::expect_equal_tables(assessTableKnown, list("AQL", 0.001, 0.85, 1, "RQL", 0.09, 0.23, 0.9117))
   assessExplanation <- results[["results"]][["analyzeVarContainer"]][["collection"]][["analyzeVarContainer_explanation"]][["rawtext"]]
   expect_that(assessExplanation, equals("Probability of acceptance (0.912) at RQL (0.090) is <b>higher</b> than the required probability of acceptance (0.230) at RQL."))
 
@@ -113,7 +111,7 @@ test_that("Analyze plan - assess table match", {
   assessTableTitle <- results[["results"]][["analyzeVarContainer"]][["collection"]][["analyzeVarContainer_riskTable"]][["title"]]
   expect_that(assessTableTitle, equals("Current plan <b>CAN </b> meet the specified risk point(s)."))
   assessTableKnown <- results[["results"]][["analyzeVarContainer"]][["collection"]][["analyzeVarContainer_riskTable"]][["data"]]
-  jaspTools::expect_equal_tables(assessTableKnown, list("AQL", 0.001, 0.95, 1, "RQL", 0.09, 0.915, 0.892))
+  jaspTools::expect_equal_tables(assessTableKnown, list("AQL", 0.001, 0.95, 1, "RQL", 0.09, 0.915, 0.8921))
   assessExplanation <- results[["results"]][["analyzeVarContainer"]][["collection"]][["analyzeVarContainer_explanation"]][["rawtext"]]
   expect_that(assessExplanation, equals(NULL))
 })
@@ -156,6 +154,7 @@ test_that("Analyze plan - OC Curve match", {
 ##                    5. Test for AOQ Curve                    --
 ##---------------------------------------------------------------
 test_that("Analyze plan - AOQ Curve match", {
+  skip_on_os(c("mac", "linux"))
   options <- jaspTools::analysisOptions("AnalyzeVariablePlan")
   options$lotSize <- 200
   options$sampleSize <- 4

@@ -30,12 +30,12 @@
 <circle cx='122.46' cy='456.11' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='195.33' cy='316.27' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='268.20' cy='214.57' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='341.07' cy='151.01' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='341.07' cy='154.19' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='413.94' cy='125.59' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='486.81' cy='131.94' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='559.68' cy='154.19' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='632.56' cy='195.51' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<polyline points='122.46,456.11 195.33,316.27 268.20,214.57 341.07,151.01 413.94,125.59 486.81,131.94 559.68,154.19 632.56,195.51 ' style='stroke-width: 1.07; stroke-dasharray: 5.69,5.69; stroke-linecap: butt;' />
+<circle cx='632.56' cy='192.33' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
+<polyline points='122.46,456.11 195.33,316.27 268.20,214.57 341.07,154.19 413.94,125.59 486.81,131.94 559.68,154.19 632.56,192.33 ' style='stroke-width: 1.07; stroke-dasharray: 5.69,5.69; stroke-linecap: butt;' />
 <line x1='78.74' y1='125.59' x2='720.00' y2='125.59' style='stroke-width: 1.07; stroke-dasharray: 1.42,4.27; stroke-linecap: butt;' />
 <text x='377.51' y='95.23' text-anchor='middle' style='font-size: 17.07px; font-family: sans;' textLength='99.66px' lengthAdjust='spacingAndGlyphs'>AOQL: 0.114</text>
 <line x1='107.57' y1='510.14' x2='691.17' y2='510.14' style='stroke-width: 0.64; stroke-linecap: butt;' />

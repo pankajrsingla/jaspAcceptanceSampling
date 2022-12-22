@@ -242,7 +242,6 @@ getPlan <- function(jaspContainer, options, type, n, c=NULL, r=NULL, k=NULL, sd=
   if (options[[paste0("assessPlan", type)]]) {
     pd <- c(pd, options[[paste0("aql", type)]], options[[paste0("rql", type)]])
     pd <- sort(pd)
-    pd <- round(pd, 3)
     pd <- pd[!duplicated(pd)]
   }
   
@@ -274,7 +273,6 @@ getPlan <- function(jaspContainer, options, type, n, c=NULL, r=NULL, k=NULL, sd=
     jaspContainer$setError(gettext("No valid values found in the plan. Check the inputs."))
     return ()
   }
-  df_plan$PA <- round(df_plan$PA, 3)
   return (list(oc_plan=oc_plan, df_plan=df_plan))
 }
 
@@ -289,10 +287,10 @@ getPlan <- function(jaspContainer, options, type, n, c=NULL, r=NULL, k=NULL, sd=
 #' @param type {string} Sampling plan type. Possible values are "Single", "", and "Mult".
 ##---------------------------------------------------------------------------------------
 assessPlan <- function(jaspContainer, pos, depend_vars, oc_plan, options, type) {
-  aql <- round(options[[paste0("aql", type)]], 3)
-  pa_prod <- round(1 - options[[paste0("prod_risk", type)]], 3)
-  rql <- round(options[[paste0("rql", type)]], 3)
-  pa_cons <- round(options[[paste0("cons_risk", type)]], 3)
+  aql <- options[[paste0("aql", type)]]
+  pa_prod <- 1 - options[[paste0("prod_risk", type)]]
+  rql <- options[[paste0("rql", type)]]
+  pa_cons <- options[[paste0("cons_risk", type)]]
 
   # Error handling for AQL/RQL
   if (aql >= rql) {
@@ -308,18 +306,18 @@ assessPlan <- function(jaspContainer, pos, depend_vars, oc_plan, options, type) 
   
   # Assessment of the sampling plan
   assess <- AcceptanceSampling::assess(oc_plan, PRP = c(aql, pa_prod), CRP = c(rql, pa_cons))
-  pa_prod_actual <- round(assess$PRP[3], 3)
-  pa_cons_actual <- round(assess$CRP[3], 3)
+  pa_prod_actual <- assess$PRP[3]
+  pa_cons_actual <- assess$CRP[3]
   # Table with the specified and actual acceptance probabilities
   if (!is.null(jaspContainer[["riskTable"]])) {
     return ()
   }
   table <- createJaspTable(title = gettextf("Current plan <b>CAN %s</b> meet the specified risk point(s).", ifelse(assess$OK, "", "NOT")))
   table$dependOn(depend_vars)
-  table$addColumnInfo(name = "col_1", title = "", type = "string")
-  table$addColumnInfo(name = "col_2", title = "Proportion Non-conforming", type = "number")
-  table$addColumnInfo(name = "col_3", title = "Required P(accept)", type = "number")
-  table$addColumnInfo(name = "col_4", title = "Actual P(accept)", type = "number")
+  table$addColumnInfo(name = "col_1", title = gettext(""), type = "string")
+  table$addColumnInfo(name = "col_2", title = gettext("Proportion Non-conforming"), type = "number")
+  table$addColumnInfo(name = "col_3", title = gettext("Required P(accept)"), type = "number")
+  table$addColumnInfo(name = "col_4", title = gettext("Actual P(accept)"), type = "number")
   table$addRows(list("col_1" = "AQL", "col_2" = aql, "col_3" = pa_prod, "col_4" = pa_prod_actual))
   table$addRows(list("col_1" = "RQL", "col_2" = rql, "col_3" = pa_cons, "col_4" = pa_cons_actual))
   table$showSpecifiedColumnsOnly <- TRUE
@@ -352,11 +350,11 @@ getSummary <- function(jaspContainer, pos, depend_vars, df_plan) {
   if (!is.null(jaspContainer[["summaryTable"]])) {
     return()
   }
-  summaryTable <- createJaspTable(title = "Acceptance Probabilities")
+  summaryTable <- createJaspTable(title = gettext("Acceptance Probabilities"))
   summaryTable$dependOn(depend_vars)
-  summaryTable$addColumnInfo(name = "col_1", title = "Prop. non-conforming", type = "number")
-  summaryTable$addColumnInfo(name = "col_2", title = " P(accept)", type = "number")
-  summaryTable$setData(list(col_1 = df_plan$PD, col_2 = round(df_plan$PA,3)))
+  summaryTable$addColumnInfo(name = "col_1", title = gettext("Prop. non-conforming"), type = "number")
+  summaryTable$addColumnInfo(name = "col_2", title = gettext("P(accept)"), type = "number")
+  summaryTable$setData(list(col_1 = round(df_plan$PD,6), col_2 = round(df_plan$PA,6)))
   summaryTable$showSpecifiedColumnsOnly <- TRUE
   summaryTable$position <- pos
   jaspContainer[["summaryTable"]] <- summaryTable
@@ -374,7 +372,9 @@ getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan) {
   if (!is.null(jaspContainer[["ocCurve"]])) {
     return()
   }
-  ocCurve <- createJaspPlot(title = paste0("OC (Operating Characteristics) Curve"),  width = 480, height = 320)
+  df_plan$PD <- round(df_plan$PD, 3)
+  df_plan$PA <- round(df_plan$PA, 3)
+  ocCurve <- createJaspPlot(title = gettext("OC (Operating Characteristics) Curve"),  width = 480, height = 320)
   ocCurve$dependOn(depend_vars)
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD), max(df_plan$PD)))
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PA), max(df_plan$PA)))
@@ -408,7 +408,7 @@ getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   if (!is.null(jaspContainer[["aoqCurve"]])) {
     return ()
   }
-  aoqCurve <- createJaspPlot(title = paste0("AOQ (Average Outgoing Quality) Curve"), width = 480, height = 320)
+  aoqCurve <- createJaspPlot(title = gettext("AOQ (Average Outgoing Quality) Curve"), width = 480, height = 320)
   aoqCurve$dependOn(depend_vars)
   jaspContainer[["aoqCurve"]] <- aoqCurve
 
@@ -439,6 +439,7 @@ getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   }
   AOQ <- round(AOQ, 3)
   df_plan$AOQ <- AOQ
+  df_plan$PD <- round(df_plan$PD, 3)
   df_plan <- na.omit(df_plan)
   if (nrow(df_plan) == 0) {
     jaspContainer$setError(gettext("No valid values found in the plan. Check the inputs."))
@@ -481,7 +482,7 @@ getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   if (!is.null(jaspContainer[["atiCurve"]])) {
     return ()
   }
-  atiCurve <- createJaspPlot(title = paste0("ATI (Average Total Inspection) Curve"), width = 480, height = 320)
+  atiCurve <- createJaspPlot(title = gettext("ATI (Average Total Inspection) Curve"), width = 480, height = 320)
   atiCurve$dependOn(depend_vars)
   jaspContainer[["atiCurve"]] <- atiCurve
 
@@ -514,6 +515,7 @@ getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   }
   ATI <- round(ATI, 3)
   df_plan$ATI <- ATI
+  df_plan$PD <- round(df_plan$PD, 3)
   df_plan <- na.omit(df_plan)
   if (nrow(df_plan) == 0) {
     jaspContainer$setError(gettext("No valid values found in the plan. Check the inputs."))
@@ -549,7 +551,7 @@ getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, n, c,
   if (!is.null(jaspContainer[["asnCurve"]])) {
     return ()
   }
-  asnCurve <- createJaspPlot(title = "ASN (Average Sample Number) Curve", width = 480, height = 320)
+  asnCurve <- createJaspPlot(title = gettext("ASN (Average Sample Number) Curve"), width = 480, height = 320)
   asnCurve$dependOn(depend_vars)
   jaspContainer[["asnCurve"]] <- asnCurve
 
@@ -573,6 +575,7 @@ getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, n, c,
   }
   ASN <- round(ASN, 3)
   df_plan$ASN <- ASN
+  df_plan$PD <- round(df_plan$PD, 3)
   df_plan <- na.omit(df_plan)
   if (nrow(df_plan) == 0) {
     jaspContainer$setError(gettext("No valid values found in the plan. Check the inputs."))
