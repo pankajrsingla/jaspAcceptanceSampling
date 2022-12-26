@@ -25,7 +25,7 @@
 AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   # Dependency variables
   plan_vars <- c("sampleSize", "kValue")
-  
+
   # Check if the container already exists. Create it if it doesn't.
   if (is.null(jaspResults[["analyzeVarContainer"]]) || jaspResults[["analyzeVarContainer"]]$getError()) {
     analyzeVarContainer <- createJaspContainer(title = gettext("Analyze Variable Plan"))
@@ -39,13 +39,13 @@ AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   n <- options$sampleSize
   k <- options$kValue
   sd <- if (options[["sd"]]) "known" else "unknown"
-  
+
   # Initialize the plan table
   plan_table <- createJaspTable(title = gettextf("Variable Sampling Plan (Standard deviation assumed to be <b>%s</b>)", sd))
   plan_table$transpose <- TRUE
   plan_table$transposeWithOvertitle <- FALSE
   plan_table$dependOn(c(plan_vars, "sd"))
-  plan_table$addColumnInfo(name = "col_0", title = gettext(""), type = "string") # Dummy row
+  plan_table$addColumnInfo(name = "col_0", title = "", type = "string") # Dummy row
   plan_table$addColumnInfo(name = "col_1", title = gettext("Sample size"), type = "integer")
   plan_table$addColumnInfo(name = "col_2", title = gettext("Critical Distance (k)"), type = "number")
   plan_table$addRows(list("col_1" = n, "col_2" = k))
@@ -73,7 +73,7 @@ AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   # Plan dataframe
   df_plan <- plan$df_plan
   oc_plan <- plan$oc_plan
-    
+
   risk_vars <- c("aql", "prod_risk", "rql", "cons_risk")
   pd_vars <- c("pd_lower", "pd_upper", "pd_step")
 
@@ -84,10 +84,10 @@ AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
       return ()
     }
   }
-  
+
   # 2. Plan summary
   if (options$showSummary) {
-    # Assess plan generates 2 output elements, so position of next element is previous + 2.    
+    # Assess plan generates 2 output elements, so position of next element is previous + 2.
     getSummary(analyzeVarContainer, pos=4, c(pd_vars, "showSummary"), df_plan)
   }
   # 3. OC Curve
@@ -96,7 +96,7 @@ AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   }
   # 4. AOQ Curve
   if (options$showAOQCurve) {
-    getAOQCurve(analyzeVarContainer, pos=6, c(pd_vars, "showAOQCurve", "lotSize"), df_plan, options, "", n) 
+    getAOQCurve(analyzeVarContainer, pos=6, c(pd_vars, "showAOQCurve", "lotSize"), df_plan, options, "", n)
     if (analyzeVarContainer$getError()) {
       return ()
     }

@@ -26,7 +26,7 @@
 AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   plan_vars <- c("lotSize", "distribution")
   pd_vars <- c("pd_lower", "pd_upper", "pd_step")
-  
+
   # Single sampling plan
   if ((options$sampleSizeSingle > 0) && (options$acceptNumberSingle >= 0)) {
     plan_vars_single <- c(plan_vars, "sampleSize", "acceptNumber", "rejectNumber")
@@ -84,7 +84,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   plan_table$showSpecifiedColumnsOnly <- TRUE
   plan_table$position <- pos
   jaspContainer[["plan_table"]] <- plan_table
-  
+
   plan_values <- getPlanValues(jaspContainer, options, type)
   # Error handling for plan values
   if (jaspContainer$getError()) {
@@ -96,15 +96,15 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   if (jaspContainer$getError()) {
     return ()
   }
-  
+
   n <- plan_values$n
   c <- plan_values$c
   r <- plan_values$r
-  
+
   # Sampling plan table
   if (type == "Single") {
     # Single plan table
-    plan_table$addColumnInfo(name = "table_1_col_1", title = gettext(""), type = "string")
+    plan_table$addColumnInfo(name = "table_1_col_1", title = "", type = "string")
     plan_table$addColumnInfo(name = "table_1_col_2", title = gettext("Value"), type = "integer")
     plan_table$addRows(list("table_1_col_1" = "Sample size", "table_1_col_2" = n))
     plan_table$addRows(list("table_1_col_1" = "Acceptance number", "table_1_col_2" = c))
@@ -123,7 +123,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   risk_vars <- paste0(c("aql", "prod_risk", "rql", "cons_risk"), type)
   # Output options
   output_vars <- paste0(c("assessPlan", "showSummary", "showOCCurve", "showAOQCurve", "showATICurve", "showASNCurve"), type)
-  
+
   # Plan data
   plan <- getPlan(jaspContainer, options, type, n, c, r)
   if (jaspContainer$getError()) {
@@ -131,7 +131,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   }
   df_plan <- plan$df_plan
   oc_plan <- plan$oc_plan
-  
+
   # Assess plan
   if (options[[output_vars[1]]]) {
     assessPlan(jaspContainer, pos=pos+1, c(output_vars[1], risk_vars), oc_plan, options, type)
@@ -144,7 +144,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   if (options[[output_vars[2]]]) {
     # Assess plan generates 2 output elements, so position of next element is previous + 2.
     getSummary(jaspContainer, pos=pos+3, output_vars[2], df_plan)
-  }  
+  }
 
   # OC Curve
   if (options[[output_vars[3]]]) {

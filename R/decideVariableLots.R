@@ -29,7 +29,7 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
 
   # Check if the container already exists. Create it if it doesn't.
   if (is.null(jaspResults[["lotContainer"]]) || jaspResults[["lotContainer"]]$getError()) {
-    lotContainer <- createJaspContainer(title = gettext(""))
+    lotContainer <- createJaspContainer(title = "")
     lotContainer$dependOn(c(depend_vars, risk_vars)) # Common dependencies
     jaspResults[["lotContainer"]] <- lotContainer
   } else {
@@ -65,16 +65,16 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
       }
     }
   }
-  
+
   # Initializing the lot decision table
   decision_table <- createJaspTable(title = gettextf("Accept or Reject Lot %s", ifelse(!is.null(var_name), paste0("(Variable: <b>", var_name, "</b>)"), "")))
   decision_table$transpose <- TRUE
   decision_table$transposeWithOvertitle <- FALSE
-  decision_table$addColumnInfo(name = "col_0", title = gettext(""), type = "string") # Dummy row for title. Add title if needed.
+  decision_table$addColumnInfo(name = "col_0", title = "", type = "string") # Dummy row for title. Add title if needed.
   decision_table$addColumnInfo(name = "col_1", title = gettext("Sample Size"), type = "integer")
   decision_table$addColumnInfo(name = "col_2", title = gettext("Sample Mean"), type = "number")
   decision_table$addColumnInfo(name = "col_3", title = gettext("Sample Standard Deviation"), type = "number")
-  
+
   # The below rows (tranposed columns) are to be added only if the corresponding options have been selected.
   if (options$sd) {
     decision_table$addColumnInfo(name = "col_4", title = gettext("Historical Standard Deviation"), type = "number")
@@ -99,7 +99,7 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
     lotContainer$setError(gettext("Sample standard deviation has to be greater than 0."))
     return ()
   }
-  
+
   if (is.null(mean_sample)) {
     lotContainer$setError(gettext("Sample mean is invalid."))
     return ()

@@ -26,7 +26,7 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   # Dependency variables
   risk_vars <- c("aql", "prod_risk", "rql", "cons_risk")
   pd_vars <- c("pd_lower", "pd_upper", "pd_step")
-  
+
   # Check if the container already exists. Create it if it doesn't.
   if (is.null(jaspResults[["createVarContainer"]]) || jaspResults[["createVarContainer"]]$getError()) {
     createVarContainer <- createJaspContainer(title = gettext("Create Variable Plan"))
@@ -36,7 +36,7 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   } else {
     createVarContainer <- jaspResults[["createVarContainer"]]
   }
-  
+
   # Description of the plan
   plan_op <- createJaspHtml(text = gettextf("%s\n\n%s", "Z.LSL = (mean - LSL) / historical standard deviation", "Accept lot if Z.LSL >= k, otherwise reject."),
                            dependencies=risk_vars, position=1)
@@ -52,13 +52,13 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   plan_table$transpose <- TRUE
   plan_table$transposeWithOvertitle <- FALSE
   plan_table$dependOn(c(risk_vars, "sd"))
-  plan_table$addColumnInfo(name = "col_0", title = gettext(""), type = "string") # Dummy row
+  plan_table$addColumnInfo(name = "col_0", title = "", type = "string") # Dummy row
   plan_table$addColumnInfo(name = "col_1", title = gettext("Sample size"), type = "integer")
   plan_table$addColumnInfo(name = "col_2", title = gettext("Critical Distance (k)"), type = "number")
   plan_table$showSpecifiedColumnsOnly <- TRUE
   plan_table$position <- 2
   createVarContainer[["plan_table"]] <- plan_table
-  
+
   # Plan constraints
   aql <- options$aql
   rql <- options$rql
@@ -90,7 +90,7 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   pd <- c(pd, aql, rql)
   pd <- sort(pd)
   pd <- pd[!duplicated(pd)]
-  
+
   # Sanity checks done. Let's find a plan that satisfies the constraints.
   var_plan <- tryCatch(AcceptanceSampling::find.plan(PRP = c(aql, pa_prod), CRP = c(rql, pa_cons), type = "normal", s.type = sd), error = function(x) "error")
   # find.plan can result in invalid sampling plans for certain quality constraints.
@@ -118,7 +118,7 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
     createVarContainer$setError(gettextf("Lot size (N = %.0f) cannot be smaller than the sample size (n = %.0f) of the generated variable plan.", N, n))
     return ()
   }
-  
+
   # Plan dataframe
   df_plan <- data.frame(PD = pd, PA = oc_var@paccept)
   df_plan <- na.omit(df_plan)
@@ -126,13 +126,13 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
     createVarContainer$setError(gettext("No valid values found in the plan. Check the inputs."))
     return ()
   }
-  
+
   # Output options
   output_vars <- c("showSummary", "showOCCurve", "showAOQCurve", "showATICurve")
 
   # 0. Fill the variable plan table
   plan_table$addRows(list("col_1" = n, "col_2" = k))
-  
+
   # 1. Plan summary
   if (options$showSummary) {
     getSummary(createVarContainer, pos=3, c(pd_vars, output_vars[1]), df_plan)
@@ -143,7 +143,7 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   }
   # 3. AOQ Curve
   if (options$showAOQCurve) {
-    getAOQCurve(createVarContainer, pos=5, c(pd_vars, output_vars[3], "lotSize"), df_plan, options, "", n) 
+    getAOQCurve(createVarContainer, pos=5, c(pd_vars, output_vars[3], "lotSize"), df_plan, options, "", n)
     if (createVarContainer$getError()) {
       return ()
     }

@@ -237,15 +237,15 @@ getPlan <- function(jaspContainer, options, type, n, c=NULL, r=NULL, k=NULL, sd=
     return ()
   }
   pd <- seq(pd_lower, pd_upper, pd_step)
-  
+
   # If assess plan option is specified, add the AQL and RQL values to quality range.
   if (options[[paste0("assessPlan", type)]]) {
     pd <- c(pd, options[[paste0("aql", type)]], options[[paste0("rql", type)]])
     pd <- sort(pd)
     pd <- pd[!duplicated(pd)]
   }
-  
-  # If PD has only <= 1 point(s), add 0 and 1 to the range to make the output more interpretable. 
+
+  # If PD has only <= 1 point(s), add 0 and 1 to the range to make the output more interpretable.
   if (length(pd) <= 1) {
     pd <- c(pd, 0, 1)
     pd <- sort(pd)
@@ -303,7 +303,7 @@ assessPlan <- function(jaspContainer, pos, depend_vars, oc_plan, options, type) 
     jaspContainer$setError(gettext("1 - \u03B1 (Producer's risk) has to be greater than \u03B2 (consumer's risk)."))
     return ()
   }
-  
+
   # Assessment of the sampling plan
   assess <- AcceptanceSampling::assess(oc_plan, PRP = c(aql, pa_prod), CRP = c(rql, pa_cons))
   pa_prod_actual <- assess$PRP[3]
@@ -314,7 +314,7 @@ assessPlan <- function(jaspContainer, pos, depend_vars, oc_plan, options, type) 
   }
   table <- createJaspTable(title = gettextf("Current plan <b>CAN %s</b> meet the specified risk point(s).", ifelse(assess$OK, "", "NOT")))
   table$dependOn(depend_vars)
-  table$addColumnInfo(name = "col_1", title = gettext(""), type = "string")
+  table$addColumnInfo(name = "col_1", title = "", type = "string")
   table$addColumnInfo(name = "col_2", title = gettext("Proportion Non-conforming"), type = "number")
   table$addColumnInfo(name = "col_3", title = gettext("Required P(accept)"), type = "number")
   table$addColumnInfo(name = "col_4", title = gettext("Actual P(accept)"), type = "number")
@@ -378,8 +378,8 @@ getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan) {
   ocCurve$dependOn(depend_vars)
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD), max(df_plan$PD)))
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PA), max(df_plan$PA)))
-  plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = PA)) + 
-                  ggplot2::geom_point(colour = "black", shape = 19) + 
+  plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = PA)) +
+                  ggplot2::geom_point(colour = "black", shape = 19) +
                   ggplot2::geom_line(colour = "black", linetype = "dashed") +
                   ggplot2::labs(x = "Proportion non-conforming", y = "Probability of Acceptance") +
                   ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
@@ -450,11 +450,11 @@ getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   # pd_aoql <- df_plan$PD[df_plan$AOQ == max(df_plan$AOQ)]
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD), max(df_plan$PD)))
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$AOQ), 1.2*aoql))
-  plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = AOQ)) + 
+  plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = AOQ)) +
          ggplot2::geom_point(colour = "black", shape = 19) + ggplot2::labs(x = "(Incoming) Proportion non-conforming", y = "Average Outgoing Quality") +
          ggplot2::geom_line(colour = "black", linetype = "dashed") +
          ggplot2::geom_hline(yintercept = aoql, linetype = "dotted") +
-         ggplot2::annotate("text", label = gettextf("AOQL: %.3f", aoql), 
+         ggplot2::annotate("text", label = gettextf("AOQL: %.3f", aoql),
                            x = (min(df_plan$PD) + max(df_plan$PD)) / 2, y = aoql*1.1, color = "black", size = 6) +
          ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
          ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
@@ -523,8 +523,8 @@ getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   }
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(df_plan$PD)
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(df_plan$ATI)
-  plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = ATI)) + 
-         ggplot2::geom_point(colour = "black", shape = 19) + 
+  plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = ATI)) +
+         ggplot2::geom_point(colour = "black", shape = 19) +
          ggplot2::geom_line(colour = "black", linetype = "dashed") +
          ggplot2::labs(x = "Proportion non-conforming", y = "Average Total Inspection") +
          ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
@@ -584,8 +584,8 @@ getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, n, c,
   # Draw ASN plot
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD), max(df_plan$PD)))
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$ASN), max(df_plan$ASN)))
-  plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = ASN)) + 
-         ggplot2::geom_point(colour = "black", shape = 19) + 
+  plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = ASN)) +
+         ggplot2::geom_point(colour = "black", shape = 19) +
          ggplot2::geom_line(colour = "black", linetype = "dashed") +
          ggplot2::labs(x = "Proportion non-conforming", y = "Average Sample Number") +
          ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
@@ -627,8 +627,8 @@ getStageProbabilityHelper <- function(pd, n, c, r, dist, N=10000) {
     k <- length(x)
     k1 <- k-2
     if (dist == "binom") {
-      # k = number of this stage + 2. 
-      # x[1:k1] will give all values until the last stage before this one. 
+      # k = number of this stage + 2.
+      # x[1:k1] will give all values until the last stage before this one.
       # n[1:k1] does the same for n.
       prob <- prod(dbinom(x[1:k1], n[1:k1], p)) * pbinom(x[k-1], n[k-1], p)
     } else if (dist == "poisson") {
@@ -662,7 +662,7 @@ getStageProbabilityHelper <- function(pd, n, c, r, dist, N=10000) {
     }
     return (prob)
   }
-  
+
   for (k in 1:k.s) {
     # For each stage, find out all the possibilities which could lead to still not having made a decision,
     # and then calculate the appropriate probabilities.
@@ -721,7 +721,7 @@ getStageProbabilityHelper <- function(pd, n, c, r, dist, N=10000) {
       x <- eval(parse(text=expand.call)[[1]])
       x <- x[,(k-1):1] # Reverses the order of columns in dataframe x
       names(x) <- paste("X", 1:(k-1), sep="")
-      
+
       for (i in ncol(x):2) {
         x[,i] <- x[,i] - x[,i-1]
       }

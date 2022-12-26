@@ -32,7 +32,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 
   # Check if the container already exists. Create it if it doesn't.
   if (is.null(jaspResults[["createContainer"]]) || jaspResults[["createContainer"]]$getError()) {
-    createContainer <- createJaspContainer(title = gettext(""))
+    createContainer <- createJaspContainer(title = "")
     createContainer$dependOn(depend_vars)
     jaspResults[["createContainer"]] <- createContainer
   } else {
@@ -41,7 +41,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 
   # Plan table outline
   plan_table <- createJaspTable(title = gettext("Generated Sampling Plan"))
-  plan_table$addColumnInfo(name = "col_1", title = gettext(""), type = "string")
+  plan_table$addColumnInfo(name = "col_1", title = "", type = "string")
   plan_table$addColumnInfo(name = "col_2", title = gettext("Value"), type = "integer")
   plan_table[["col_1"]] <- c("Sample size", "Acceptance number")
   plan_table$position <- 1
@@ -49,14 +49,14 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 
   # Probability table outline
   prob_table <- createJaspTable(title = gettext("Acceptance probabilities at AQL and RQL"))
-  prob_table$addColumnInfo(name = "col_1", title = gettext(""), type = "string")
+  prob_table$addColumnInfo(name = "col_1", title = "", type = "string")
   prob_table$addColumnInfo(name = "col_2", title = gettext("Proportion Non-conforming"), type = "number")
   prob_table$addColumnInfo(name = "col_3", title = gettext("Acceptance Probability"), type = "number")
   prob_table$addColumnInfo(name = "col_4", title = gettext("Rejection Probability"), type = "number")
   prob_table[["col_1"]] <- c("AQL", "RQL")
   prob_table$position <- 2
   createContainer[["findProbTable"]] <- prob_table
-  
+
   # Error handling for hypergeometric distribution
   aql <- options$aql
   rql <- options$rql
@@ -64,7 +64,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   if (createContainer$getError()) {
     return ()
   }
-  
+
   # Error handling for AQL/RQL
   if (aql >= rql) {
     createContainer$setError(gettext("AQL (Acceptable Quality Level) value should be lower than RQL (Rejectable Quality Level) value."))
@@ -106,7 +106,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   dist <- options$distribution
   plan_values <- NULL
   plan <- NULL
-  
+
   # # Create sampling plan with the specified values
   if (dist == "hypergeom") {
     # Need to provide the lot size (N) for hypergeometric distribution.
@@ -120,7 +120,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   n <- plan_values$n
   c <- plan_values$c
   r <- plan_values$r
-  
+
   df_plan <- data.frame(PD = pd, PA = plan@paccept)
   df_plan <- na.omit(df_plan)
   if (nrow(df_plan) == 0) {
