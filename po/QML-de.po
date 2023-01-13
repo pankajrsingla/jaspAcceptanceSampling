@@ -1,24 +1,32 @@
 msgid ""
 msgstr ""
+"PO-Revision-Date: 2023-01-05 22:50+0000\n"
+"Last-Translator: Johannes Keyser <joke@fsfe.org>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/jasp/"
+"jaspacceptancesampling-qml/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "X-Qt-Contexts: true\n"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/Description.qml:7
 msgctxt "Description|"
 msgid "Acceptance Sampling"
-msgstr ""
+msgstr "Annahmestichprobenprüfung"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/Description.qml:8
 msgctxt "Description|"
 msgid "Sampling for acceptance"
-msgstr ""
+msgstr "Stichprobenprüfung zur Annahme"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/Description.qml:18
+#, fuzzy
 msgctxt "Description|"
 msgid "Attribute Sampling"
-msgstr ""
+msgstr "Attribut-Stichproben"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/Description.qml:24
 msgctxt "Description|"
@@ -58,7 +66,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/AnalyzeAttributePlan.qml:27
 msgctxt "AnalyzeAttributePlan|"
 msgid "Single Sampling Plan"
-msgstr ""
+msgstr "Einfacher Stichprobenplan"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/AnalyzeAttributePlan.qml:39
 msgctxt "AnalyzeAttributePlan|"
@@ -68,7 +76,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/AnalyzeAttributePlan.qml:60
 msgctxt "AnalyzeAttributePlan|"
 msgid "Multiple Sampling Plan"
-msgstr ""
+msgstr "Mehrfacher Stichprobenplan"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/AnalyzeAttributePlan.qml:72
 msgctxt "AnalyzeAttributePlan|"
@@ -78,17 +86,17 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/AnalyzeVariablePlan.qml:29
 msgctxt "AnalyzeVariablePlan|"
 msgid "Lot size (N)"
-msgstr ""
+msgstr "Losumfang (N)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/AnalyzeVariablePlan.qml:30
 msgctxt "AnalyzeVariablePlan|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Stichprobenumfang (n)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/AnalyzeVariablePlan.qml:31
 msgctxt "AnalyzeVariablePlan|"
 msgid "k"
-msgstr ""
+msgstr "k"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/AnalyzeVariablePlan.qml:32
 msgctxt "AnalyzeVariablePlan|"
@@ -103,37 +111,37 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/Distribution.qml:24
 msgctxt "Distribution|"
 msgid "Distribution"
-msgstr ""
+msgstr "Verteilung"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/Distribution.qml:27
 msgctxt "Distribution|"
 msgid "Binomial"
-msgstr ""
+msgstr "Binomial"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/Distribution.qml:28
 msgctxt "Distribution|"
 msgid "Hypergeometric"
-msgstr ""
+msgstr "Hypergeometrisch"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/Distribution.qml:29
 msgctxt "Distribution|"
 msgid "Poisson"
-msgstr ""
+msgstr "Poisson"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/OutputOptions.qml:25
 msgctxt "OutputOptions|"
 msgid "Output options"
-msgstr ""
+msgstr "Ausgabeoptionen"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/OutputOptions.qml:27
 msgctxt "OutputOptions|"
 msgid "Summary table"
-msgstr ""
+msgstr "Übersichtstabelle"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/OutputOptions.qml:28
 msgctxt "OutputOptions|"
 msgid "OC curve"
-msgstr ""
+msgstr "OC-Kurve"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/OutputOptions.qml:29
 msgctxt "OutputOptions|"
@@ -153,7 +161,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/PlanMultiple.qml:26
 msgctxt "PlanMultiple|"
 msgid "Lot size (N)"
-msgstr ""
+msgstr "Losumfang (N)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/PlanMultiple.qml:31
 msgctxt "PlanMultiple|"
@@ -168,17 +176,17 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/PlanMultiple.qml:40
 msgctxt "PlanMultiple|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Stichprobenumfang (n)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/PlanMultiple.qml:41
 msgctxt "PlanMultiple|"
 msgid "Acceptance number (c)"
-msgstr ""
+msgstr "Annahmezahl (c)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/PlanMultiple.qml:42
 msgctxt "PlanMultiple|"
 msgid "Rejection number (r)"
-msgstr ""
+msgstr "Rückweisezahl (r)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/PlanMultiple.qml:75
 msgctxt "PlanMultiple|"
@@ -198,22 +206,22 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/PlanSingle.qml:24
 msgctxt "PlanSingle|"
 msgid "Lot size (N)"
-msgstr ""
+msgstr "Losumfang (N)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/PlanSingle.qml:25
 msgctxt "PlanSingle|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Stichprobenumfang (n)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/PlanSingle.qml:26
 msgctxt "PlanSingle|"
 msgid "Acceptance number (c)"
-msgstr ""
+msgstr "Annahmezahl (c)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/PlanSingle.qml:27
 msgctxt "PlanSingle|"
 msgid "Rejection number (r)"
-msgstr ""
+msgstr "Rückweisezahl (r)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:24
 msgctxt "ProbDefect|"
@@ -223,7 +231,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:29
 msgctxt "ProbDefect|"
 msgid "From"
-msgstr ""
+msgstr "Von"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:30
 msgctxt "ProbDefect|"
@@ -233,7 +241,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:31
 msgctxt "ProbDefect|"
 msgid "To"
-msgstr ""
+msgstr "Bis"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:32
 msgctxt "ProbDefect|"
@@ -243,7 +251,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:33
 msgctxt "ProbDefect|"
 msgid "Step size"
-msgstr ""
+msgstr "Schrittweite"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:34
 msgctxt "ProbDefect|"
@@ -258,7 +266,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:31
 msgctxt "RiskPoints|"
 msgid "Acceptable Quality Level (AQL)"
-msgstr ""
+msgstr "Annehmbare Qualitätsgrenzlage (AQL)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:32
 msgctxt "RiskPoints|"
@@ -268,7 +276,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:33
 msgctxt "RiskPoints|"
 msgid "Rejectable Quality Level (RQL / LTPD)"
-msgstr ""
+msgstr "Rückzuweisende Qualitätsgrenzlage (RQL / LTPD)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:34
 msgctxt "RiskPoints|"
@@ -278,7 +286,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:40
 msgctxt "RiskPoints|"
 msgid "Producer's Risk (α)"
-msgstr ""
+msgstr "Lieferantenrisiko (α)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:41
 msgctxt "RiskPoints|"
@@ -288,7 +296,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:42
 msgctxt "RiskPoints|"
 msgid "Consumer's Risk (β)"
-msgstr ""
+msgstr "Abnehmerrisiko (β)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:43
 msgctxt "RiskPoints|"
@@ -298,12 +306,12 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/CreateAttributePlan.qml:26
 msgctxt "CreateAttributePlan|"
 msgid "Lot size (N)"
-msgstr ""
+msgstr "Losumfang (N)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/CreateVariablePlan.qml:26
 msgctxt "CreateVariablePlan|"
 msgid "Lot size (N)"
-msgstr ""
+msgstr "Losumfang (N)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/CreateVariablePlan.qml:35
 msgctxt "CreateVariablePlan|"
@@ -313,7 +321,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:30
 msgctxt "DecideVariableLots|"
 msgid "Measurement"
-msgstr ""
+msgstr "Messung"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:36
 msgctxt "DecideVariableLots|"
@@ -323,17 +331,17 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:37
 msgctxt "DecideVariableLots|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Stichprobenumfang (n)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:38
 msgctxt "DecideVariableLots|"
 msgid "Sample mean"
-msgstr ""
+msgstr "Stichproben-Mittelwert"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:39
 msgctxt "DecideVariableLots|"
 msgid "Sample standard deviation"
-msgstr ""
+msgstr "Stichproben-Standardabweichung"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:43
 msgctxt "DecideVariableLots|"
@@ -343,7 +351,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:47
 msgctxt "DecideVariableLots|"
 msgid "Specification limits"
-msgstr ""
+msgstr "Spezifikationsgrenzen"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:49
 msgctxt "DecideVariableLots|"
@@ -383,7 +391,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:67
 msgctxt "DecideVariableLots|"
 msgid "Acceptable Quality Level (AQL)"
-msgstr ""
+msgstr "Annehmbare Qualitätsgrenzlage (AQL)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:68
 msgctxt "DecideVariableLots|"
@@ -393,7 +401,7 @@ msgstr ""
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:69
 msgctxt "DecideVariableLots|"
 msgid "Rejectable Quality Level (RQL / LTPD)"
-msgstr ""
+msgstr "Rückzuweisende Qualitätsgrenzlage (RQL / LTPD)"
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:70
 msgctxt "DecideVariableLots|"
