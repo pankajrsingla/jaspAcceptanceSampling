@@ -1,7 +1,7 @@
 Package: jaspAcceptanceSampling
 Type: Package
 Title: Lot sampling for acceptance/rejection of lots
-Version: 0.16.4
+Version: 0.17.0
 Date: 2022-09-12
 Author: JASP Team
 Website: jasp-stats.org
