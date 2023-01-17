@@ -37,9 +37,9 @@ Group
 	Group
 	{
 		columns: 2
-		Text { text: qsTr("Producer's Risk (\u03B1)") }
+		Text { text: qsTr("Producer's risk (\u03B1)") }
 		DoubleField{ name: "prod_risk" + suffix; label: ""; negativeValues: false; defaultValue: 0.05; min: 0; max: 1; inclusive: include_limits ? JASP.MinMax : JASP.None; decimals: 6 }
-		Text { text: qsTr("Consumer's Risk (\u03B2)") }
+		Text { text: qsTr("Consumer's risk (\u03B2)") }
 		DoubleField { name: "cons_risk" + suffix; label: ""; negativeValues: false; defaultValue: 0.10; min: 0; max: 1; inclusive: include_limits ? JASP.MinMax : JASP.None; decimals: 6 }
 	}
 }
