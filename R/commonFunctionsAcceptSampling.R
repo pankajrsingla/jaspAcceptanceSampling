@@ -381,7 +381,7 @@ getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan) {
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = PA)) +
                   ggplot2::geom_point(colour = "black", shape = 19) +
                   ggplot2::geom_line(colour = "black", linetype = "dashed") +
-                  ggplot2::labs(x = "Proportion Non-conforming", y = "Probability of Acceptance") +
+                  ggplot2::labs(x = gettext("Proportion Non-conforming"), y = gettext("Probability of Acceptance")) +
                   ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
                   ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
   plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw()
@@ -451,7 +451,7 @@ getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD), max(df_plan$PD)))
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$AOQ), 1.2*aoql))
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = AOQ)) +
-         ggplot2::geom_point(colour = "black", shape = 19) + ggplot2::labs(x = "(Incoming) Proportion Non-conforming", y = "Average Outgoing Quality") +
+         ggplot2::geom_point(colour = "black", shape = 19) + ggplot2::labs(x = gettext("(Incoming) Proportion Non-conforming"), y = gettext("Average Outgoing Quality")) +
          ggplot2::geom_line(colour = "black", linetype = "dashed") +
          ggplot2::geom_hline(yintercept = aoql, linetype = "dotted") +
          ggplot2::annotate("text", label = gettextf("AOQL: %.3f", aoql),
@@ -526,7 +526,7 @@ getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = ATI)) +
          ggplot2::geom_point(colour = "black", shape = 19) +
          ggplot2::geom_line(colour = "black", linetype = "dashed") +
-         ggplot2::labs(x = "Proportion Non-conforming", y = "Average Total Inspection") +
+         ggplot2::labs(x = gettext("Proportion Non-conforming"), y = gettext("Average Total Inspection")) +
          ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
          ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
          # ggplot2::scale_y_continuous(breaks = pretty(df_plan$ATI))
@@ -587,7 +587,7 @@ getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, n, c,
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = ASN)) +
          ggplot2::geom_point(colour = "black", shape = 19) +
          ggplot2::geom_line(colour = "black", linetype = "dashed") +
-         ggplot2::labs(x = "Proportion Non-conforming", y = "Average Sample Number") +
+         ggplot2::labs(x = gettext("Proportion Non-conforming"), y = gettext("Average Sample Number")) +
          ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
          ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
   plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw()
