@@ -1,0 +1,285 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: jaspAcceptanceSampling 0.16.4\n"
+"POT-Creation-Date: 2023-01-02 12:02\n"
+"PO-Revision-Date: 2023-01-18 15:03+0000\n"
+"Last-Translator: ecadrian <ecadrian@hotmail.com>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/jasp/"
+"jaspacceptancesampling-r/es/>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
+
+msgid "Single Sampling Plan"
+msgstr "Plan de Muestreo Único"
+
+msgid "Multiple Sampling Plan"
+msgstr "Plan de Muestreo Múltiple"
+
+msgid "Acceptance Sampling Plan"
+msgstr "Plan de Muestreo de Aceptación"
+
+msgid "Value"
+msgstr "Valor"
+
+msgid "Sample"
+msgstr "Muestra"
+
+msgid "Sample Size"
+msgstr "Tamaño de la Muestra"
+
+msgid "Cum. Sample Size"
+msgstr "Tamaño de la Muestra Acumulada"
+
+msgid "Acc. Number"
+msgstr "Número de Aceptación"
+
+msgid "Rej. Number"
+msgstr "Número de Rechazo"
+
+msgid "Analyze Variable Plan"
+msgstr "Analizar Plan de Variables"
+
+msgid "Variable Sampling Plan (Standard deviation assumed to be <b>%s</b>)"
+msgstr ""
+"Plan de Muestro de Variables (asumiendo una desviación típica de <b>%s</b>)"
+
+msgid "Sample size"
+msgstr "Tamaño de la muestra"
+
+msgid "Critical Distance (k)"
+msgstr "Distancia Crítica (k)"
+
+msgid "If historical standard deviation is unknown, sample size has to be > 1."
+msgstr ""
+"Si la desviación típica histórica es desconocida, el tamaño de la muestra "
+"debe ser > 1."
+
+msgid "Lot size (N = %1$.0f) cannot be smaller than the sample size (n = %2$.0f) of the generated variable plan."
+msgstr ""
+"El tamaño del lote (N = %1$.0f) no puede ser menor que el tamaño de la "
+"muestra (n = %2$.0f) del plan de variables generado."
+
+msgid "Lower limit for proportion non-conforming items needs to be smaller than the upper limit."
+msgstr ""
+"El límite inferior para la proporción de elementos no conformes, tiene que "
+"ser menor que el límite superior."
+
+msgid "Step size for proportion non-conforming items needs to be smaller than the difference between the upper and limits."
+msgstr ""
+"El tamaño de paso para la proporción de elementos no conformes, tiene que "
+"ser menor que la diferencia entre los límites superior e inferior."
+
+msgid "Step size of 0 is allowed only if the lower and upper limits of proportion non-conforming items are identical."
+msgstr ""
+"Un tamaño de paso igual a 0 solo se admite si los límites inferior y "
+"superior de la proporción de elementos no conformes, son idénticos."
+
+msgid "%s\n\n%s"
+msgstr ""
+"%s\n"
+"\n"
+"%s"
+
+msgid "Sample size (n) cannot be larger than the lot size (N)."
+msgstr ""
+"El tamaño de la muestra (n) no puede ser mayor que el tamaño del lote (N)."
+
+msgid "Acceptance number (c) cannot be larger than the sample size (n)."
+msgstr ""
+"El número de aceptación (c) no puede ser mayor que el tamaño de la muestra "
+"(n)."
+
+msgid "Rejection number (r) cannot be larger than the sample size (n)."
+msgstr ""
+"El número de rechazo (r) no puede ser mayor que el tamaño de la muestra (n)."
+
+msgid "Rejection number (r) has to be larger than the acceptance number (c)."
+msgstr ""
+"El número de rechazo (r) debe ser mayor que el número de aceptación (c)."
+
+msgid "Cumulative sample size (n1+n2+...) cannot be larger than the lot size (N)."
+msgstr ""
+"El tamaño de la muestra acumulada (n1+n2+...) no puede ser mayor que el "
+"tamaño del lote (N)."
+
+msgid "Final rejection number (r) needs to be 1 more than the final acceptance number (c)."
+msgstr ""
+"El número de rechazo final (r) tiene que ser 1 más que el número de "
+"aceptación final (c)."
+
+msgid "Rejection number (r) for every stage has to be larger than the corresponding acceptance number (c)."
+msgstr ""
+"El número de rechazo (r) de cada etapa debe ser mayor que el correspondiente "
+"número de aceptación (c)."
+
+msgid "%s\n%s"
+msgstr ""
+"%s\n"
+"%s"
+
+msgid "Acceptance numbers (c) are cumulative, so they need to be in a non-decreasing sequence."
+msgstr ""
+"Los números de aceptación (c) son acumulados, por lo que es necesario que no "
+"sigan una secuencia decreciente."
+
+msgid "Rejection numbers (r) are cumulative, so they need to be in a non-decreasing sequence."
+msgstr ""
+"Los números de rechazo (r) son acumulados, por lo que es necesario que no "
+"sigan una secuencia decreciente."
+
+msgid "No valid values found in the plan. Check the inputs."
+msgstr "No se encontraron valores válidos en el plan. Comprueba las entradas."
+
+msgid "AQL (Acceptable Quality Level) value should be lower than RQL (Rejectable Quality Level) value."
+msgstr ""
+"El valor NCA (Nivel de Calidad Aceptable, AQL) tiene que ser menor que el "
+"valor NCR (Nivel de Calidad Rechazable, RQL)."
+
+msgid "1 - α (Producer's risk) has to be greater than β (consumer's risk)."
+msgstr ""
+"1 - α (riesgo del productor) tiene que ser mayor que β (riesgo del "
+"consumidor)."
+
+msgid "Current plan <b>CAN %s</b> meet the specified risk point(s)."
+msgstr ""
+"El plan vigente <b>CAN %s</b> satisface el(los) punto(s) especificado(s) de "
+"riesgo."
+
+msgid "Proportion Non-conforming"
+msgstr "Proporción No Conforme"
+
+msgid "Required P(accept)"
+msgstr "P requerido (aceptar)"
+
+msgid "Actual P(accept)"
+msgstr "P actual (aceptar)"
+
+msgid "Probability of acceptance (%.3f) at AQL (%.3f) is <b>lower</b> than the required probability of acceptance (%.3f) at AQL."
+msgstr ""
+"La probabilidad de aceptación (%.3f) al NCA (%.3f) es <b>menor</b> que la "
+"probabilidad de aceptación requerida (%.3f) al NCA."
+
+msgid "Probability of acceptance (%.3f) at RQL (%.3f) is <b>higher</b> than the required probability of acceptance (%.3f) at RQL."
+msgstr ""
+"La probabilidad de aceptación (%.3f) al NCR (%.3f) es <b>mayor</b> que la "
+"probabilidad de aceptación requerida (%.3f) al NCR."
+
+msgid "Acceptance Probabilities"
+msgstr "Probabilidades de Aceptación"
+
+msgid "Prop. non-conforming"
+msgstr "Prop. no conforme"
+
+msgid "P(accept)"
+msgstr "P(aceptar)"
+
+msgid "OC (Operating Characteristics) Curve"
+msgstr "Curva OC (Características Operativas)"
+
+msgid "AOQ (Average Outgoing Quality) Curve"
+msgstr "Curva CMS (Calidad Media de Salida, AOQ)"
+
+msgid "Can not calculate AOQ. Check the plan parameters."
+msgstr "No se puede calcular la CMS (AOQ). Comprueba los parámetros del plan."
+
+msgid "AOQL: %.3f"
+msgstr "LCMS (AOQL): %.3f"
+
+msgid "ATI (Average Total Inspection) Curve"
+msgstr "Curva ITM (Inspección Total Media, ATI)"
+
+msgid "Can not calculate ATI. Check the plan parameters."
+msgstr "No se puede calcular la ITM (ATI). Comprueba los parámetos del plan."
+
+msgid "ASN (Average Sample Number) Curve"
+msgstr "Curva NMM (Número de la Muestra Media, ASN)"
+
+msgid "Can not calculate ASN. Check the plan parameters."
+msgstr "No se puede calcular el NMM (ASN). Comprueba los parámetos del plan."
+
+msgid "Generated Sampling Plan"
+msgstr "Plan de Muestreo Generado"
+
+msgid "Acceptance probabilities at AQL and RQL"
+msgstr "Probabilidades de aceptación aos NCA (AQL) e NCR (RQL)"
+
+msgid "Acceptance Probability"
+msgstr "Probabilidad de Aceptación"
+
+msgid "Rejection Probability"
+msgstr "Probabilidad de Rechazo"
+
+msgid "If the number of defective items out of %1$d sampled is <= %2$d, accept the lot. Reject otherwise."
+msgstr ""
+"Si el número de elementos defectuosos más allá de %1$d muestreados es <= %2$"
+"d, acepta el lote. Recházalo en caso contrario."
+
+msgid "Create Variable Plan"
+msgstr "Crear Plan de Variables"
+
+msgid "Variable plan generated for the current quality constraints is invalid. Modify the quality constraints."
+msgstr ""
+"El plan de variables generado para las restricciones de calidad vigentes, no "
+"es válido. Modifica las restricciones de calidad."
+
+msgid "Variable plan generated for the current quality constraints has an invalid sample size (n). Modify the quality constraints."
+msgstr ""
+"El plan de variables generado para las restricciones de calidad vigentes, no "
+"tiene un tamaño muestral (n) válido. Modifica las restricciones de calidad."
+
+msgid "Variable plan generated for the current quality constraints has an invalid k value. Modify the quality constraints."
+msgstr ""
+"El plan de variables generado para las restricciones de calidad vigentes, no "
+"tiene un valor k válido. Modifica las restricciones de calidad."
+
+msgid "Lot size (N = %.0f) cannot be smaller than the sample size (n = %.0f) of the generated variable plan."
+msgstr ""
+"El tamaño del lote (N = %.0f) no puede ser menor que el tamaño de la muestra "
+"(n = %.0f) del plan de variables generado."
+
+msgid "Accept or Reject Lot %s"
+msgstr "Aceptar o Rechazar Lote %s"
+
+msgid "Sample Mean"
+msgstr "Media Muestral"
+
+msgid "Sample Standard Deviation"
+msgstr "Desviación Típica Muestral"
+
+msgid "Historical Standard Deviation"
+msgstr "Desviación Típica Histórica"
+
+msgid "Lower Specification Limit (LSL)"
+msgstr "Límite Inferior de Especificación (LIE,LSL)"
+
+msgid "Upper Specification Limit (USL)"
+msgstr "Límite Superior de Especificación (LSE, USL)"
+
+msgid "Z.LSL"
+msgstr "Z.LIE"
+
+msgid "Z.USL"
+msgstr "Z.LSE"
+
+msgid "Sample standard deviation has to be greater than 0."
+msgstr "La desviación típica muestral tiene que ser mayor que 0."
+
+msgid "Sample mean is invalid."
+msgstr "La media muestral no es válida."
+
+msgid "Can not accept or reject lot: sample size has to be greater than 1."
+msgstr ""
+"No se puede aceptar o rechazar el lote: el tamaño de la muestra tiene que "
+"ser mayor que 1."
+
+msgid "Sample size has to be <b>> 1</b> if <b>both</b> LSL and USL are provided, and historical standard deviation is <b>unknown</b>."
+msgstr ""
+"El tamaño muestral tiene que ser <b>> 1</b> si se indican <b>tanto</b> LIE "
+"como LSE, y la desviación típica histórica es <b>desconocida</b>."
+
+msgid "<u>Decision:</u> <b>%s</b> lot."
+msgstr "<u>Decisión:</u> <b>%s</b> lote."
