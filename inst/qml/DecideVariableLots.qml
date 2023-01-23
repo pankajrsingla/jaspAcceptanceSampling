@@ -33,7 +33,8 @@ Form
 	Group
 	{
 		enabled: variables.count != 1
-		CheckBox { name: "sampleStats"; label: qsTr("Specify sample statistics directly (used if dataset is not available)"); id: sampleStats; checked: (variables.count != 1); enabled: false }
+		Text { text: qsTr("Specify sample statistics directly (used if dataset is not available)") }
+		CheckBox { name: "sampleStats"; id: sampleStats; checked: (variables.count != 1); enabled: false; visible: false }
 		IntegerField { name: "sampleSize"; label: qsTr("Sample size (n)"); defaultValue: 24; min: 1 }
 		DoubleField { name: "sampleMean"; label: qsTr("Sample mean"); defaultValue: 1.5; decimals: 6 }
 		DoubleField { name: "sampleSD"; label: qsTr("Sample standard deviation"); defaultValue: 1; min: 0; inclusive: JASP.None; decimals: 6 }
@@ -55,7 +56,7 @@ Form
 	Group
 	{
 		columns: 2
-		CheckBox { name: "sd"; label: qsTr("Standard Deviation (Historical)"); id: sd; checked: false }
+		CheckBox { name: "sd"; label: qsTr("Standard deviation (historical)"); id: sd; checked: false }
 		DoubleField { name: "stdev"; label: ""; enabled: sd.checked; defaultValue: 1; min: 0; negativeValues: false; inclusive: JASP.None; decimals: 6 }
 	}
 

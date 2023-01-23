@@ -28,7 +28,7 @@ Group
 
 	IntegerField
 	{
-		name: "numberOfStages"; label: qsTr("Number of stages"); id: numberOfStages; defaultValue: 2; min: 2; max: 100; onEditingFinished: stages.values = value
+		name: "numberOfStages"; label: qsTr("Number of stages"); id: numberOfStages; defaultValue: 2; min: 2; max: 100
 	}
 
 	ColumnLayout
@@ -47,7 +47,7 @@ Group
 			name:								"stages"
 			id:									stages
 			addItemManually:					false
-			values:								numberOfStages.defaultValue
+			values:								numberOfStages.value
 
 			rowComponent: 						RowLayout
 			{
@@ -102,7 +102,7 @@ Group
 					{
 						name: 					"rejectNumberMult"
 						label: 					""
-						defaultValue:			(rowIndex + 1) == numberOfStages.value ? (rowIndex * 3 + 1) : (rowIndex * 3 + 2)
+						defaultValue:			(rowIndex + 1) == stages.values ? (rowIndex * 3 + 1) : (rowIndex * 3 + 2)
 						min:					1
 						placeholderText:		qsTr("r %d").arg(rowIndex + 1)
 						fieldWidth:				50 * preferencesModel.uiScale
