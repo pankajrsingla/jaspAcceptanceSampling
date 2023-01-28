@@ -74,10 +74,6 @@ msgid "k"
 msgstr ""
 
 msgctxt "AnalyzeVariablePlan|"
-msgid "Standard Deviation (Historical) known"
-msgstr ""
-
-msgctxt "AnalyzeVariablePlan|"
 msgid "Assess variable plan"
 msgstr ""
 
@@ -201,14 +197,6 @@ msgctxt "RiskPoints|"
 msgid "Rejectable Quality Level (RQL / LTPD)"
 msgstr ""
 
-msgctxt "RiskPoints|"
-msgid "Producer's Risk (α)"
-msgstr ""
-
-msgctxt "RiskPoints|"
-msgid "Consumer's Risk (β)"
-msgstr ""
-
 msgctxt "CreateAttributePlan|"
 msgid "Lot size (N)"
 msgstr ""
@@ -258,10 +246,6 @@ msgid "Upper Specification Limit (USL)"
 msgstr ""
 
 msgctxt "DecideVariableLots|"
-msgid "Standard Deviation (Historical)"
-msgstr ""
-
-msgctxt "DecideVariableLots|"
 msgid "Quality constraints"
 msgstr ""
 
@@ -271,4 +255,20 @@ msgstr ""
 
 msgctxt "DecideVariableLots|"
 msgid "Rejectable Quality Level (RQL / LTPD)"
+msgstr ""
+
+msgctxt "AnalyzeVariablePlan|"
+msgid "Standard deviation (historical) known"
+msgstr ""
+
+msgctxt "RiskPoints|"
+msgid "Producer's risk (α)"
+msgstr ""
+
+msgctxt "RiskPoints|"
+msgid "Consumer's risk (β)"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Standard deviation (historical)"
 msgstr ""
