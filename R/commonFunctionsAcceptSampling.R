@@ -451,7 +451,8 @@ getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD), max(df_plan$PD)))
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$AOQ), 1.2*aoql))
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD, y = AOQ)) +
-         ggplot2::geom_point(colour = "black", shape = 19) + ggplot2::labs(x = gettext("(Incoming) Proportion Non-conforming"), y = gettext("Average Outgoing Quality")) +
+         ggplot2::geom_point(colour = "black", shape = 19) + 
+         ggplot2::labs(x = gettext("(Incoming) Proportion Non-conforming"), y = gettext("Average Outgoing Quality")) +
          ggplot2::geom_line(colour = "black", linetype = "dashed") +
          ggplot2::geom_hline(yintercept = aoql, linetype = "dotted") +
          ggplot2::annotate("text", label = gettextf("AOQL: %.3f", aoql),

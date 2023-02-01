@@ -20,7 +20,8 @@ Imports:
   stringr,
   vcd,
   vcdExtra,
-  AcceptanceSampling
+  AcceptanceSampling,
+  nleqslv
 Remotes:
   jasp-stats/jaspBase,
   jasp-stats/jaspGraphs,
