@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: jaspAcceptanceSampling 0.17.0\n"
-"POT-Creation-Date: 2023-01-02 12:02\n"
+"POT-Creation-Date: 2023-01-28 04:42\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -156,7 +156,7 @@ msgstr ""
 msgid "Acceptance Probabilities"
 msgstr ""
 
-msgid "Prop. non-conforming"
+msgid "Prop. Non-conforming"
 msgstr ""
 
 msgid "P(accept)"
@@ -165,10 +165,19 @@ msgstr ""
 msgid "OC (Operating Characteristics) Curve"
 msgstr ""
 
+msgid "Probability of Acceptance"
+msgstr ""
+
 msgid "AOQ (Average Outgoing Quality) Curve"
 msgstr ""
 
 msgid "Can not calculate AOQ. Check the plan parameters."
+msgstr ""
+
+msgid "(Incoming) Proportion Non-conforming"
+msgstr ""
+
+msgid "Average Outgoing Quality"
 msgstr ""
 
 msgid "AOQL: %.3f"
@@ -180,10 +189,16 @@ msgstr ""
 msgid "Can not calculate ATI. Check the plan parameters."
 msgstr ""
 
+msgid "Average Total Inspection"
+msgstr ""
+
 msgid "ASN (Average Sample Number) Curve"
 msgstr ""
 
 msgid "Can not calculate ASN. Check the plan parameters."
+msgstr ""
+
+msgid "Average Sample Number"
 msgstr ""
 
 msgid "Generated Sampling Plan"
