@@ -1,274 +1,334 @@
 msgid ""
 msgstr ""
+"PO-Revision-Date: 2023-01-31 19:52+0000\n"
+"Last-Translator: fedder <fedor.derish@gmail.com>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/jasp/"
+"jaspacceptancesampling-qml/ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.16-dev\n"
 "X-Qt-Contexts: true\n"
 
+#, fuzzy
 msgctxt "Description|"
 msgid "Acceptance Sampling"
-msgstr ""
+msgstr "Контрольная выборка"
 
+#, fuzzy
 msgctxt "Description|"
 msgid "Sampling for acceptance"
-msgstr ""
+msgstr "Выборка для контроля качества"
 
+#, fuzzy
 msgctxt "Description|"
 msgid "Attribute Sampling"
-msgstr ""
+msgstr "Атрибут отбора"
 
+#, fuzzy
 msgctxt "Description|"
 msgid "Create Attribute Plan"
-msgstr ""
+msgstr "Создать атрибутивный план"
 
+#, fuzzy
 msgctxt "Description|"
 msgid "Analyze Attribute Plan"
-msgstr ""
+msgstr "Анализ атрибутивного плана"
 
+#, fuzzy
 msgctxt "Description|"
 msgid "Variable Sampling"
-msgstr ""
+msgstr "Отбор переменных"
 
+#, fuzzy
 msgctxt "Description|"
 msgid "Create Variable Plan"
-msgstr ""
+msgstr "Создать план переменных"
 
+#, fuzzy
 msgctxt "Description|"
 msgid "Analyze Variable Plan"
-msgstr ""
+msgstr "Анализ плана переменных"
 
+#, fuzzy
 msgctxt "Description|"
 msgid "Accept/Reject Lots"
-msgstr ""
+msgstr "Принять/отклонить жребий"
 
+#, fuzzy
 msgctxt "Description|"
 msgid "Accept/Reject Lots (k-method)"
-msgstr ""
+msgstr "Принять/отклонить жребий (k-метод)"
 
+#, fuzzy
 msgctxt "AnalyzeAttributePlan|"
 msgid "Single Sampling Plan"
-msgstr ""
+msgstr "Одновыборочный план"
 
+#, fuzzy
 msgctxt "AnalyzeAttributePlan|"
 msgid "Assess attribute plan"
-msgstr ""
+msgstr "Оценка плана атрибутов"
 
+#, fuzzy
 msgctxt "AnalyzeAttributePlan|"
 msgid "Multiple Sampling Plan"
-msgstr ""
+msgstr "Многовыборочный план"
 
+#, fuzzy
 msgctxt "AnalyzeAttributePlan|"
 msgid "Assess sampling plan"
-msgstr ""
+msgstr "Оценка плана отбора"
 
+#, fuzzy
 msgctxt "AnalyzeVariablePlan|"
 msgid "Lot size (N)"
-msgstr ""
+msgstr "Размер лота (N)"
 
 msgctxt "AnalyzeVariablePlan|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Размер выборки (n)"
 
 msgctxt "AnalyzeVariablePlan|"
 msgid "k"
-msgstr ""
+msgstr "k"
 
+#, fuzzy
 msgctxt "AnalyzeVariablePlan|"
 msgid "Assess variable plan"
-msgstr ""
+msgstr "Оценка плана переменных"
 
 msgctxt "Distribution|"
 msgid "Distribution"
-msgstr ""
+msgstr "Распределение"
 
+#, fuzzy
 msgctxt "Distribution|"
 msgid "Binomial"
-msgstr ""
+msgstr "Биномиальный"
 
+#, fuzzy
 msgctxt "Distribution|"
 msgid "Hypergeometric"
-msgstr ""
+msgstr "Гипергеометрический"
 
+#, fuzzy
 msgctxt "Distribution|"
 msgid "Poisson"
-msgstr ""
+msgstr "Пуассон"
 
 msgctxt "OutputOptions|"
 msgid "Output options"
-msgstr ""
+msgstr "Параметры вывода"
 
+#, fuzzy
 msgctxt "OutputOptions|"
 msgid "Summary table"
-msgstr ""
+msgstr "Итоговая таблица"
 
+#, fuzzy
 msgctxt "OutputOptions|"
 msgid "OC curve"
-msgstr ""
+msgstr "OC-кривая"
 
+#, fuzzy
 msgctxt "OutputOptions|"
 msgid "AOQ curve (plan with rectification)"
-msgstr ""
+msgstr "Кривая AOQ (план с ректификацией)"
 
+#, fuzzy
 msgctxt "OutputOptions|"
 msgid "ATI curve (plan with rectification)"
-msgstr ""
+msgstr "Кривая ATI (план с ректификацией)"
 
+#, fuzzy
 msgctxt "OutputOptions|"
 msgid "ASN curve"
-msgstr ""
+msgstr "Кривая ASN"
 
+#, fuzzy
 msgctxt "PlanMultiple|"
 msgid "Lot size (N)"
-msgstr ""
+msgstr "Размер лота (N)"
 
+#, fuzzy
 msgctxt "PlanMultiple|"
 msgid "Number of stages"
-msgstr ""
+msgstr "Количество этапов"
 
+#, fuzzy
 msgctxt "PlanMultiple|"
 msgid "Stage"
-msgstr ""
+msgstr "Этап"
 
+#, fuzzy
 msgctxt "PlanMultiple|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Размер выборки (n)"
 
+#, fuzzy
 msgctxt "PlanMultiple|"
 msgid "Acceptance number (c)"
-msgstr ""
+msgstr "Контрольное количество (с)"
 
+#, fuzzy
 msgctxt "PlanMultiple|"
 msgid "Rejection number (r)"
-msgstr ""
+msgstr "Число отказов (r)"
 
 msgctxt "PlanMultiple|"
 msgid "n %d"
-msgstr ""
+msgstr "n %d"
 
 msgctxt "PlanMultiple|"
 msgid "c %d"
-msgstr ""
+msgstr "c %d"
 
 msgctxt "PlanMultiple|"
 msgid "r %d"
-msgstr ""
+msgstr "r %d"
 
+#, fuzzy
 msgctxt "PlanSingle|"
 msgid "Lot size (N)"
-msgstr ""
+msgstr "Размер лота (N)"
 
 msgctxt "PlanSingle|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Размер выборки (n)"
 
+#, fuzzy
 msgctxt "PlanSingle|"
 msgid "Acceptance number (c)"
-msgstr ""
+msgstr "Контрольное количество (с)"
 
+#, fuzzy
 msgctxt "PlanSingle|"
 msgid "Rejection number (r)"
-msgstr ""
+msgstr "Количество брака (r)"
 
+#, fuzzy
 msgctxt "ProbDefect|"
 msgid "Proportion non-conforming items"
-msgstr ""
+msgstr "Доля несоответствующих пунктов"
 
+#, fuzzy
 msgctxt "ProbDefect|"
 msgid "From"
-msgstr ""
+msgstr "Из"
 
+#, fuzzy
 msgctxt "ProbDefect|"
 msgid "To"
-msgstr ""
+msgstr "К"
 
 msgctxt "ProbDefect|"
 msgid "Step size"
-msgstr ""
+msgstr "Размер шага"
 
 msgctxt "RiskPoints|"
 msgid "Quality constraints"
-msgstr ""
+msgstr "Ограничения качества"
 
 msgctxt "RiskPoints|"
 msgid "Acceptable Quality Level (AQL)"
-msgstr ""
+msgstr "Приемлемый уровень качества (AQL)"
 
 msgctxt "RiskPoints|"
 msgid "Rejectable Quality Level (RQL / LTPD)"
-msgstr ""
+msgstr "Отклоняемый уровень качества (RQL / LTPD)"
 
+#, fuzzy
 msgctxt "CreateAttributePlan|"
 msgid "Lot size (N)"
-msgstr ""
+msgstr "Размер лота (N)"
 
+#, fuzzy
 msgctxt "CreateVariablePlan|"
 msgid "Lot size (N)"
-msgstr ""
+msgstr "Размер лота (N)"
 
+#, fuzzy
 msgctxt "CreateVariablePlan|"
 msgid "Standard Deviation (Historical) known"
-msgstr ""
+msgstr "Стандартное отклонение (историческое) известно"
 
+#, fuzzy
 msgctxt "DecideVariableLots|"
 msgid "Measurement"
-msgstr ""
+msgstr "Измерение"
 
+#, fuzzy
 msgctxt "DecideVariableLots|"
 msgid "Specify sample statistics directly (used if dataset is not available)"
 msgstr ""
+"Укажите выборочную статистику напрямую (используется, если набор данных "
+"недоступен)"
 
+#, fuzzy
 msgctxt "DecideVariableLots|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Размер выборки (n)"
 
 msgctxt "DecideVariableLots|"
 msgid "Sample mean"
-msgstr ""
+msgstr "Выборочное среднее"
 
 msgctxt "DecideVariableLots|"
 msgid "Sample standard deviation"
-msgstr ""
+msgstr "Выборочное стандартное отклонение"
 
 msgctxt "DecideVariableLots|"
 msgid "k                        "
-msgstr ""
+msgstr "k                        "
 
+#, fuzzy
 msgctxt "DecideVariableLots|"
 msgid "Specification limits"
-msgstr ""
+msgstr "Ограничения спецификации"
 
 msgctxt "DecideVariableLots|"
 msgid "Lower Specification Limit (LSL)"
-msgstr ""
+msgstr "Нижний предел спецификации (LSL)"
 
 msgctxt "DecideVariableLots|"
 msgid "Upper Specification Limit (USL)"
-msgstr ""
+msgstr "Верхний предел спецификации (USL)"
 
+#, fuzzy
 msgctxt "DecideVariableLots|"
 msgid "Quality constraints"
-msgstr ""
+msgstr "Ограничения качества"
 
+#, fuzzy
 msgctxt "DecideVariableLots|"
 msgid "Acceptable Quality Level (AQL)"
-msgstr ""
+msgstr "Приемлемый уровень качества (AQL)"
 
+#, fuzzy
 msgctxt "DecideVariableLots|"
 msgid "Rejectable Quality Level (RQL / LTPD)"
-msgstr ""
+msgstr "Отклоняемый уровень качества (RQL / LTPD)"
 
+#, fuzzy
 msgctxt "AnalyzeVariablePlan|"
 msgid "Standard deviation (historical) known"
-msgstr ""
+msgstr "Стандартное отклонение (историческое) известно"
 
+#, fuzzy
 msgctxt "RiskPoints|"
 msgid "Producer's risk (α)"
-msgstr ""
+msgstr "Производственный риск (α)"
 
+#, fuzzy
 msgctxt "RiskPoints|"
 msgid "Consumer's risk (β)"
-msgstr ""
+msgstr "Потребительский риск (β)"
 
+#, fuzzy
 msgctxt "DecideVariableLots|"
 msgid "Standard deviation (historical)"
-msgstr ""
+msgstr "Стандартное отклонение (историческое)"

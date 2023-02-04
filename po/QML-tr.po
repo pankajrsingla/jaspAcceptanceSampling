@@ -1,13 +1,20 @@
 msgid ""
 msgstr ""
+"PO-Revision-Date: 2023-01-31 19:52+0000\n"
+"Last-Translator: Ünal Halit ÖZDEN <uozden@ticaret.edu.tr>\n"
+"Language-Team: Turkish <https://hosted.weblate.org/projects/jasp/"
+"jaspacceptancesampling-qml/tr/>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.16-dev\n"
 "X-Qt-Contexts: true\n"
 
 msgctxt "Description|"
 msgid "Acceptance Sampling"
-msgstr ""
+msgstr "Kabul Örneklemesi"
 
 msgctxt "Description|"
 msgid "Sampling for acceptance"
@@ -55,7 +62,7 @@ msgstr ""
 
 msgctxt "AnalyzeAttributePlan|"
 msgid "Multiple Sampling Plan"
-msgstr ""
+msgstr "Çoklu Örnekleme Planı"
 
 msgctxt "AnalyzeAttributePlan|"
 msgid "Assess sampling plan"
@@ -67,7 +74,7 @@ msgstr ""
 
 msgctxt "AnalyzeVariablePlan|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Örneklem büyüklüğü (n)"
 
 msgctxt "AnalyzeVariablePlan|"
 msgid "k"
@@ -79,7 +86,7 @@ msgstr ""
 
 msgctxt "Distribution|"
 msgid "Distribution"
-msgstr ""
+msgstr "Dağılım"
 
 msgctxt "Distribution|"
 msgid "Binomial"
@@ -87,11 +94,11 @@ msgstr ""
 
 msgctxt "Distribution|"
 msgid "Hypergeometric"
-msgstr ""
+msgstr "hipergeometrik"
 
 msgctxt "Distribution|"
 msgid "Poisson"
-msgstr ""
+msgstr "Poisson"
 
 msgctxt "OutputOptions|"
 msgid "Output options"
@@ -99,7 +106,7 @@ msgstr ""
 
 msgctxt "OutputOptions|"
 msgid "Summary table"
-msgstr ""
+msgstr "Özet tablo"
 
 msgctxt "OutputOptions|"
 msgid "OC curve"
@@ -131,7 +138,7 @@ msgstr ""
 
 msgctxt "PlanMultiple|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Örneklem büyüklüğü (n)"
 
 msgctxt "PlanMultiple|"
 msgid "Acceptance number (c)"
@@ -159,7 +166,7 @@ msgstr ""
 
 msgctxt "PlanSingle|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Örneklem büyüklüğü (n)"
 
 msgctxt "PlanSingle|"
 msgid "Acceptance number (c)"
@@ -207,27 +214,29 @@ msgstr ""
 
 msgctxt "CreateVariablePlan|"
 msgid "Standard Deviation (Historical) known"
-msgstr ""
+msgstr "Standart Sapma (Tarihsel) biliniyor"
 
 msgctxt "DecideVariableLots|"
 msgid "Measurement"
-msgstr ""
+msgstr "Ölçüm"
 
 msgctxt "DecideVariableLots|"
 msgid "Specify sample statistics directly (used if dataset is not available)"
 msgstr ""
+"Örnek istatistikleri doğrudan belirtin (veri kümesi mevcut değilse "
+"kullanılır)"
 
 msgctxt "DecideVariableLots|"
 msgid "Sample size (n)"
-msgstr ""
+msgstr "Örneklem büyüklüğü (n)"
 
 msgctxt "DecideVariableLots|"
 msgid "Sample mean"
-msgstr ""
+msgstr "Örnek ortalaması"
 
 msgctxt "DecideVariableLots|"
 msgid "Sample standard deviation"
-msgstr ""
+msgstr "Örnek standart sapması"
 
 msgctxt "DecideVariableLots|"
 msgid "k                        "
@@ -259,7 +268,7 @@ msgstr ""
 
 msgctxt "AnalyzeVariablePlan|"
 msgid "Standard deviation (historical) known"
-msgstr ""
+msgstr "Standart sapma (tarihsel) biliniyor"
 
 msgctxt "RiskPoints|"
 msgid "Producer's risk (α)"
@@ -271,4 +280,4 @@ msgstr ""
 
 msgctxt "DecideVariableLots|"
 msgid "Standard deviation (historical)"
-msgstr ""
+msgstr "Standart sapma (tarihsel)"
