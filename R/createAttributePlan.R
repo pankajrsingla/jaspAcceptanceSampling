@@ -25,10 +25,12 @@
 ##---------------------------------------------------------------
 CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   # Constraints to create a plan
-  risk_vars <- c("aql", "prod_risk", "rql", "cons_risk")
+  type <- "CreateAttr"
+  # Risk variables
+  risk_vars <- paste0(c("aql", "prod_risk", "rql", "cons_risk"), type)
   # Quality levels
-  pd_vars <- c("pd_lower", "pd_upper", "pd_step")
-  depend_vars <- c(pd_vars, risk_vars, "lotSize", "distribution")
+  pd_vars <- paste0(c("pd_lower", "pd_upper", "pd_step", "pd_unit"), type)
+  depend_vars <- c(pd_vars, risk_vars, paste0(c("lotSize", "distribution"), type))
 
   # Check if the container already exists. Create it if it doesn't.
   if (is.null(jaspResults[["createContainer"]]) || jaspResults[["createContainer"]]$getError()) {
@@ -58,28 +60,28 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   createContainer[["findProbTable"]] <- prob_table
 
   # Error handling for hypergeometric distribution
-  aql <- options$aql
-  rql <- options$rql
-  checkHypergeom(createContainer, pd_vars, options, type="", aql, rql)
+  checkHypergeom(createContainer, options, type)
   if (createContainer$getError()) {
     return ()
   }
 
   # Error handling for AQL/RQL
+  aql <- options[[paste0("aql", type)]]
+  rql <- options[[paste0("rql", type)]]
   if (aql >= rql) {
     createContainer$setError(gettext("AQL (Acceptable Quality Level) value should be lower than RQL (Rejectable Quality Level) value."))
     return ()
   }
 
   # Error handling for Producer's and Consumer's Risk
-  pa_prod <- (1 - options$prod_risk)
-  pa_cons <- options$cons_risk
+  pa_prod <- 1 - options[[paste0("prod_risk", type)]]
+  pa_cons <- options[[paste0("cons_risk", type)]]
   if (pa_prod <= pa_cons) {
     createContainer$setError(gettext("1 - \u03B1 (Producer's risk) has to be greater than \u03B2 (consumer's risk)."))
     return ()
   }
   # Sanity checks done. Let's find a plan that satisfies the constraints.
-  .findPlan(createContainer, options, depend_vars, aql, rql, pa_prod, pa_cons)
+  .findPlan(createContainer, options, type, aql, rql, pa_prod, pa_cons)
 }
 
 ##----------------------------------------------------------------------------------
@@ -94,63 +96,57 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 #' @param pa_cons {numeric} Maximum probability (0 to 1) of accepting the lot at Rejectable Quality Level.
 #' @seealso CreateAttributePlan()
 ##----------------------------------------------------------------------------------
-.findPlan <- function(jaspContainer, options, depend_vars, aql, rql, pa_prod, pa_cons) {
-  pd_lower <- options$pd_lower
-  pd_upper <- options$pd_upper
-  pd_step <- options$pd_step
-  pd <- seq(pd_lower, pd_upper, pd_step)
-  # Add AQL and RQL to quality range.
-  pd <- c(pd, aql, rql)
-  pd <- pd[!duplicated(pd)]
-  pd <- sort(pd)
-  dist <- options$distribution
+.findPlan <- function(jaspContainer, options, type, aql, rql, pa_prod, pa_cons) {
+  dist <- options[[paste0("distribution", type)]]
   plan_values <- NULL
-  plan <- NULL
-
+  
   # # Create sampling plan with the specified values
   if (dist == "hypergeom") {
     # Need to provide the lot size (N) for hypergeometric distribution.
-    plan_values <- AcceptanceSampling::find.plan(PRP = c(aql, pa_prod), CRP = c(rql, pa_cons), type = dist, N = options$lotSize)
-    plan <- AcceptanceSampling::OC2c(N = options$lotSize, n = plan_values$n, c = plan_values$c, r = plan_values$r, type = dist, pd = pd)
+    N <- options[[paste0("lotSize", type)]]
+    plan_values <- AcceptanceSampling::find.plan(PRP = c(aql, pa_prod), CRP = c(rql, pa_cons), type = dist, N = N)  
   } else {
     # Binomial and Poisson distributions don't require lot size (N) or standard deviation.
-    plan_values <- AcceptanceSampling::find.plan(PRP = c(aql, pa_prod), CRP = c(rql, pa_cons), type = dist)
-    plan <- AcceptanceSampling::OC2c(n = plan_values$n, c = plan_values$c, r = plan_values$r, type = dist, pd = pd)
+    plan_values <- AcceptanceSampling::find.plan(PRP = c(aql, pa_prod), CRP = c(rql, pa_cons), type = dist)    
   }
   n <- plan_values$n
   c <- plan_values$c
   r <- plan_values$r
-
-  df_plan <- data.frame(PD = pd, PA = plan@paccept)
+  
+  df_plan <- getPlan(jaspContainer, options, type, n, c, r)$df_plan
+  if (jaspContainer$getError()) {
+    return ()
+  }
   df_plan <- na.omit(df_plan)
   if (nrow(df_plan) == 0) {
     jaspContainer$setError(gettext("No valid values found in the plan. Check the inputs."))
     return ()
   }
   # Fill the output tables for the created plan.
-  .attributePlanTable(jaspContainer, depend_vars, aql, rql, df_plan$PA[df_plan$PD == aql], df_plan$PA[df_plan$PD == rql], n, c, r)
+  .attributePlanTable(jaspContainer, aql, rql, df_plan$PA[df_plan$PD_Prop == aql], df_plan$PA[df_plan$PD_Prop == rql], n, c, r)  
 
+  output_vars <- paste0(c("showSummary", "showOCCurve", "showAOQCurve", "showATICurve"), type)
   # Plan summary
-  if (options$showSummary) {
-    getSummary(jaspContainer, pos=4, c(depend_vars, "showSummary"), df_plan)
+  if (options[[output_vars[1]]]) {
+    getSummary(jaspContainer, pos=4, output_vars[1], df_plan, options, type, n, c, r)
   }
 
   # OC Curve
-  if (options$showOCCurve) {
-    getOCCurve(jaspContainer, pos=5, c(depend_vars, "showOCCurve"), df_plan)
+  if (options[[output_vars[2]]]) {
+    getOCCurve(jaspContainer, pos=5, output_vars[2], df_plan, options, type)
   }
 
   # AOQ Curve (for plans with rectification)
-  if (options$showAOQCurve) {
-    getAOQCurve(jaspContainer, pos=6, "showAOQCurve", df_plan, options, "", n)
+  if (options[[output_vars[3]]]) {
+    getAOQCurve(jaspContainer, pos=6, output_vars[3], df_plan, options, type, n)
     if (jaspContainer$getError()) {
       return ()
     }
   }
 
   # ATI Curve (for plans with rectification)
-  if (options$showATICurve) {
-    getATICurve(jaspContainer, pos=7, "showATICurve", df_plan, options, "", n)
+  if (options[[output_vars[4]]]) {
+    getATICurve(jaspContainer, pos=7, output_vars[4], df_plan, options, type, n)
     if (jaspContainer$getError()) {
       return ()
     }
@@ -170,7 +166,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 #' @param c {numeric} Acceptance number for the plan.
 #' @param r {numeric} Rejection number for the plan.
 ##----------------------------------------------------------------
-.attributePlanTable <- function(jaspContainer, depend_vars, aql, rql, pa_prod, pa_cons, n, c, r) {
+.attributePlanTable <- function(jaspContainer, aql, rql, pa_prod, pa_cons, n, c, r) {
   # Fill the table with sample size and acceptance number
   plan_table <- jaspContainer[["findPlanTable"]]
   plan_table[["col_2"]] <- c(n, c)

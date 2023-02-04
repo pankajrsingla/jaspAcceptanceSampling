@@ -23,10 +23,10 @@ import "./" as Common
 Group
 {
 	title: qsTr("Output options")
-	property string output_suffix: ""
-	CheckBox { name: "showSummary" + output_suffix; label: qsTr("Summary table") }
-	CheckBox { name: "showOCCurve" + output_suffix; label: qsTr("OC curve") }
-	CheckBox { name: "showAOQCurve" + output_suffix; label: qsTr("AOQ curve (plan with rectification)") }
-	CheckBox { name: "showATICurve" + output_suffix; label: qsTr("ATI curve (plan with rectification)") }
-	CheckBox { name: "showASNCurve" + output_suffix; label: qsTr("ASN curve"); enabled: output_suffix === "Mult" ? true : false; visible: output_suffix === "Mult" ? true : false }
+	property string suffix: ""
+	CheckBox { name: "showSummary" + suffix; label: qsTr("Summary table") }
+	CheckBox { name: "showOCCurve" + suffix; label: qsTr("OC curve") }
+	CheckBox { name: "showAOQCurve" + suffix; label: qsTr("AOQ curve (plan with rectification)") }
+	CheckBox { name: "showATICurve" + suffix; label: qsTr("ATI curve (plan with rectification)") }
+	CheckBox { name: "showASNCurve" + suffix; label: qsTr("ASN curve"); enabled: suffix === "AnalyzeAttrMult" ? true : false; visible: suffix === "AnalyzeAttrMult" ? true : false }
 }

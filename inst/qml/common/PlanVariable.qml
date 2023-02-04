@@ -18,15 +18,13 @@
 import QtQuick 2.8
 import QtQuick.Layouts 1.3
 import JASP.Controls 1.0
-import "./common" as Common
+import JASP
 
-Form
+Group
 {
-	columns: 1
-	property string analysis: "CreateAttr"
-	IntegerField { name: "lotSize" + analysis; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1}
-	Common.RiskPoints { suffix: analysis }
-	Common.ProbDefect { suffix: analysis }
-	Common.Distribution { suffix: analysis }
-	Common.OutputOptions {suffix: analysis }
-}
+	property string suffix: ""
+	IntegerField { name: "lotSize" + suffix; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1}
+	IntegerField { name: "sampleSize" + suffix; label: qsTr("Sample size (n)"); defaultValue: 24; min: 1 }
+	DoubleField { name: "kValue" + suffix; label: qsTr("k"); defaultValue: 1.309; min: 0; negativeValues: false; inclusive: JASP.None; decimals: 6 }
+	CheckBox { name: "sd" + suffix; label: qsTr("Standard Deviation (Historical) known"); id: sd; checked: true }
+}	

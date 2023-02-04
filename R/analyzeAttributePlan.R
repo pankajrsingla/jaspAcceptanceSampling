@@ -25,13 +25,13 @@
 ##---------------------------------------------------------------
 AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   plan_vars <- c("lotSize", "distribution")
-  pd_vars <- c("pd_lower", "pd_upper", "pd_step")
+  pd_vars <- c("pd_lower", "pd_upper", "pd_step", "pd_unit")
 
   # Single sampling plan
-  if ((options$sampleSizeSingle > 0) && (options$acceptNumberSingle >= 0)) {
-    plan_vars_single <- c(plan_vars, "sampleSize", "acceptNumber", "rejectNumber")
-    plan_vars_single <- paste0(plan_vars_single, "Single")
-    pd_vars_single <- paste0(pd_vars, "Single")
+  type <- "AnalyzeAttrSingle"    
+  if ((options[[paste0("sampleSize", type)]] > 0) && (options[[paste0("acceptNumber", type)]] >= 0)) {
+    plan_vars_single <- paste0(c(plan_vars, "sampleSize", "acceptNumber", "rejectNumber"), type)
+    pd_vars_single <- paste0(pd_vars, type)
 
     # Check if the container already exists. Create it if it doesn't.
     if (is.null(jaspResults[["singleContainer"]]) || jaspResults[["singleContainer"]]$getError()) {
@@ -42,14 +42,14 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
     } else {
       singleContainer <- jaspResults[["singleContainer"]]
     }
-    .handleAttributePlan(singleContainer, pos=0, plan_vars_single, pd_vars_single, options, "Single")
+    .handleAttributePlan(singleContainer, pos=0, plan_vars_single, pd_vars_single, options, type)
   }
 
   # Multiple sampling plan
-  if (length(options$stages) > 1) {
-    plan_vars_mult <- paste0(plan_vars, "Mult")
-    plan_vars_mult <- c(plan_vars_mult, "stages", "numberOfStages")
-    pd_vars_mult <- paste0(pd_vars, "Mult")
+  type <- "AnalyzeAttrMult"    
+  if (length(options[[paste0("stages", type)]]) > 1) {
+    plan_vars_mult <- paste0(c(plan_vars, "stages", "numberOfStages"), type)
+    pd_vars_mult <- paste0(pd_vars, type)
     # Check if the container already exists. Create it if it doesn't.
     if (is.null(jaspResults[["multContainer"]]) || jaspResults[["multContainer"]]$getError()) {
       multContainer <- createJaspContainer(title = gettext("Multiple Sampling Plan"))
@@ -59,7 +59,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
     } else {
       multContainer <- jaspResults[["multContainer"]]
     }
-    .handleAttributePlan(multContainer, pos=100, plan_vars_mult, pd_vars_mult, options, "Mult")
+    .handleAttributePlan(multContainer, pos=100, plan_vars_mult, pd_vars_mult, options, type)
   }
 }
 
@@ -69,17 +69,17 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 #' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
 #' @param pos {numeric} Position of the output element in the output display.
 #' @param plan_vars {vector} Names of variables that determine a sampling plan. Used to set dependencies for outputs.
-#' @param pd_vars {vector} Variables to generate a sequence of quality levels. Includes pd_lower, pd_upper, and pd_step.
+#' @param pd_vars {vector} Variables to generate a sequence of quality levels. Includes pd_unit, pd_lower, pd_upper, and pd_step.
 #' @param options {list} A named list of interface options selected by the user.
 #' @param type {string} Sampling plan type. Possible values are "Single", "", and "Mult".
 #' @seealso AnalyzeAttributePlan()
 ##---------------------------------------------------------------
 .handleAttributePlan <- function(jaspContainer, pos, plan_vars, pd_vars, options, type) {
   plan_table <- createJaspTable(title = gettext("Acceptance Sampling Plan"))
-  if (type == "Single") {
+  if (type == "AnalyzeAttrSingle") {
     plan_table$dependOn(paste0(c("sampleSize", "acceptNumber", "rejectNumber"), type))
   } else {
-    plan_table$dependOn(c("stages"))
+    plan_table$dependOn(paste0("stages", type))
   }
   plan_table$showSpecifiedColumnsOnly <- TRUE
   plan_table$position <- pos
@@ -92,7 +92,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   }
 
   # Error handling for hypergeometric distribution
-  checkHypergeom(jaspContainer, pd_vars, options, type)
+  checkHypergeom(jaspContainer, options, type)
   if (jaspContainer$getError()) {
     return ()
   }
@@ -102,7 +102,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   r <- plan_values$r
 
   # Sampling plan table
-  if (type == "Single") {
+  if (type == "AnalyzeAttrSingle") {
     # Single plan table
     plan_table$addColumnInfo(name = "table_1_col_1", title = "", type = "string")
     plan_table$addColumnInfo(name = "table_1_col_2", title = gettext("Value"), type = "integer")
@@ -110,7 +110,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
     plan_table$addRows(list("table_1_col_1" = "Acceptance number", "table_1_col_2" = c))
   } else {
     # Multiple plan table
-    stages <- options[["stages"]]
+    stages <- options[[paste0("stages", type)]]
     plan_table$addColumnInfo(name = "table_1_col_1", title = gettext("Sample"), type = "integer")
     plan_table$addColumnInfo(name = "table_1_col_2", title = gettext("Sample Size"), type = "integer")
     plan_table$addColumnInfo(name = "table_1_col_3", title = gettext("Cum. Sample Size"), type = "integer")
@@ -118,7 +118,7 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
     plan_table$addColumnInfo(name = "table_1_col_5", title = gettext("Rej. Number"), type = "integer")
     plan_table$setData(list(table_1_col_1 = 1:length(stages), table_1_col_2 = n, table_1_col_3 = cumsum(n),
                             table_1_col_4 = c, table_1_col_5 = r))
-  }
+  }  
   # Assess plan options
   risk_vars <- paste0(c("aql", "prod_risk", "rql", "cons_risk"), type)
   # Output options
@@ -130,6 +130,10 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
     return ()
   }
   df_plan <- plan$df_plan
+  if (nrow(df_plan) == 0) {
+    jaspContainer$setError(gettext("No valid values found in the plan. Check the inputs."))
+    return ()
+  }
   oc_plan <- plan$oc_plan
 
   # Assess plan
@@ -143,12 +147,15 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   # Summary table
   if (options[[output_vars[2]]]) {
     # Assess plan generates 2 output elements, so position of next element is previous + 2.
-    getSummary(jaspContainer, pos=pos+3, output_vars[2], df_plan)
+    getSummary(jaspContainer, pos=pos+3, output_vars[2], df_plan, options, type, n, c, r)
+    if (jaspContainer$getError()) {
+      return ()
+    }
   }
 
   # OC Curve
   if (options[[output_vars[3]]]) {
-    getOCCurve(jaspContainer, pos=pos+4, output_vars[3], df_plan)
+    getOCCurve(jaspContainer, pos=pos+4, output_vars[3], df_plan, options, type)
   }
 
   # AOQ Curve (for plans with rectification)
@@ -169,6 +176,6 @@ AnalyzeAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 
   # ASN Curve (only for multiple sampling plan)
   if (options[[output_vars[6]]]) {
-    getASNCurve(jaspContainer, pos=pos+7, output_vars[6], df_plan, options, n, c, r)
+    getASNCurve(jaspContainer, pos=pos+7, output_vars[6], df_plan, options, type, n, c, r)
   }
 }
