@@ -23,22 +23,24 @@
 #' @param options {list} A named list of interface options selected by the user.
 ##----------------------------------------------------------------
 AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
+  type <- "AnalyzeVar"
   # Dependency variables
-  plan_vars <- c("sampleSize", "kValue")
+  plan_vars <- paste0(c("sampleSize", "kValue"), type)
+  pd_vars <- paste0(c("pd_lower", "pd_upper", "pd_step", "pd_unit"), type)
 
   # Check if the container already exists. Create it if it doesn't.
   if (is.null(jaspResults[["analyzeVarContainer"]]) || jaspResults[["analyzeVarContainer"]]$getError()) {
     analyzeVarContainer <- createJaspContainer(title = gettext("Analyze Variable Plan"))
-    analyzeVarContainer$dependOn(plan_vars) # Common dependencies
+    analyzeVarContainer$dependOn(c(plan_vars, pd_vars)) # Common dependencies
     jaspResults[["analyzeVarContainer"]] <- analyzeVarContainer
   } else {
     analyzeVarContainer <- jaspResults[["analyzeVarContainer"]]
   }
   # Plan variables
-  N <- options$lotSize
-  n <- options$sampleSize
-  k <- options$kValue
-  sd <- if (options[["sd"]]) "known" else "unknown"
+  N <- options[[paste0("lotSize", type)]]
+  n <- options[[paste0("sampleSize", type)]]
+  k <- options[[paste0("kValue", type)]]
+  sd <- if (options[[paste0("sd", type)]]) "known" else "unknown"
 
   # Initialize the plan table
   plan_table <- createJaspTable(title = gettextf("Variable Sampling Plan (Standard deviation assumed to be <b>%s</b>)", sd))
@@ -54,7 +56,7 @@ AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   analyzeVarContainer[["plan_table"]] <- plan_table
 
   # Error check for n (sample size)
-  if (!options$sd && (n <= 1)) {
+  if (sd == "unknown" && (n <= 1)) {
     analyzeVarContainer$setError(gettext("If historical standard deviation is unknown, sample size has to be > 1."))
     return ()
   }
@@ -64,8 +66,7 @@ AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
     analyzeVarContainer$setError(gettextf("Lot size (N = %1$.0f) cannot be smaller than the sample size (n = %2$.0f) of the generated variable plan.", N, n))
     return ()
   }
-
-  plan <- getPlan(analyzeVarContainer, options, "", n, k=k, sd=sd)
+  plan <- getPlan(analyzeVarContainer, options, type, n, k=k, sd=sd)
   if (analyzeVarContainer$getError()) {
     return ()
   }
@@ -74,35 +75,35 @@ AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   df_plan <- plan$df_plan
   oc_plan <- plan$oc_plan
 
-  risk_vars <- c("aql", "prod_risk", "rql", "cons_risk")
-  pd_vars <- c("pd_lower", "pd_upper", "pd_step")
+  risk_vars <- paste0(c("aql", "prod_risk", "rql", "cons_risk"), type)
+  output_vars <- paste0(c("assessPlan", "showSummary", "showOCCurve", "showAOQCurve", "showATICurve"), type)
 
   # 1. Assess plan
-  if (options$assessPlan) {
-    assessPlan(analyzeVarContainer, pos=2, c(risk_vars, pd_vars, "assessPlan"), oc_plan, options, "")
+  if (options[[output_vars[1]]]) {
+    assessPlan(analyzeVarContainer, pos=2, c(risk_vars, output_vars[1]), oc_plan, options, type)
     if (analyzeVarContainer$getError()) {
       return ()
     }
   }
 
   # 2. Plan summary
-  if (options$showSummary) {
+  if (options[[output_vars[2]]]) {
     # Assess plan generates 2 output elements, so position of next element is previous + 2.
-    getSummary(analyzeVarContainer, pos=4, c(pd_vars, "showSummary"), df_plan)
+    getSummary(analyzeVarContainer, pos=4, output_vars[2], df_plan, options, type, n)
   }
   # 3. OC Curve
-  if (options$showOCCurve) {
-    getOCCurve(analyzeVarContainer, pos=5, c(pd_vars, "showOCCurve"), df_plan)
+  if (options[[output_vars[3]]]) {
+    getOCCurve(analyzeVarContainer, pos=5, output_vars[3], df_plan)
   }
   # 4. AOQ Curve
-  if (options$showAOQCurve) {
-    getAOQCurve(analyzeVarContainer, pos=6, c(pd_vars, "showAOQCurve", "lotSize"), df_plan, options, "", n)
+  if (options[[output_vars[4]]]) {
+    getAOQCurve(analyzeVarContainer, pos=6, c(output_vars[4], paste0("lotSize", type)), df_plan, options, type, n)
     if (analyzeVarContainer$getError()) {
       return ()
     }
   }
   # 5. ATI Curve
-  if (options$showATICurve) {
-    getATICurve(analyzeVarContainer, pos=7, c(pd_vars, "showATICurve", "lotSize"), df_plan, options, "", n)
+  if (options[[output_vars[5]]]) {
+    getATICurve(analyzeVarContainer, pos=7, c(output_vars[5], paste0("lotSize", type)), df_plan, options, type, n)
   }
 }
