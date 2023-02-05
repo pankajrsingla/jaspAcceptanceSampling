@@ -28,5 +28,5 @@ Group
 	CheckBox { name: "showOCCurve" + suffix; label: qsTr("OC curve") }
 	CheckBox { name: "showAOQCurve" + suffix; label: qsTr("AOQ curve (plan with rectification)") }
 	CheckBox { name: "showATICurve" + suffix; label: qsTr("ATI curve (plan with rectification)") }
-	CheckBox { name: "showASNCurve" + suffix; label: qsTr("ASN curve"); enabled: suffix === "AnalyzeAttrMult" ? true : false; visible: suffix === "AnalyzeAttrMult" ? true : false }
+	CheckBox { name: "showASNCurve" + suffix; label: qsTr("ASN curve"); enabled: (suffix === "AnalyzeAttrMult" || suffix === "Seq") ? true : false; visible: (suffix === "AnalyzeAttrMult" || suffix === "Seq") ? true : false }
 }

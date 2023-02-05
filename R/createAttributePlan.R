@@ -129,6 +129,9 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
   # Plan summary
   if (options[[output_vars[1]]]) {
     getSummary(jaspContainer, pos=4, output_vars[1], df_plan, options, type, n, c, r)
+    if (jaspContainer$getError()) {
+      return ()
+    }
   }
 
   # OC Curve

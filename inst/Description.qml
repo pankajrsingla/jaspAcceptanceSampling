@@ -25,13 +25,21 @@ Description
 		qml:	"CreateAttributePlan.qml"
 		func:	"CreateAttributePlan"
 		requiresData: false
-	}
+	}	
 
 	Analysis
 	{
 		title:	qsTr("Analyze Attribute Plan")
 		qml:	"AnalyzeAttributePlan.qml"
 		func:	"AnalyzeAttributePlan"
+		requiresData: false
+	}
+
+	Analysis
+	{
+		title:	qsTr("Sequential Sampling")
+		qml:	"SequentialSampling.qml"
+		func:	"SequentialSampling"
 		requiresData: false
 	}
 

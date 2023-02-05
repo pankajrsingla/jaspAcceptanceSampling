@@ -382,15 +382,18 @@ assessPlan <- function(jaspContainer, pos, depend_vars, oc_plan, options, type) 
 #' @param depend_vars {vector} Names of variables on which the output element depends.
 #' @param df_plan {data.frame} Dataframe for a plan with quality levels (PD) and the corresponding probabilities of acceptance (PA).
 ##---------------------------------------------------------------
-getSummary <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n, c=NULL, r=NULL) {
+getSummary <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n=NULL, c=NULL, r=NULL) {
   if (!is.null(jaspContainer[["summaryTable"]])) {
     return()
   }
   summaryTable <- createJaspTable(title = gettext("Acceptance Probabilities"))
   summaryTable$dependOn(depend_vars)
-  df_plan <- getAOQ(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
-  # df_plan$AOQ <- getAOQ(jaspContainer, df_plan, options, type, n, c, r)$AOQ
-  df_plan <- getATI(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
+  if (!"AOQ" %in% colnames(df_plan)) {
+    df_plan <- getAOQ(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
+  }
+  if (!"ATI" %in% colnames(df_plan)) {
+    df_plan <- getATI(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
+  }
   pd_title <- getPDTitle(jaspContainer, options, type)
   if (jaspContainer$getError()) {
     return ()
@@ -402,10 +405,12 @@ getSummary <- function(jaspContainer, pos, depend_vars, df_plan, options, type, 
   summaryTable$addColumnInfo(name = "col_2", title = gettext("P(accept)"), type = "number")
   summaryTable$addColumnInfo(name = "col_3", title = gettext("AOQ"), type = "number")
   summaryTable$addColumnInfo(name = "col_4", title = gettext("ATI"), type = "number")
-  if (type == "AnalyzeAttrMult") {
+  if (type == "AnalyzeAttrMult" || type == "Seq") {
     # Append data for ASN.
     summaryTable$addColumnInfo(name = "col_5", title = gettext("ASN"), type = "number")
-    df_plan <- getASN(jaspContainer, df_plan, options, n, c, r)
+    if (!"ASN" %in% colnames(df_plan)) {
+      df_plan <- getASN(jaspContainer, df_plan, options, n, c, r)
+    }
     row <- append(row, list("col_5" = df_plan$ASN))
   }
   summaryTable$setData(row)
@@ -504,15 +509,17 @@ getAOQ <- function(jaspContainer, depend_vars, df_plan, options, type, n, c=NULL
   return (jaspContainer[["aoqValues"]]$object)
 }
 
-getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n, c=NULL, r=NULL) {
+getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n=NULL, c=NULL, r=NULL) {
   if (!is.null(jaspContainer[["aoqCurve"]]) || jaspContainer$getError()) {
     return ()
   }
   aoqCurve <- createJaspPlot(title = gettext("AOQ (Average Outgoing Quality) Curve"), width = 570, height = 320)
   aoqCurve$dependOn(depend_vars)
   jaspContainer[["aoqCurve"]] <- aoqCurve
-
-  df_plan <- getAOQ(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
+  
+  if (!"AOQ" %in% colnames(df_plan)) {
+    df_plan <- getAOQ(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
+  }
   if (jaspContainer$getError()) {
     return ()
   }
@@ -598,14 +605,16 @@ getATI <- function(jaspContainer, depend_vars, df_plan, options, type, n, c=NULL
   return (jaspContainer[["atiValues"]]$object)
 }
 
-getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n, c=NULL, r=NULL) {
+getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n=NULL, c=NULL, r=NULL) {
   if (!is.null(jaspContainer[["atiCurve"]])) {
     return ()
   }
   atiCurve <- createJaspPlot(title = gettext("ATI (Average Total Inspection) Curve"), width = 570, height = 320)
   atiCurve$dependOn(depend_vars)
   jaspContainer[["atiCurve"]] <- atiCurve
-  df_plan <- getATI(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
+  if (!"ATI" %in% colnames(df_plan)) {
+    df_plan <- getATI(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
+  }
   if (jaspContainer$getError()) {
     return ()
   }
@@ -673,7 +682,7 @@ getASN <- function(jaspContainer, depend_vars, df_plan, options, type, n, c, r) 
   return (jaspContainer[["asnValues"]]$object)
 }
 
-getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n, c, r) {
+getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n=NULL, c=NULL, r=NULL) {
   if (!is.null(jaspContainer[["asnCurve"]])) {
     return ()
   }
@@ -681,7 +690,9 @@ getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   asnCurve$dependOn(depend_vars)
   jaspContainer[["asnCurve"]] <- asnCurve
 
-  df_plan <- getASN(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
+  if (!"ASN" %in% colnames(df_plan)) {
+    df_plan <- getASN(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
+  }
   if (jaspContainer$getError()) {
     return ()
   }
