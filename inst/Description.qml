@@ -43,6 +43,14 @@ Description
 		requiresData: false
 	}
 
+	Analysis
+	{
+		title:	qsTr("Bayesian Sampling")
+		qml:	"BayesianSampling.qml"
+		func:	"BayesianSampling"
+		requiresData: false
+	}
+
 	Separator {}
 
 	GroupTitle

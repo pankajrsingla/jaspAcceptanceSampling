@@ -439,8 +439,8 @@ getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type) 
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD_Orig), max(df_plan$PD_Orig)))
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PA), max(df_plan$PA)))
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD_Orig, y = PA)) +
-                  ggplot2::geom_point(colour = "black", shape = 19) +
-                  ggplot2::geom_line(colour = "black", linetype = "dashed") +
+                  ggplot2::geom_point(color = "black", shape = 19) +
+                  ggplot2::geom_line(color = "black", linetype = "dashed") +
                   ggplot2::labs(x = gettext(pd_title), y = gettext("Probability of Acceptance")) +
                   ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
                   ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
@@ -530,9 +530,9 @@ getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD_Orig), max(df_plan$PD_Orig)))
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$AOQ), 1.2*aoql))
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD_Orig, y = AOQ)) +
-         ggplot2::geom_point(colour = "black", shape = 19) + 
+         ggplot2::geom_point(color = "black", shape = 19) + 
          ggplot2::labs(x = gettext(paste0("(Incoming) ", pd_title)), y = gettext("Average Outgoing Quality")) +
-         ggplot2::geom_line(colour = "black", linetype = "dashed") +
+         ggplot2::geom_line(color = "black", linetype = "dashed") +
          ggplot2::geom_hline(yintercept = aoql, linetype = "dotted") +
          ggplot2::annotate("text", label = gettextf("AOQL: %.3f", aoql),
                            x = (min(df_plan$PD_Orig) + max(df_plan$PD_Orig)) / 2, y = aoql*1.1, color = "black", size = 6) +
@@ -622,8 +622,8 @@ getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(df_plan$ATI)
   pd_title <- getPDTitle(jaspContainer, options, type)
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD_Orig, y = ATI)) +
-         ggplot2::geom_point(colour = "black", shape = 19) +
-         ggplot2::geom_line(colour = "black", linetype = "dashed") +
+         ggplot2::geom_point(color = "black", shape = 19) +
+         ggplot2::geom_line(color = "black", linetype = "dashed") +
          ggplot2::labs(x = gettext(pd_title), y = gettext("Average Total Inspection")) +
          ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
          ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
@@ -701,8 +701,8 @@ getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$ASN), max(df_plan$ASN)))
   pd_title <- getPDTitle(jaspContainer, options, type)
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD_Orig, y = ASN)) +
-         ggplot2::geom_point(colour = "black", shape = 19) +
-         ggplot2::geom_line(colour = "black", linetype = "dashed") +
+         ggplot2::geom_point(color = "black", shape = 19) +
+         ggplot2::geom_line(color = "black", linetype = "dashed") +
          ggplot2::labs(x = pd_title, y = "Average Sample Number") +
          ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
          ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
