@@ -1,13 +1,274 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-01-28 20:57+0000\n"
-"Last-Translator: ecadrian <ecadrian@hotmail.com>\n"
-"Language-Team: Galician <https://hosted.weblate.org/projects/jasp/"
-"jaspacceptancesampling-qml/gl/>\n"
-"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16-dev\n"
 "X-Qt-Contexts: true\n"
+
+msgctxt "Description|"
+msgid "Acceptance Sampling"
+msgstr ""
+
+msgctxt "Description|"
+msgid "Sampling for acceptance"
+msgstr ""
+
+msgctxt "Description|"
+msgid "Attribute Sampling"
+msgstr ""
+
+msgctxt "Description|"
+msgid "Create Attribute Plan"
+msgstr ""
+
+msgctxt "Description|"
+msgid "Analyze Attribute Plan"
+msgstr ""
+
+msgctxt "Description|"
+msgid "Variable Sampling"
+msgstr ""
+
+msgctxt "Description|"
+msgid "Create Variable Plan"
+msgstr ""
+
+msgctxt "Description|"
+msgid "Analyze Variable Plan"
+msgstr ""
+
+msgctxt "Description|"
+msgid "Accept/Reject Lots"
+msgstr ""
+
+msgctxt "Description|"
+msgid "Accept/Reject Lots (k-method)"
+msgstr ""
+
+msgctxt "AnalyzeAttributePlan|"
+msgid "Single Sampling Plan"
+msgstr ""
+
+msgctxt "AnalyzeAttributePlan|"
+msgid "Assess attribute plan"
+msgstr ""
+
+msgctxt "AnalyzeAttributePlan|"
+msgid "Multiple Sampling Plan"
+msgstr ""
+
+msgctxt "AnalyzeAttributePlan|"
+msgid "Assess sampling plan"
+msgstr ""
+
+msgctxt "AnalyzeVariablePlan|"
+msgid "Lot size (N)"
+msgstr ""
+
+msgctxt "AnalyzeVariablePlan|"
+msgid "Sample size (n)"
+msgstr ""
+
+msgctxt "AnalyzeVariablePlan|"
+msgid "k"
+msgstr ""
+
+msgctxt "AnalyzeVariablePlan|"
+msgid "Standard deviation (historical) known"
+msgstr ""
+
+msgctxt "AnalyzeVariablePlan|"
+msgid "Assess variable plan"
+msgstr ""
+
+msgctxt "Distribution|"
+msgid "Distribution"
+msgstr ""
+
+msgctxt "Distribution|"
+msgid "Binomial"
+msgstr ""
+
+msgctxt "Distribution|"
+msgid "Hypergeometric"
+msgstr ""
+
+msgctxt "Distribution|"
+msgid "Poisson"
+msgstr ""
+
+msgctxt "OutputOptions|"
+msgid "Output options"
+msgstr ""
+
+msgctxt "OutputOptions|"
+msgid "Summary table"
+msgstr ""
+
+msgctxt "OutputOptions|"
+msgid "OC curve"
+msgstr ""
+
+msgctxt "OutputOptions|"
+msgid "AOQ curve (plan with rectification)"
+msgstr ""
+
+msgctxt "OutputOptions|"
+msgid "ATI curve (plan with rectification)"
+msgstr ""
+
+msgctxt "OutputOptions|"
+msgid "ASN curve"
+msgstr ""
+
+msgctxt "PlanMultiple|"
+msgid "Lot size (N)"
+msgstr ""
+
+msgctxt "PlanMultiple|"
+msgid "Number of stages"
+msgstr ""
+
+msgctxt "PlanMultiple|"
+msgid "Stage"
+msgstr ""
+
+msgctxt "PlanMultiple|"
+msgid "Sample size (n)"
+msgstr ""
+
+msgctxt "PlanMultiple|"
+msgid "Acceptance number (c)"
+msgstr ""
+
+msgctxt "PlanMultiple|"
+msgid "Rejection number (r)"
+msgstr ""
+
+msgctxt "PlanMultiple|"
+msgid "n %d"
+msgstr ""
+
+msgctxt "PlanMultiple|"
+msgid "c %d"
+msgstr ""
+
+msgctxt "PlanMultiple|"
+msgid "r %d"
+msgstr ""
+
+msgctxt "PlanSingle|"
+msgid "Lot size (N)"
+msgstr ""
+
+msgctxt "PlanSingle|"
+msgid "Sample size (n)"
+msgstr ""
+
+msgctxt "PlanSingle|"
+msgid "Acceptance number (c)"
+msgstr ""
+
+msgctxt "PlanSingle|"
+msgid "Rejection number (r)"
+msgstr ""
+
+msgctxt "ProbDefect|"
+msgid "Proportion non-conforming items"
+msgstr ""
+
+msgctxt "ProbDefect|"
+msgid "From"
+msgstr ""
+
+msgctxt "ProbDefect|"
+msgid "To"
+msgstr ""
+
+msgctxt "ProbDefect|"
+msgid "Step size"
+msgstr ""
+
+msgctxt "RiskPoints|"
+msgid "Quality constraints"
+msgstr ""
+
+msgctxt "RiskPoints|"
+msgid "Acceptable Quality Level (AQL)"
+msgstr ""
+
+msgctxt "RiskPoints|"
+msgid "Rejectable Quality Level (RQL / LTPD)"
+msgstr ""
+
+msgctxt "RiskPoints|"
+msgid "Producer's risk (α)"
+msgstr ""
+
+msgctxt "RiskPoints|"
+msgid "Consumer's risk (β)"
+msgstr ""
+
+msgctxt "CreateAttributePlan|"
+msgid "Lot size (N)"
+msgstr ""
+
+msgctxt "CreateVariablePlan|"
+msgid "Lot size (N)"
+msgstr ""
+
+msgctxt "CreateVariablePlan|"
+msgid "Standard Deviation (Historical) known"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Measurement"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Specify sample statistics directly (used if dataset is not available)"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Sample size (n)"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Sample mean"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Sample standard deviation"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "k                        "
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Specification limits"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Lower Specification Limit (LSL)"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Upper Specification Limit (USL)"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Standard deviation (historical)"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Quality constraints"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Acceptable Quality Level (AQL)"
+msgstr ""
+
+msgctxt "DecideVariableLots|"
+msgid "Rejectable Quality Level (RQL / LTPD)"
+msgstr ""
