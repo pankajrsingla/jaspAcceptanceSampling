@@ -232,29 +232,14 @@ msgctxt "ProbDefect|"
 msgid "From"
 msgstr ""
 
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:30
-msgctxt "ProbDefect|"
-msgid ""
-msgstr ""
-
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:31
 msgctxt "ProbDefect|"
 msgid "To"
 msgstr ""
 
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:32
-msgctxt "ProbDefect|"
-msgid ""
-msgstr ""
-
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:33
 msgctxt "ProbDefect|"
 msgid "Step size"
-msgstr ""
-
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/ProbDefect.qml:34
-msgctxt "ProbDefect|"
-msgid ""
 msgstr ""
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:25
@@ -267,19 +252,9 @@ msgctxt "RiskPoints|"
 msgid "Acceptable Quality Level (AQL)"
 msgstr ""
 
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:32
-msgctxt "RiskPoints|"
-msgid ""
-msgstr ""
-
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:33
 msgctxt "RiskPoints|"
 msgid "Rejectable Quality Level (RQL / LTPD)"
-msgstr ""
-
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:34
-msgctxt "RiskPoints|"
-msgid ""
 msgstr ""
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:40
@@ -287,19 +262,9 @@ msgctxt "RiskPoints|"
 msgid "Producer's Risk (α)"
 msgstr ""
 
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:41
-msgctxt "RiskPoints|"
-msgid ""
-msgstr ""
-
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:42
 msgctxt "RiskPoints|"
 msgid "Consumer's Risk (β)"
-msgstr ""
-
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/common/RiskPoints.qml:43
-msgctxt "RiskPoints|"
-msgid ""
 msgstr ""
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/CreateAttributePlan.qml:26
@@ -357,29 +322,14 @@ msgctxt "DecideVariableLots|"
 msgid "Lower Specification Limit (LSL)"
 msgstr ""
 
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:50
-msgctxt "DecideVariableLots|"
-msgid ""
-msgstr ""
-
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:51
 msgctxt "DecideVariableLots|"
 msgid "Upper Specification Limit (USL)"
 msgstr ""
 
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:52
-msgctxt "DecideVariableLots|"
-msgid ""
-msgstr ""
-
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:58
 msgctxt "DecideVariableLots|"
 msgid "Standard Deviation (Historical)"
-msgstr ""
-
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:59
-msgctxt "DecideVariableLots|"
-msgid ""
 msgstr ""
 
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:64
@@ -392,17 +342,7 @@ msgctxt "DecideVariableLots|"
 msgid "Acceptable Quality Level (AQL)"
 msgstr ""
 
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:68
-msgctxt "DecideVariableLots|"
-msgid ""
-msgstr ""
-
 #: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:69
 msgctxt "DecideVariableLots|"
 msgid "Rejectable Quality Level (RQL / LTPD)"
-msgstr ""
-
-#: /home/runner/work/jaspAcceptanceSampling/jaspAcceptanceSampling/inst/qml/DecideVariableLots.qml:70
-msgctxt "DecideVariableLots|"
-msgid ""
 msgstr ""
