@@ -42,6 +42,7 @@ SequentialSampling <- function(jaspResults, dataset = NULL, options, ...) {
 
   # Visual summary plot: create outline now, draw plot later.
   planCurve <- createJaspPlot(title = gettext("Sequential Plan Plot"),  width = 480, height = 320)
+  planCurve$dependOn(depend_vars)
   planCurve$position <- 1
   seqContainer[["planCurve"]] <- planCurve
 
@@ -141,59 +142,92 @@ SequentialSampling <- function(jaspResults, dataset = NULL, options, ...) {
     jaspContainer$setError(gettext("No valid values found in the plan. Check the inputs."))
     return ()
   }
-  # Draw the visual summary plot.
-  # Todo: add legend for the accept and reject lines.
-  planCurve <- jaspContainer[["planCurve"]]
-  df_plot <- data.frame(n=k, accept=accept, reject=reject)
-  xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plot$n), max(df_plot$n)))
-  yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plot$accept), max(df_plot$reject)))
-  plt <- ggplot2::ggplot(data = df_plot, ggplot2::aes(x = n)) +
-                  ggplot2::geom_line(ggplot2::aes(y = reject, colour = reject), colour = "red", linetype = "dashed") +
-                  ggplot2::geom_line(ggplot2::aes(y = accept, colour = accept), colour = "green", linetype = "dashed") +
-                  ggplot2::labs(x = gettext("Number of Items Sampled"), y = gettext("Acceptance/Rejection Criteria"), colour = gettext("Decision")) +
+  plans <- data.frame(n=k, accept=accept, reject=reject)
+  plans <- subset(plans, accept >= 0 & reject >= 0)
+  output_vars <- paste0(c("showPlans", "showSummary", "showOCCurve", "showAOQCurve", "showATICurve", "showASNCurve"), type)
+  pos <- 1
+
+  # 0. (Always) show the visual summary plot.
+  # Todo: Reorder the legend for the accept and reject lines.
+  planCurve <- createJaspPlot(title = gettext("Acceptance and Rejection Plot"), width = 570, height = 320)
+  xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(plans$n), max(plans$n)))
+  yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(plans$accept), max(plans$reject)))
+  colors <- c("reject" = "red", "accept" = "green")
+  plt <- ggplot2::ggplot(data = plans, ggplot2::aes(x = n)) +
+                  ggplot2::geom_line(ggplot2::aes(y = reject, color = "reject", show.legend=TRUE), linetype = "solid") +
+                  ggplot2::geom_point(ggplot2::aes(y = reject), color = "red", shape = 19) +
+                  ggplot2::geom_line(ggplot2::aes(y = accept, color = "accept", show.legend=TRUE), linetype = "solid") +
+                  ggplot2::geom_point(ggplot2::aes(y = accept), color = "green", shape = 19) +
+                  ggplot2::labs(x = gettext("Number of Items Sampled"), y = gettext("Acceptance/Rejection Criteria"), color = gettext("Decision")) +
                   ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
-                  ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
-  plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw()
+                  ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks)) +
+                  ggplot2::scale_color_manual(values = colors)
+  plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw(legend.position = "right")
   planCurve$plotObject <- plt
-  planCurve$position <- 1
+  planCurve$position <- pos
   jaspContainer[["planCurve"]] <- planCurve
-
-  output_vars <- paste0(c("showSummary", "showOCCurve", "showAOQCurve", "showATICurve", "showASNCurve"), type)
-
-  # Plan summary
+  
+  # 1. Plans table
   if (options[[output_vars[1]]]) {
-    getSummary(jaspContainer, pos=2, output_vars[1], df_plan, options, type)
+    .getSequentialPlans(jaspContainer, pos+1, output_vars[1], plans, type)
+    if (jaspContainer$getError()) {
+      return ()
+    }
+  }
+
+  # 2. Plan summary
+  if (options[[output_vars[2]]]) {
+    getSummary(jaspContainer, pos+2, output_vars[2], df_plan, options, type)
     if (jaspContainer$getError()) {
       return ()
     } 
   }
 
-  # OC Curve
-  if (options[[output_vars[2]]]) {
-    getOCCurve(jaspContainer, pos=3, output_vars[2], df_plan, options, type)
-  }
-
-  # AOQ Curve (for plans with rectification)
+  # 3. OC Curve
   if (options[[output_vars[3]]]) {
-    getAOQCurve(jaspContainer, pos=4, output_vars[3], df_plan, options, type)
-    if (jaspContainer$getError()) {
-      return ()
-    }    
+    getOCCurve(jaspContainer, pos+3, output_vars[3], df_plan, options, type)
   }
 
-  # ATI Curve (for plans with rectification)
+  # 4. AOQ Curve (for plans with rectification)
   if (options[[output_vars[4]]]) {
-    getATICurve(jaspContainer, pos=5, output_vars[4], df_plan, options, type)
+    getAOQCurve(jaspContainer, pos+4, output_vars[4], df_plan, options, type)
     if (jaspContainer$getError()) {
       return ()
     }    
   }
 
-  # ASN Curve
+  # 5. ATI Curve (for plans with rectification)
   if (options[[output_vars[5]]]) {
-    getASNCurve(jaspContainer, pos=6, output_vars[4], df_plan, options, type)
+    getATICurve(jaspContainer, pos+5, output_vars[5], df_plan, options, type)
     if (jaspContainer$getError()) {
       return ()
     }    
   }
+
+  # 6. ASN Curve
+  if (options[[output_vars[6]]]) {
+    getASNCurve(jaspContainer, pos+6, output_vars[6], df_plan, options, type)
+    if (jaspContainer$getError()) {
+      return ()
+    }    
+  }
+}
+
+.getSequentialPlans <- function(jaspContainer, pos, depend_vars, plans, type) {
+  if (!is.null(jaspContainer[["plansTable"]])) {
+    return ()
+  }
+  plansTable <- createJaspTable(title = gettext("Acceptance Probabilities"))
+  plansTable$dependOn(depend_vars)  
+  plansTable$addColumnInfo(name = "col_1", title = gettext("Sample Size"), type = "integer")
+  plansTable$addColumnInfo(name = "col_2", title = gettext("Acceptance Number"), type = "integer")
+  plansTable$addColumnInfo(name = "col_3", title = gettext("Rejection Number"), type = "integer")
+  # Data for the table
+  plans$accept <- floor(plans$accept)
+  plans$reject <- ceiling(plans$reject)
+  row = list(col_1 = plans$n, col_2 = plans$accept, col_3 = plans$reject)
+  plansTable$setData(row)
+  plansTable$showSpecifiedColumnsOnly <- TRUE
+  plansTable$position <- pos
+  jaspContainer[["plansTable"]] <- plansTable
 }

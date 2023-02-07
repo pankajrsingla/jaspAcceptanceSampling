@@ -59,5 +59,9 @@ Form
 		}
 	}
 	// Common.Distribution {}
-	Common.OutputOptions { suffix: analysis }
+	Group
+	{
+		CheckBox { name: "showPlans" + analysis; label: qsTr("Sequential Plans") }
+		Common.OutputOptions { suffix: analysis }
+	}
 }

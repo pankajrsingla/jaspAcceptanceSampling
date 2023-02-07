@@ -386,7 +386,7 @@ getSummary <- function(jaspContainer, pos, depend_vars, df_plan, options, type, 
   if (!is.null(jaspContainer[["summaryTable"]])) {
     return()
   }
-  summaryTable <- createJaspTable(title = gettext("Acceptance Probabilities"))
+  summaryTable <- createJaspTable(title = gettext("Plan Summary"))
   summaryTable$dependOn(depend_vars)
   if (!"AOQ" %in% colnames(df_plan)) {
     df_plan <- getAOQ(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
