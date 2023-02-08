@@ -26,45 +26,47 @@ Form
 	{
 		title: qsTr("Single Sampling Plan")
 		columns: 1
-		// property string analysisSingle: "AnalyzeAttrSingle"
+		id: analyzeAttrSingle
+		property string segment: "AnalyzeAttrSingle"
 
-		Common.PlanSingle { suffix: "AnalyzeAttrSingle" }
-		Common.Distribution { suffix: "AnalyzeAttrSingle" }
+		Common.PlanSingle { suffix: analyzeAttrSingle.segment }
+		Common.Distribution { suffix: analyzeAttrSingle.segment }
 
 		Group
 		{
-			CheckBox { name: "assessPlan" + "AnalyzeAttrSingle"; label: qsTr("Assess attribute plan"); id: assessSingle }
+			CheckBox { name: "assessPlan" + analyzeAttrSingle.segment; label: qsTr("Assess attribute plan"); id: assessSingle }
 			Common.RiskPoints
 			{
-				suffix: "AnalyzeAttrSingle"
+				suffix: analyzeAttrSingle.segment
 				enabled: assessSingle.checked
 			}
 		}
 
-		Common.ProbDefect { suffix: "AnalyzeAttrSingle" }
-		Common.OutputOptions { suffix: "AnalyzeAttrSingle" }
+		Common.ProbDefect { suffix: analyzeAttrSingle.segment }
+		Common.OutputOptions { suffix: analyzeAttrSingle.segment }
 	}
 
 	Section
 	{
 		title: qsTr("Multiple Sampling Plan")
 		columns: 1
-		// property string analysisMult: "AnalyzeAttrMult"
+		id: analyzeAttrMult
+		property string segment: "AnalyzeAttrMult"
 
-		Common.PlanMultiple { suffix: "AnalyzeAttrMult" }
-		Common.Distribution { suffix: "AnalyzeAttrMult" }
+		Common.PlanMultiple { suffix: analyzeAttrMult.segment }
+		Common.Distribution { suffix: analyzeAttrMult.segment }
 
 		Group
 		{
-			CheckBox { name: "assessPlan" + "AnalyzeAttrMult"; label: qsTr("Assess sampling plan"); id: assessMult }
+			CheckBox { name: "assessPlan" + analyzeAttrMult.segment; label: qsTr("Assess sampling plan"); id: assessMult }
 			Common.RiskPoints
 			{
-				suffix: "AnalyzeAttrMult"
+				suffix: analyzeAttrMult.segment
 				enabled: assessMult.checked
 			}
 		}
 
-		Common.ProbDefect { suffix: "AnalyzeAttrMult" }		
-		Common.OutputOptions { suffix: "AnalyzeAttrMult" }		
+		Common.ProbDefect { suffix: analyzeAttrMult.segment }
+		Common.OutputOptions { suffix: analyzeAttrMult.segment }		
 	}
 }

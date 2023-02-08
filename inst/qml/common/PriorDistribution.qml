@@ -18,16 +18,18 @@
 import QtQuick 2.8
 import QtQuick.Layouts 1.3
 import JASP.Controls 1.0
-import "./common" as Common
 
-Form
+RadioButtonGroup
 {
-	columns: 1
-	id: createAttr
-	property string segment: "CreateAttr"
-	IntegerField { name: "lotSize" + createAttr.segment; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1}
-	Common.RiskPoints { suffix: createAttr.segment }
-	Common.ProbDefect { suffix: createAttr.segment }
-	Common.Distribution { suffix: createAttr.segment }
-	Common.OutputOptions {suffix: createAttr.segment }
+	title: qsTr("Prior Distribution (Beta)")
+	property string suffix: ""
+	name: "prior" + suffix
+	RadioButton { value: "impartial"; label: qsTr("Impartial"); checked: true }
+	RadioButton { value: "uniform"; label: qsTr("Uniform") }
+	RadioButton 
+	{ 
+		value: "custom"; label: qsTr("Custom")
+		DoubleField{ name: "alpha" + suffix; label: qsTr("\u03B1"); defaultValue: 1; min: 0 }
+		DoubleField { name: "beta" + suffix; label: qsTr("\u03B2"); defaultValue: 1; min: 0 }			
+	}
 }

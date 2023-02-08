@@ -24,10 +24,11 @@ import JASP
 Form
 {
 	columns: 1
-	property string analysis: "Seq"
-	IntegerField { name: "lotSize" + analysis; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1}
-    IntegerField { name: "max_n" + analysis; label: qsTr("Max sample size (n)"); defaultValue: 100; min: 1; max: 1000}
-	Common.RiskPoints { suffix: analysis }
+	id: sequential
+	property string segment: "Seq"
+	IntegerField { name: "lotSize" + sequential.segment; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1}
+    IntegerField { name: "max_n" + sequential.segment; label: qsTr("Max sample size (n)"); defaultValue: 100; min: 1; max: 1000}
+	Common.RiskPoints { suffix: sequential.segment }
 	// Todo: Use ProbDefect.qml instead of this code. Adjust the minimum values.
 	Group
 	{
@@ -35,7 +36,7 @@ Form
 		DropDown
 		{
 			id: 							pd_unit
-			name: 							"pd_unit" + analysis
+			name: 							"pd_unit" + sequential.segment
 			currentIndex:					0
 			label: 							qsTr("Unit for quality levels")
 			property var maxPd: (pd_unit.value === "percent") ? 100 : ((pd_unit.value === "proportion") ? 1 : 1000000)
@@ -51,17 +52,17 @@ Form
 		{
 			columns: 2
 			Text { text: qsTr("From") }
-			DoubleField{ name: "pd_lower" + analysis; label: ""; negativeValues: false; defaultValue: 0.01; min: 0; max: pd_unit.maxPd; decimals: 6; inclusive: JASP.MaxOnly; fieldWidth: 60 }
+			DoubleField{ name: "pd_lower" + sequential.segment; label: ""; negativeValues: false; defaultValue: 0.01; min: 0; max: pd_unit.maxPd; decimals: 6; inclusive: JASP.MaxOnly; fieldWidth: 60 }
 			Text { text: qsTr("To") }
-			DoubleField{ name: "pd_upper" + analysis; label: ""; negativeValues: false; defaultValue: pd_unit.maxPd; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
+			DoubleField{ name: "pd_upper" + sequential.segment; label: ""; negativeValues: false; defaultValue: pd_unit.maxPd; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
 			Text { text: qsTr("Step size") }
-			DoubleField{ name: "pd_step" + analysis; label: ""; negativeValues: false; defaultValue: pd_unit.maxPd/10; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
+			DoubleField{ name: "pd_step" + sequential.segment; label: ""; negativeValues: false; defaultValue: pd_unit.maxPd/10; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
 		}
 	}
 	// Common.Distribution {}
 	Group
 	{
-		CheckBox { name: "showPlans" + analysis; label: qsTr("Sequential Plans") }
-		Common.OutputOptions { suffix: analysis }
+		CheckBox { name: "showPlans" + sequential.segment; label: qsTr("Sequential Plans") }
+		Common.OutputOptions { suffix: sequential.segment }
 	}
 }

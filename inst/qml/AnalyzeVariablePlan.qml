@@ -24,19 +24,20 @@ import JASP
 Form
 {
 	columns: 1
-	property string analysis: "AnalyzeVar"
-	Common.PlanVariable { suffix : analysis }
+	id: analyzeVar
+	property string segment: "AnalyzeVar"
+	Common.PlanVariable { suffix : analyzeVar.segment }
 
 	Group
 	{
-		CheckBox { name: "assessPlan" + analysis; label: qsTr("Assess variable plan"); id: assessVariable }
+		CheckBox { name: "assessPlan" + analyzeVar.segment; label: qsTr("Assess variable plan"); id: assessVariable }
 		Common.RiskPoints
 		{
-			suffix: analysis
-			enabled: assessVariable.checked
+			suffix: analyzeVar.segment
+			enabled: assessVariable.segment
 		}
 	}
 
-	Common.ProbDefect { suffix: analysis }
-	Common.OutputOptions { suffix: analysis }
+	Common.ProbDefect { suffix: analyzeVar.segment }
+	Common.OutputOptions { suffix: analyzeVar.segment }
 }

@@ -27,85 +27,53 @@ Form
 	{
 		title: qsTr("Planning")
 		columns: 1
-		Group
-		{
-			IntegerField { name: "max_n"; label: qsTr("(Max) Sample size (n)"); defaultValue: 40; min: 1; max: 1000 }
-			DoubleField { name: "min_bf"; label: qsTr("(Min) Bayes factor (BF)"); defaultValue: 30; min: 1/1000; max: 1000 }
-		}
-		RadioButtonGroup
-		{
-			title: qsTr("Prior Distribution (Beta)")
-			name: "prior"
-			RadioButton { value: "impartial"; label: qsTr("Impartial"); checked: true }
-			RadioButton { value: "uniform"; label: qsTr("Uniform") }
-			Group
-			{
-				RadioButton { id: custom; value: "custom"; label: qsTr("Custom") }
-				Group
-				{
-					DoubleField{ name: "alpha"; label: qsTr("\u03B1"); defaultValue: 1; min: 0; enabled: custom.checked }
-					DoubleField { name: "beta"; label: qsTr("\u03B2"); defaultValue: 1; min: 0; enabled: custom.checked }
-				}
-			}
-		}
-		
+		id: plan
+		property string segment: "plan"
 		Group
 		{
 			title: qsTr("Quality constraints")
-			Group
-			{
-				DoubleField{ name: "aql"; label: qsTr("Acceptable Quality Level (AQL)"); defaultValue: 0.05; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }
-				DoubleField { name: "rql"; label: qsTr("Rejectable Quality Level (RQL / LTPD)"); defaultValue: 0.15; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }
-			}		
+			DoubleField{ name: "aql" + plan.segment; label: qsTr("Acceptable Quality Level (AQL)"); defaultValue: 0.05; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }
+			DoubleField { name: "rql" + plan.segment; label: qsTr("Rejectable Quality Level (RQL / LTPD)"); defaultValue: 0.15; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }			
 		}
+
+		Common.PriorDistribution { suffix: plan.segment }
+
+		Group
+		{
+			IntegerField { name: "max_n" + plan.segment; label: qsTr("(Max) Sample size (n)"); defaultValue: 40; min: 1; max: 1000 }
+			DoubleField { name: "min_bf" + plan.segment; label: qsTr("(Min) Bayes factor (BF)"); defaultValue: 30; min: 1/1000; max: 1000 }
+		}				
 
 		Group
 		{
 			title: qsTr("Output options")
-			CheckBox { name: "showPlans"; label: qsTr("Plans table") }
-			CheckBox { name: "priorCurve"; label: qsTr("Prior plot") }
-			CheckBox { name: "ncCurve"; label: qsTr("Plans plot") }
-			CheckBox { name: "bfCurve"; label: qsTr("BF plot") }
+			CheckBox { name: "showPlans" + plan.segment; label: qsTr("Plans table") }
+			CheckBox { name: "priorPlot" + plan.segment; label: qsTr("Prior plot") }
+			CheckBox { name: "ncPlot" + plan.segment; label: qsTr("Plans plot") }
+			CheckBox { name: "bfPlot" + plan.segment; label: qsTr("BF plot") }
 		}
 	}
 	Section
 	{
 		title: qsTr("Inference")
 		columns: 1
-		Group
+		id: infer
+		property string segment: "infer"
+		RadioButtonGroup
 		{
-			RadioButtonGroup
-			{
-				title: qsTr("Prior")
-				name: "prior_inf"
-				RadioButton { value: "usePrevPrior"; label: qsTr("Use prior from planning"); checked: true }
-				RadioButton { id: useNewPrior; value: "useNewPrior"; label: qsTr("Specify new prior (Beta)") }
-				RadioButtonGroup
-				{
-					name: "new_prior"
-					enabled: useNewPrior.checked
-					RadioButton { value: "impartial_inf"; label: qsTr("Impartial"); checked: true }
-					RadioButton { value: "uniform_inf"; label: qsTr("Uniform") }
-					Group
-					{
-						RadioButton { id: new_custom; value: "new_custom"; label: qsTr("Custom") }
-						Group
-						{
-							DoubleField{ name: "alpha_inf"; label: qsTr("\u03B1"); defaultValue: 1; min: 0; enabled: new_custom.checked }
-							DoubleField { name: "beta_inf"; label: qsTr("\u03B2"); defaultValue: 1; min: 0; enabled: new_custom.checked }
-						}
-					}
-				}
+			title: qsTr("Choose prior")
+			name: "choosePrior" + infer.segment
+			RadioButton { value: "usePrev"; label: qsTr("Use constraints and prior from planning phase"); checked: true }
+			RadioButton 
+			{ 
+				id: useNewPrior; value: "useNew"; label: qsTr("Use different constraints and prior")
 				Group
 				{
 					title: qsTr("Quality constraints")
-					enabled: useNewPrior.checked
-					Group
-					{
-						DoubleField{ name: "aql_inf"; label: qsTr("Acceptable Quality Level (AQL)"); defaultValue: 0.05; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }
-						DoubleField { name: "rql_inf"; label: qsTr("Rejectable Quality Level (RQL / LTPD)"); defaultValue: 0.15; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }
-					}		
-				}				
+					DoubleField{ name: "aql" + infer.segment; label: qsTr("Acceptable Quality Level (AQL)"); defaultValue: 0.05; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }
+					DoubleField { name: "rql" + infer.segment; label: qsTr("Rejectable Quality Level (RQL / LTPD)"); defaultValue: 0.15; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }			
+				}
+				Common.PriorDistribution { suffix: infer.segment }												
 			}
 		}
 		Group
@@ -113,16 +81,15 @@ Form
 			title: qsTr("Specify data")
 			Group
 			{
-				IntegerField { name: "data_n"; id: data_n; label: qsTr("Sample size (n)"); defaultValue: 40; min: 1; max: 1000 }
-				IntegerField { name: "data_c"; label: qsTr("Acceptance number (c)"); defaultValue: 1; min: 0; max: parseInt(data_n.value) }
-				IntegerField { name: "data_d"; label: qsTr("(Max) Sample size (n)"); defaultValue: 40; min: 1; max: parseInt(data_n.value) }
+				IntegerField { name: "data_n" + infer.segment; id: data_n; label: qsTr("Sample size (n)"); defaultValue: 40; min: 1; max: 1000 }
+				IntegerField { name: "data_d" + infer.segment; label: qsTr("Observed number of defects (d)"); defaultValue: 1; min: 0; max: parseInt(data_n.value) }				
 			}
 		}
 		Group
 		{
 			title: qsTr("Output options")
-			CheckBox { name: "inf_priorCurve"; label: qsTr("Prior plot") }
-			CheckBox { name: "inf_posteriorCurve"; label: qsTr("Posterior plot") }			
+			CheckBox { name: "priorPlot" + infer.segment; label: qsTr("Prior plot") }
+			CheckBox { name: "posteriorPlot" + infer.segment; label: qsTr("Posterior plot") }			
 		}
 	}
 }
