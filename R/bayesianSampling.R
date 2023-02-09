@@ -24,32 +24,33 @@
 #' @seealso .findPlan()
 ##---------------------------------------------------------------
 BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {    
-  # 1. Planning section  
-  analysis <- "plan"
+  # 1. Planning: use constraints, generate plans
+  ##---------------------------------------------------------------
+  section_plan <- "plan"
   depend_vars_plan <- c("max_n", "min_bf", "aql", "rql", "prior")  
   # Check if the container already exists. Create it if it doesn't.
   if (is.null(jaspResults[["planContainer"]]) || jaspResults[["planContainer"]]$getError()) {
-    planContainer <- createJaspContainer(title = "")
+    planContainer <- createJaspContainer(title = "Planning")
     planContainer$dependOn(depend_vars_plan)
     jaspResults[["planContainer"]] <- planContainer
   } else {
     planContainer <- jaspResults[["planContainer"]]
   }
 
-  aql_plan <- options[[paste0("aql", analysis)]]
-  rql_plan <- options[[paste0("rql", analysis)]]
-  max_n_plan <- options[[paste0("max_n", analysis)]]
-  min_bf_plan <- options[[paste0("min_bf", analysis)]]
-  prior_plan <- options[[paste0("prior", analysis)]]
+  aql_plan <- options[[paste0("aql", section_plan)]]
+  rql_plan <- options[[paste0("rql", section_plan)]]
+  max_n_plan <- options[[paste0("max_n", section_plan)]]
+  min_bf_plan <- options[[paste0("min_bf", section_plan)]]
+  prior_plan <- options[[paste0("prior", section_plan)]]
   alpha_plan <- beta_plan <- 0
   if (prior_plan == "impartial") {
-    alpha_plan <- (3 * rql_plan) - aql_plan * (4 * rql_plan - 1) / (3 * (rql_plan - aql_plan))
-    beta_plan <- (2 + rql_plan * (4 * aql_plan - 1) - 5 * aql_plan) / (3 * (rql_plan - aql_plan))
+    alpha_plan <- ((3 * rql_plan) - aql_plan * (4 * rql_plan + 1)) / (3 * (rql_plan - aql_plan))
+    beta_plan <- ((2 + rql_plan * (4 * aql_plan - 1) - 5 * aql_plan)) / (3 * (rql_plan - aql_plan))    
   } else if (prior == "uniform") {
     alpha_plan <- beta_plan <- 1
   } else if (prior_plan == "custom") {
-    alpha_plan <- options[[paste0("alpha", analysis)]]
-    beta_plan <- options[[paste0("beta", analysis)]]
+    alpha_plan <- options[[paste0("alpha", section_plan)]]
+    beta_plan <- options[[paste0("beta", section_plan)]]
   }
   plans <- iso_bf_plans(aql_plan, rql_plan, max_n_plan, min_bf_plan, alpha_plan, beta_plan)
   plans$log_bf <- log(plans$bf)
@@ -59,79 +60,133 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
     planContainer$setError(gettext("No valid plans found satisfying the specified constraints."))
   }
 
-  pos <- 1
-  output_vars_plan <- paste0(c("showPlans", "priorPlot", "ncPlot", "bfPlot"), analysis)
+  pos_plan <- 0
+  output_vars_plan <- paste0(c("showPlans", "priorPlot", "ncPlot", "bfPlot"), section_plan)
 
   # 1.1 Create a table of the plans from above
   if (options[[output_vars_plan[1]]]) {
-    makePlanTable(planContainer, pos, output_vars_plan[1], plans)
+    makePlanTable(planContainer, pos_plan+1, output_vars_plan[1], plans)
   }
   
   # 1.2 Prior distribution plot
   if (options[[output_vars_plan[2]]]) {
-    makePriorPlot(planContainer, pos+1, output_vars_plan[2], aql_plan, rql_plan, alpha_plan, beta_plan)
+    makeDistributionPlot(planContainer, pos_plan+2, output_vars_plan[2], aql_plan, rql_plan, alpha_plan, beta_plan, "Prior")
   }
 
   # 1.3 Plot of n vs c
   if (options[[output_vars_plan[3]]]) {
-    makeNCPlot(planContainer, pos+2, output_vars_plan[3], plans)
+    makeNCPlot(planContainer, pos_plan+3, output_vars_plan[3], plans)
   }
 
   # 1.4 Plot of n vs BF
   if (options[[output_vars_plan[4]]]) {
-    makeBFPlot(planContainer, pos+3, output_vars_plan[4], plans)
+    makeBFPlot(planContainer, pos_plan+4, output_vars_plan[4], plans)
   }
 
-  # 2. Inference for posterior
-  segment <- "infer"
-  depend_vars_inf <- paste0(c("choosePrior", "data_n", "data_d"), segment)
-  # Check if the container already exists. Create it if it doesn't.
-  if (is.null(jaspResults[["infContainer"]]) || jaspResults[["infContainer"]]$getError()) {
-    infContainer <- createJaspContainer(title = "")
-    infContainer$dependOn(depend_vars_inf)
-    jaspResults[["infContainer"]] <- infContainer
-  } else {
-    infContainer <- jaspResults[["infContainer"]]
-  }
+  # 2. Inference: take data, create posterior
+  ##---------------------------------------------------------------
+  section_infer <- "infer"
+  if (options[[paste0("inferPosterior", section_infer)]]) {
+    depend_vars_inf <- paste0(c("choosePrior", "aql", "rql", "prior", "alpha", "beta"), section_infer)
+    pos_inf <- 10
+    # Check if the container already exists. Create it if it doesn't.
+    if (is.null(jaspResults[["infContainer"]]) || jaspResults[["infContainer"]]$getError()) {
+      infContainer <- createJaspContainer(title = "Inference")
+      infContainer$dependOn(depend_vars_inf)
+      jaspResults[["infContainer"]] <- infContainer
+    } else {
+      infContainer <- jaspResults[["infContainer"]]
+    }
 
-  alpha_prior_inf <- beta_prior_inf <- 0
-  aql_inf <- rql_inf <- 0
-  if (options[[paste0("choosePrior", segment)]] == "usePrev") {
-    alpha_prior_inf <- alpha_plan
-    beta_prior_inf <- beta_plan
-    aql_inf <- aql_plan
-    rql_inf <- rql_plan
-  } else if (options[[paste0("choosePrior", segment)]] == "useNew") {
-    prior_inf <- options[[paste0("prior", segment)]]
-    aql_inf <- options[[paste0("aql", segment)]]
-    rql_inf <- options[[paste0("rql", segment)]]
-    if (prior_inf == "impartial") {
-      alpha_prior_inf <- (3 * rql_inf) - aql_inf * (4 * rql_inf - 1) / (3 * (rql_inf - aql_inf))
-      beta_prior_inf <- (2 + rql_inf * (4 * aql_inf - 1) - 5 * aql_inf) / (3 * (rql_inf - aql_inf))
-    } else if (prior_inf == "uniform") {
-      alpha_prior_inf <- beta_prior_inf <- 1
-    } else if (prior_inf == "custom") {
-      alpha_prior_inf <- options[[paste0("alpha", segment)]]
-      beta_prior_inf <- options[[paste0("beta", segment)]]    
+    alpha_prior_inf <- beta_prior_inf <- 0
+    aql_inf <- rql_inf <- 0
+    if (options[[paste0("choosePrior", section_infer)]] == "usePrev") {
+      alpha_prior_inf <- alpha_plan
+      beta_prior_inf <- beta_plan
+      aql_inf <- aql_plan
+      rql_inf <- rql_plan
+    } else if (options[[paste0("choosePrior", section_infer)]] == "useNew") {
+      prior_inf <- options[[paste0("prior", section_infer)]]
+      aql_inf <- options[[paste0("aql", section_infer)]]
+      rql_inf <- options[[paste0("rql", section_infer)]]
+      if (prior_inf == "impartial") {
+        alpha_prior_inf <- ((3 * rql_inf) - aql_inf * (4 * rql_inf + 1)) / (3 * (rql_inf - aql_inf))
+        beta_prior_inf <- ((2 + rql_inf * (4 * aql_inf - 1) - 5 * aql_inf)) / (3 * (rql_inf - aql_inf))    
+      } else if (prior_inf == "uniform") {
+        alpha_prior_inf <- beta_prior_inf <- 1
+      } else if (prior_inf == "custom") {
+        alpha_prior_inf <- options[[paste0("alpha", section_infer)]]
+        beta_prior_inf <- options[[paste0("beta", section_infer)]]    
+      }
+    }
+    n_inf <- options[[paste0("data_n", section_infer)]]
+    d_inf <- options[[paste0("data_d", section_infer)]]
+    alpha_post_inf <- alpha_prior_inf + d_inf
+    beta_post_inf <- beta_prior_inf + n_inf - d_inf
+    posterior_odds_inf <- pbeta(rql_inf, alpha_post_inf, beta_post_inf) / (1 - pbeta(rql_inf, alpha_post_inf, beta_post_inf))
+    prior_odds_inf <- pbeta(rql_inf, alpha_prior_inf, beta_prior_inf) / (1 - pbeta(rql_inf, alpha_prior_inf, beta_prior_inf))
+    bf_inf <- posterior_odds_inf / prior_odds_inf
+    
+    output_vars_inf <- paste0(c("priorPlot", "posteriorPlot"), section_infer)
+    
+    # 2.1 Prior distribution plot for inference
+    if (options[[output_vars_inf[1]]]) {
+      makeDistributionPlot(infContainer, pos_inf+1, output_vars_inf[1], aql_inf, rql_inf, alpha_prior_inf, beta_prior_inf, "Prior")
+    }
+    
+    # 2.2 Posterior distribution plot for inference
+    if (options[[output_vars_inf[2]]]) {
+      makeDistributionPlot(infContainer, pos_inf+2, c(output_vars_inf[2], paste0(c("data_n", "data_d"), section_infer)), aql_inf, rql_inf, alpha_post_inf, beta_post_inf, "Posterior")
+      # 2.2.1 Report the Bayes factor for the observed data
+      bf_text <- createJaspHtml(text = gettextf("<u>Bayes factor</u> in favor of proportion of defects < <u>%1$.2f</u> is <b>%2$.2f</b>.", rql_inf, bf_inf), position=pos_inf+3, dependencies=paste0(c("data_n", "data_d"), section_infer))
+      infContainer[["bf_text"]] <- bf_text
     }
   }
-  n_inf <- options[[paste0("data_n", segment)]]
-  d_inf <- options[[paste0("data_d", segment)]]
-  alpha_post_inf <- alpha_prior_inf + d_inf
-  beta_post_inf <- beta_prior_inf + n_inf - d_inf
 
-  pos_inf <- pos+4
-  output_vars_inf <- paste0(c("priorPlot", "posteriorPlot"), segment)
-  
-  # 2.1 Prior distribution plot for inference
-  if (options[[output_vars_inf[1]]]) {
-    makePriorPlot(infContainer, pos_inf, output_vars_inf[1], aql_inf, rql_inf, alpha_prior_inf, beta_prior_inf)
+  # 3. Update: use posterior data, generate new plans
+  ##---------------------------------------------------------------
+  section_update <- "update"
+  if (options[[paste0("updatePlan", section_update)]]) {
+    pos_update <- 100
+    # Check if the container already exists. Create it if it doesn't.
+    if (is.null(jaspResults[["updateContainer"]]) || jaspResults[["updateContainer"]]$getError()) {
+      updateContainer <- createJaspContainer(title = "Update")
+      updateContainer$dependOn(depend_vars_inf)
+      jaspResults[["updateContainer"]] <- updateContainer
+    } else {
+      updateContainer <- jaspResults[["updateContainer"]]
+    }
+
+    min_bf_inf <- options[[paste0("min_bf", section_update)]]
+    inf_plans <- iso_bf_plans(aql_inf, rql_inf, n_inf, min_bf_inf, alpha_post_inf, beta_post_inf)
+    inf_plans$log_bf <- log(inf_plans$bf)
+    inf_plans <- na.omit(inf_plans)
+    if (nrow(inf_plans) == 0) {
+      updateContainer$setError(gettext("No valid plans found satisfying the specified constraints."))
+    }
+    
+    output_vars_update <- paste0(c("showPlans", "priorPlot", "ncPlot", "bfPlot"), section_update)
+
+    # 1.1 Create a table of the plans from above
+    if (options[[output_vars_update[1]]]) {
+      makePlanTable(updateContainer, pos_update+1, output_vars_update[1], inf_plans)
+    }
+    
+    # 1.2 Prior distribution plot
+    if (options[[output_vars_update[2]]]) {
+      makeDistributionPlot(updateContainer, pos_update+2, output_vars_update[2], aql_inf, rql_inf, alpha_post_inf, beta_post_inf, "Prior")
+    }
+
+    # 1.3 Plot of n vs c
+    if (options[[output_vars_update[3]]]) {
+      makeNCPlot(updateContainer, pos_update+3, output_vars_update[3], inf_plans)
+    }
+
+    # 1.4 Plot of n vs BF
+    if (options[[output_vars_update[4]]]) {
+      makeBFPlot(updateContainer, pos_update+4, output_vars_update[4], inf_plans)
+    }
   }
-  
-  # 2.1 Posterior distribution plot for inference
-  # if (options[[output_vars[2]]]) {
-    # makePosteriorPlot(infContainer, pos_inf, output_vars[1], aql_inf, rql_inf, alpha_prior_inf, beta_prior_inf)
-  # }
 }
 
 bf <- function(rql, n, c, alpha, beta, prior_odds) {
@@ -163,6 +218,32 @@ iso_bf_plans <- function(aql, rql, max_n, min_bf, alpha, beta) {
     return (plans)
 }
 
+makeDistributionPlot <- function(jaspContainer, pos, depend_vars, aql, rql, alpha, beta, type) {
+  if (!is.null(jaspContainer[[paste0("distPlot", type)]])) {
+    return()
+  }
+  # Todo: add labels for the highlighted part of the graph.  
+  distPlot <- createJaspPlot(title = gettext(paste0(type, " Distribution: Beta(", round(alpha,1), ", ", round(beta,1), ")")), width = 570, height = 320)
+  distPlot$dependOn(depend_vars)
+  xValue <- seq(0,1,0.005)
+  propDist <- dbeta(xValue, alpha, beta)
+  df_dist <- data.frame(x=xValue, y=propDist)
+  # xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(0, 1))
+  # yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_dist$y), max(df_dist$y)))
+  plt <- ggplot2::ggplot(data = df_dist, ggplot2::aes(x=x, y=y)) +
+                  ggplot2::geom_line(color = "black", linetype = "solid") +
+                  ggplot2::labs(x = gettext("Lot Proportion Defective"), y = gettext("Density")) +
+                  ggplot2::geom_ribbon(data = subset(df_dist, x <= aql), ggplot2::aes(x=x, ymin=0, ymax=y), fill="green", inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                  ggplot2::geom_ribbon(data = subset(df_dist, x >= aql & x <= rql), ggplot2::aes(x=x, ymin=0, ymax=y), fill="blue", inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                  ggplot2::geom_ribbon(data = subset(df_dist, x >= rql), ggplot2::aes(x=x, ymin=0, ymax=y), fill="red", inherit.aes=FALSE, alpha=0.2, outline.type="both")
+                  # ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
+                  # ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))                    
+  plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw()
+  distPlot$plotObject <- plt
+  distPlot$position <- pos
+  jaspContainer[[paste0("distPlot", type)]] <- distPlot
+}
+
 makePlanTable <- function(jaspContainer, pos, depend_vars, plans) {
   if (!is.null(jaspContainer[["planTable"]])) {
     return()
@@ -173,37 +254,11 @@ makePlanTable <- function(jaspContainer, pos, depend_vars, plans) {
   planTable$addColumnInfo(name = "col_1", title = gettext("Sample size (n)"), type = "integer")
   planTable$addColumnInfo(name = "col_2", title = gettext("Acceptance number (c)"), type = "integer")
   planTable$addColumnInfo(name = "col_3", title = gettext("Bayes factor (BF)"), type = "number")
-  row = list(col_1 = plans$n, col_2 = plans$c, col_3 = plans$bf)  
+  row = list(col_1 = plans$n, col_2 = plans$c, col_3 = plans$bf)
   planTable$setData(row)
   planTable$showSpecifiedColumnsOnly <- TRUE
   planTable$position <- pos
   jaspContainer[["planTable"]] <- planTable
-}
-
-makePriorPlot <- function(jaspContainer, pos, depend_vars, aql, rql, alpha, beta) {
-  if (!is.null(jaspContainer[["priorPlot"]])) {
-    return()
-  }
-  # Todo: add labels for the highlighted part of the graph.  
-  priorPlot <- createJaspPlot(title = gettext(paste0("Prior Distribution: Beta(", round(alpha,1), ", ", round(beta,1), ")")), width = 570, height = 320)
-  priorPlot$dependOn(depend_vars)
-  xValue <- seq(0,1,0.005)
-  propPrior <- dbeta(xValue, alpha, beta)
-  df_prior <- data.frame(x=xValue, y=propPrior)
-  # xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(0, 1))
-  # yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_prior$y), max(df_prior$y)))
-  plt <- ggplot2::ggplot(data = df_prior, ggplot2::aes(x=x, y=y)) +
-                  ggplot2::geom_line(color = "black", linetype = "solid") +
-                  ggplot2::labs(x = gettext("Lot Proportion Defective"), y = gettext("Density")) +
-                  ggplot2::geom_ribbon(data = subset(df_prior, x <= aql), ggplot2::aes(x=x, ymin=0, ymax=y), fill="green", inherit.aes=FALSE, alpha=0.2, outline.type="both") +
-                  ggplot2::geom_ribbon(data = subset(df_prior, x >= aql & x <= rql), ggplot2::aes(x=x, ymin=0, ymax=y), fill="blue", inherit.aes=FALSE, alpha=0.2, outline.type="both") +
-                  ggplot2::geom_ribbon(data = subset(df_prior, x >= rql), ggplot2::aes(x=x, ymin=0, ymax=y), fill="red", inherit.aes=FALSE, alpha=0.2, outline.type="both")
-                  # ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
-                  # ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))                    
-  plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw()
-  priorPlot$plotObject <- plt
-  priorPlot$position <- pos
-  jaspContainer[["priorPlot"]] <- priorPlot
 }
 
 makeNCPlot <- function(jaspContainer, pos, depend_vars, plans) {

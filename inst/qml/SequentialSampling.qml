@@ -60,9 +60,10 @@ Form
 		}
 	}
 	// Common.Distribution {}
-	Group
+	// Todo: Ensure that the show plans option shows up before the other output options in the group.
+	Common.OutputOptions
 	{
+		suffix: sequential.segment
 		CheckBox { name: "showPlans" + sequential.segment; label: qsTr("Sequential Plans") }
-		Common.OutputOptions { suffix: sequential.segment }
 	}
 }
