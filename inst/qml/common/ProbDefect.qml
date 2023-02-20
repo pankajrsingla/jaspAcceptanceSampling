@@ -21,7 +21,7 @@ import JASP.Controls 1.0
 
 Group
 {
-	title: qsTr("Proportion non-conforming items")
+	title: qsTr("Proportion Non-conforming Items")
 	property string suffix: ""
 	
 	DropDown

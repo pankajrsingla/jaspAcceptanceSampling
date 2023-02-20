@@ -35,8 +35,8 @@ Form
 	Group
 	{
 		columns: 2
-		CheckBox { name: "sd" + createVar.segment; label: qsTr("Standard Deviation (Historical) known"); id: sd; checked: true }
-	}	
+		CheckBox { name: "sd" + createVar.segment; label: qsTr("Standard deviation (historical) known"); id: sd; checked: true }
+	}
 
 	Common.ProbDefect { suffix: createVar.segment }
 	Common.OutputOptions {suffix: createVar.segment }

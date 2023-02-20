@@ -25,13 +25,13 @@ Form
 {
 	Section
 	{
-		title: qsTr("Planning")
+		title: qsTr("1. Planning")
 		columns: 1
 		id: plan
 		property string segment: "plan"
 		Group
 		{
-			title: qsTr("Quality constraints")
+			title: qsTr("Quality Constraints")
 			DoubleField{ name: "aql" + plan.segment; label: qsTr("Acceptable Quality Level (AQL)"); defaultValue: 0.05; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }
 			DoubleField { name: "rql" + plan.segment; label: qsTr("Rejectable Quality Level (RQL / LTPD)"); defaultValue: 0.15; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }			
 		}
@@ -46,7 +46,7 @@ Form
 
 		Group
 		{
-			title: qsTr("Output options")
+			title: qsTr("Output Options")
 			CheckBox { name: "showPlans" + plan.segment; label: qsTr("Plans table") }
 			CheckBox { name: "priorPlot" + plan.segment; label: qsTr("Prior plot") }
 			CheckBox { name: "ncPlot" + plan.segment; label: qsTr("Plans plot") }
@@ -56,7 +56,7 @@ Form
 	
 	Section
 	{
-		title: qsTr("Inference")
+		title: qsTr("2. Inference")
 		columns: 1
 		id: infer
 		property string segment: "infer"
@@ -66,7 +66,7 @@ Form
 			enabled: inferPosterior.checked
 			RadioButtonGroup
 			{
-				title: qsTr("Choose prior")
+				title: qsTr("Choose Prior")
 				name: "choosePrior" + infer.segment
 				RadioButton { value: "usePrev"; label: qsTr("Use constraints and prior from planning phase"); checked: true }
 				RadioButton 
@@ -74,7 +74,7 @@ Form
 					id: useNewPrior; value: "useNew"; label: qsTr("Use different constraints and prior")
 					Group
 					{
-						title: qsTr("Quality constraints")
+						title: qsTr("Quality Constraints")
 						DoubleField{ name: "aql" + infer.segment; label: qsTr("Acceptable Quality Level (AQL)"); defaultValue: 0.05; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }
 						DoubleField { name: "rql" + infer.segment; label: qsTr("Rejectable Quality Level (RQL / LTPD)"); defaultValue: 0.15; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }			
 					}
@@ -83,13 +83,13 @@ Form
 			}
 			Group
 			{
-				title: qsTr("Specify data")
+				title: qsTr("Specify Data")
 				IntegerField { name: "data_n" + infer.segment; id: data_n; label: qsTr("Sample size (n)"); defaultValue: 40; min: 1; max: 1000 }
 				IntegerField { name: "data_d" + infer.segment; label: qsTr("Observed number of defects (d)"); defaultValue: 1; min: 0; max: parseInt(data_n.value) }			
 			}
 			Group
 			{
-				title: qsTr("Output options")
+				title: qsTr("Output Options")
 				CheckBox { name: "priorPlot" + infer.segment; label: qsTr("Prior plot") }
 				CheckBox { name: "posteriorPlot" + infer.segment; label: qsTr("Posterior plot") }			
 			}
@@ -98,7 +98,7 @@ Form
 
 	Section
 	{
-		title: qsTr("Update")
+		title: qsTr("3. Update")
 		columns: 1
 		id: update
 		property string segment: "update"
@@ -109,7 +109,7 @@ Form
 			DoubleField { name: "min_bf" + update.segment; label: qsTr("Bayes factor (min)"); defaultValue: 30; min: 1/10000; max: 10000 }
 			Group
 			{
-				title: qsTr("Output options")
+				title: qsTr("Output Options")
 				CheckBox { name: "showPlans" + update.segment; label: qsTr("Plans table") }
 				CheckBox { name: "priorPlot" + update.segment; label: qsTr("Updated prior plot") }
 				CheckBox { name: "ncPlot" + update.segment; label: qsTr("Plans plot") }

@@ -93,7 +93,7 @@ AnalyzeVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   }
   # 3. OC Curve
   if (options[[output_vars[3]]]) {
-    getOCCurve(analyzeVarContainer, pos=5, output_vars[3], df_plan)
+    getOCCurve(analyzeVarContainer, pos=5, output_vars[3], df_plan, options, type)
   }
   # 4. AOQ Curve
   if (options[[output_vars[4]]]) {

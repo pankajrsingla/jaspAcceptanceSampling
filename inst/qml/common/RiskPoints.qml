@@ -22,7 +22,7 @@ import JASP
 
 Group
 {
-	title: qsTr("Quality constraints")
+	title: qsTr("Quality Constraints")
 	property string suffix: ""
 	property bool include_limits: true
 	Group

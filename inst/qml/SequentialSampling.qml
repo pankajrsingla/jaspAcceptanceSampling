@@ -32,7 +32,7 @@ Form
 	// Todo: Use ProbDefect.qml instead of this code. Adjust the minimum values.
 	Group
 	{
-		title: qsTr("Proportion non-conforming items")
+		title: qsTr("Proportion Non-conforming Items")
 		DropDown
 		{
 			id: 							pd_unit

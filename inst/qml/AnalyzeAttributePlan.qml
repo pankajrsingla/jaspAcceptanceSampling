@@ -34,7 +34,7 @@ Form
 
 		Group
 		{
-			CheckBox { name: "assessPlan" + analyzeAttrSingle.segment; label: qsTr("Assess attribute plan"); id: assessSingle }
+			CheckBox { name: "assessPlan" + analyzeAttrSingle.segment; label: qsTr("Assess Plan"); id: assessSingle }
 			Common.RiskPoints
 			{
 				suffix: analyzeAttrSingle.segment
@@ -58,7 +58,7 @@ Form
 
 		Group
 		{
-			CheckBox { name: "assessPlan" + analyzeAttrMult.segment; label: qsTr("Assess sampling plan"); id: assessMult }
+			CheckBox { name: "assessPlan" + analyzeAttrMult.segment; label: qsTr("Assess Plan"); id: assessMult }
 			Common.RiskPoints
 			{
 				suffix: analyzeAttrMult.segment

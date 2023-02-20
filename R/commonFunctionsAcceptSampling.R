@@ -435,7 +435,6 @@ getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type) 
   # df_plan$PD <- round(df_plan$PD, 3)
   # df_plan$PA <- round(df_plan$PA, 3)
   ocCurve <- createJaspPlot(title = gettext("OC (Operating Characteristics) Curve"),  width = 570, height = 320)
-  ocCurve$dependOn(depend_vars)
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD_Orig), max(df_plan$PD_Orig)))
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PA), max(df_plan$PA)))
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD_Orig, y = PA)) +
@@ -444,9 +443,22 @@ getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type) 
                   ggplot2::labs(x = gettext(pd_title), y = gettext("Probability of Acceptance")) +
                   ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
                   ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
-  plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw()
+  # Highlight regions < AQL, > RQL
+  aql <- tryCatch(options[[paste0("aql", type)]], error = function(x) "error")
+  add_risk_points <- (!is.null(aql) && aql != "error")
+  if (add_risk_points) {
+    depend_vars <- append(depend_vars, paste0(c("aql", "rql"), type))
+    rql <- options[[paste0("rql", type)]]
+    cols <- c("<AQL"="green",">= AQL & <=RQL"="blue",">RQL"="red")
+    plt <- plt + ggplot2::geom_ribbon(data = subset(df_plan, PD_Orig <= aql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=PA, fill="<AQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Orig >= aql & PD_Orig <= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=PA, fill=">= AQL & <=RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Orig >= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=PA, fill=">RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::scale_fill_manual(name="Regions",values=cols)
+  }
+  plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw(legend.position = "right")
   ocCurve$plotObject <- plt
   ocCurve$position <- pos
+  ocCurve$dependOn(depend_vars)
   jaspContainer[["ocCurve"]] <- ocCurve
 }
 

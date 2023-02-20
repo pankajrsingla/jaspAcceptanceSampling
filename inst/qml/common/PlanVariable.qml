@@ -26,5 +26,5 @@ Group
 	IntegerField { name: "lotSize" + suffix; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1}
 	IntegerField { name: "sampleSize" + suffix; label: qsTr("Sample size (n)"); defaultValue: 24; min: 1 }
 	DoubleField { name: "kValue" + suffix; label: qsTr("k"); defaultValue: 1.309; min: 0; negativeValues: false; inclusive: JASP.None; decimals: 6 }
-	CheckBox { name: "sd" + suffix; label: qsTr("Standard Deviation (Historical) known"); id: sd; checked: true }
+	CheckBox { name: "sd" + suffix; label: qsTr("Standard deviation (historical) known"); id: sd; checked: true }
 }	

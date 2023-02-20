@@ -42,12 +42,20 @@ Form
 		DoubleField { name: "sampleSD" + decideVar.segment; label: qsTr("Sample standard deviation"); defaultValue: 1; min: 0; inclusive: JASP.None; decimals: 6 }
 	}
 
-	// Todo: Label for k is a hacky solution to align it with the sample values. Adjust the width in code.
 	DoubleField { name: "kValue" + decideVar.segment; label: qsTr("k                        "); defaultValue: 1.309; min: 0; negativeValues: false; inclusive: JASP.None; decimals: 6 }
+	// Todo: Label for k and M are hacky ways to align them with the sample values. Adjust the width in code.
+	RadioButtonGroup
+	{
+		title: qsTr("Method")
+        name: "method" + decideVar.segment
+		// columns: 2
+        RadioButton { id: k; value: "k"; label: qsTr("k method"); checked: true }		
+        RadioButton { id: m; value: "M"; label: qsTr("M method") }		        
+	}
 	
 	Group
 	{
-		title: qsTr("Specification limits")
+		title: qsTr("Specification Limits")
 		columns: 2
 		CheckBox { name: "lsl" + decideVar.segment; label: qsTr("Lower Specification Limit (LSL)"); id: lsl; checked: false }
 		DoubleField{ name: "lower_spec" + decideVar.segment; label: ""; id: lower_spec; defaultValue: 0; enabled: lsl.checked; negativeValues: true; max: upper_spec.value; inclusive: JASP.MaxOnly; decimals: 6 }

@@ -41,6 +41,8 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
   n <- NULL
   mean_sample <- NULL
   sd_sample <- NULL
+  method <- options[[paste0("method", type)]]
+  historical_sd_known <- options[[paste0("sd", type)]]  
   k <- options[[paste0("kValue", type)]]
   var_name <- NULL
 
@@ -77,7 +79,7 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
   decision_table$addColumnInfo(name = "col_3", title = gettext("Sample Standard Deviation"), type = "number")
 
   # The below rows (tranposed columns) are to be added only if the corresponding options have been selected.
-  if (options[[paste0("sd", type)]]) {
+  if (historical_sd_known) {
     decision_table$addColumnInfo(name = "col_4", title = gettext("Historical Standard Deviation"), type = "number")
   }
   if (options[[paste0("lsl", type)]]) {
@@ -92,7 +94,10 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
   if (options[[paste0("usl", type)]]) {
     decision_table$addColumnInfo(name = "col_8", title = gettext("Z.USL"), type = "number")
   }
-  decision_table$addColumnInfo(name = "col_9", title = gettext("Critical Distance (k)"), type = "number")
+  decision_table$addColumnInfo(name = "col_9", title = gettext("Critical distance (k)"), type = "number")  
+  if (method == "M") {
+    decision_table$addColumnInfo(name = "col_10", title = gettext("Maximum allowable proportion (M)"), type = "number")
+  }
 
   lotContainer[["decision_table"]] <- decision_table
   # Sanity checks for sample statistics
@@ -108,15 +113,14 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
   # We always have a sample standard deviation.
   # We might or might not have a historical standard deviation, so comparison is to be done accordingly.
   sd_compare <- sd_sample
-  sd <- "unknown"
   sd_historical <- 0
-  if (options[[paste0("sd", type)]]) {
+  if (historical_sd_known) {
     # Historical standard deviation is known. We'll use it for comparison.
-    sd <- "known"
     sd_historical <- options[[paste0("stdev", type)]]
     sd_compare <- sd_historical
   }
 
+  lsl <- usl <- NULL
   z.lsl <- NULL
   z.usl <- NULL
   decision <- NULL
@@ -125,75 +129,114 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
     decision <- NULL
   }
 
-  # Decision for the lot is made based on the available specification limits.
+  # Decision for the lot is made based on the available specification limits.  
+  M <- PL <- PU <- NULL    
   # 1. LSL is available.
   if (options[[paste0("lsl", type)]]) {
-    z.lsl <- ((mean_sample - options[[paste0("lower_spec", type)]]) / sd_compare)
-    z.lsl <- z.lsl
-    if (!options[[paste0("usl", type)]]) {
-      # Only LSL available. Accept/reject lot based on Z.LSL.
-      decision <- z.lsl >= k
+    lsl <- options[[paste0("lower_spec", type)]]
+    z.lsl <- ((mean_sample - lsl) / sd_compare)      
+    if (method == "M") {
+      if (historical_sd_known) {
+        M <- pnorm(k * sqrt(n/(n-1)), lower.tail=F)      
+        PL <- pnorm(z.lsl * sqrt(n/(n-1)), lower.tail=F)
+      } else {
+        x <- max(0, 0.5 - 0.5 * z.lsl * (sqrt(n)/(n-1)))
+        a <- b <- n/2 - 1
+        PL <- pbeta(x, a, b)
+        Bm <- 0.5 * (1 - k * (sqrt(n)/(n-1)))
+        M <- pbeta(Bm, a, b)
+      }
     }
+    if (!options[[paste0("usl", type)]]) {
+      # Only LSL available. Accept/reject lot based on LSL.
+      if (method == "k") {
+        decision <- z.lsl >= k
+      } else {
+        decision <- PL <= M
+      } 
+    }    
   }
   # 2. USL is available.
   if (options[[paste0("usl", type)]]) {
-    z.usl <- ((options[[paste0("upper_spec", type)]] - mean_sample) / sd_compare)
-    z.usl <- z.usl
+    usl <- options[[paste0("upper_spec", type)]]
+    z.usl <- (usl - mean_sample) / sd_compare
+    if (method == "M") {            
+      if (historical_sd_known) {
+        M <- pnorm(k * sqrt(n/(n-1)), lower.tail=F)      
+        PU <- pnorm(z.usl * sqrt(n/(n-1)), lower.tail=F)
+      } else {
+        x <- max(0, 0.5 - 0.5 * z.usl * (sqrt(n)/(n-1)))
+        a <- b <- n/2 - 1
+        PU <- pbeta(x, a, b)
+        Bm <- 0.5 * (1 - k * (sqrt(n)/(n-1)))
+        M <- pbeta(Bm, a, b)
+      }
+    }
     if (!options[[paste0("lsl", type)]]) {
-      # Only USL available. Accept/reject lot based on Z.USL.
-      decision <- z.usl >= k
+      # Only USL available. Accept/reject lot based on USL.
+      if (method == "k") {
+        decision <- z.usl >= k
+      } else {
+        decision <- PU <= M
+      }
     }
   }
   # 3. Both LSL and USL are available.
   if (options[[paste0("lsl", type)]] && options[[paste0("usl", type)]]) {
-    # When both LSL and USL are specified, we need to decide based on standard deviation.
-    # Historical standard deviation known
-    if (options[[paste0("sd", type)]]) {
-      # Error handling for AQL/RQL
-      aql <- options[[paste0("aql", type)]]
-      rql <- options[[paste0("rql", type)]]
-      if (aql >= rql) {
-        lotContainer$setError(gettext("AQL (Acceptable Quality Level) value should be lower than RQL (Rejectable Quality Level) value."))
-        return ()
-      }
-      z.p <- (options[[paste0("lower_spec", type)]] - options[[paste0("upper_spec", type)]]) / (2 * sd_historical)
-      p <- pnorm(z.p)
-      if (2*p >= rql) {
-        decision <- FALSE
-      } else if (2*p <= aql) {
-        decision <- (z.lsl >= k) && (z.usl >= k)
+    if (method == "k") {
+      # When both LSL and USL are specified, we need to decide based on standard deviation.
+      # Historical standard deviation known
+      if (historical_sd_known) {
+          # Error handling for AQL/RQL
+          aql <- options[[paste0("aql", type)]]
+          rql <- options[[paste0("rql", type)]]
+          if (aql >= rql) {
+            lotContainer$setError(gettext("AQL (Acceptable Quality Level) value should be lower than RQL (Rejectable Quality Level) value."))
+            return ()
+          }
+          z.p <- (options[[paste0("lower_spec", type)]] - options[[paste0("upper_spec", type)]]) / (2 * sd_historical)
+          p <- pnorm(z.p)
+          if (2*p >= rql) {
+            decision <- FALSE
+          } else if (2*p <= aql) {
+            decision <- (z.lsl >= k) && (z.usl >= k)
+          } else {
+            if (n <= 1) {
+              lotContainer$setError(gettext("Can not accept or reject lot: sample size has to be greater than 1."))
+              return ()
+            } else {
+              q.l <- z.lsl * sqrt(n/(n-1))
+              p.l <- pnorm(q.l, lower.tail = FALSE)
+              q.u <- z.usl * sqrt(n/(n-1))
+              p.u <- pnorm(q.u, lower.tail = FALSE)
+              p.combined <- p.l + p.u
+              z.m <- k * sqrt(n/(n-1))
+              m <- pnorm(z.m, lower.tail = FALSE)
+              decision <- p.combined <= m
+            }
+          }      
       } else {
+        # Historical standard deviation unknown
         if (n <= 1) {
-          lotContainer$setError(gettext("Can not accept or reject lot: sample size has to be greater than 1."))
+          lotContainer$setError(gettextf("Sample size has to be <b>> 1</b> if <b>both</b> LSL and USL are provided, and historical standard deviation is <b>unknown</b>."))
           return ()
         } else {
-          q.l <- z.lsl * sqrt(n/(n-1))
-          p.l <- pnorm(q.l, lower.tail = FALSE)
-          q.u <- z.usl * sqrt(n/(n-1))
-          p.u <- pnorm(q.u, lower.tail = FALSE)
+          a <- (n - 2) / 2
+          b <- (n - 2) / 2
+          x.l <- max(0, 0.5 - (0.5 * z.lsl * sqrt(n)/(n-1)))
+          p.l <- pbeta(x.l, a, b)
+          x.u <- max(0, 0.5 - (0.5 * z.usl * sqrt(n)/(n-1)))
+          p.u <- pbeta(x.u, a, b)
           p.combined <- p.l + p.u
-          z.m <- k * sqrt(n/(n-1))
-          m <- pnorm(z.m, lower.tail = FALSE)
+          b.m <- 0.5 * (1 - k * sqrt(n)/(n-1))
+          m <- pbeta(b.m, a, b)
           decision <- p.combined <= m
         }
       }
     } else {
-      # Historical standard deviation unknown
-      if (n <= 1) {
-        lotContainer$setError(gettextf("Sample size has to be <b>> 1</b> if <b>both</b> LSL and USL are provided, and historical standard deviation is <b>unknown</b>."))
-        return ()
-      } else {
-        a <- (n - 2) / 2
-        b <- (n - 2) / 2
-        x.l <- max(0, 0.5 - (0.5 * z.lsl * sqrt(n)/(n-1)))
-        p.l <- pbeta(x.l, a, b)
-        x.u <- max(0, 0.5 - (0.5 * z.usl * sqrt(n)/(n-1)))
-        p.u <- pbeta(x.u, a, b)
-        p.combined <- p.l + p.u
-        b.m <- 0.5 * (1 - k * sqrt(n)/(n-1))
-        m <- pbeta(b.m, a, b)
-        decision <- p.combined <= m
-      }
+      # M method
+      P <- PL + PU
+      decision <- P <= M
     }
   }
   # Fill up the decision table
@@ -212,6 +255,9 @@ DecideVariableLots <- function(jaspResults, dataset = NULL, options, ...) {
     row <- append(row, list("col_8" = z.usl))
   }
   row <- append(row, list("col_9" = k))
+  if (method == "M") {
+    row <- append(row, list("col_10" = M))
+  }
 
   decision_table$addRows(row)
   decision_table$showSpecifiedColumnsOnly <- TRUE

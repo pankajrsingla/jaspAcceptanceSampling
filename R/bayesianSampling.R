@@ -136,7 +136,7 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
     
     # 2.2 Posterior distribution plot for inference
     if (options[[output_vars_inf[2]]]) {
-      makeDistributionPlot(infContainer, pos_inf+2, c(output_vars_inf[2], paste0(c("data_n", "data_d"), section_infer)), aql_inf, rql_inf, alpha_post_inf, beta_post_inf, "Posterior")
+      makeDistributionPlot(infContainer, pos_inf+2, c(output_vars_inf[2], paste0(c("data_n", "data_d"), section_infer)), aql_inf, rql_inf, alpha_post_inf, beta_post_inf, "Posterior", alpha_prior_inf, beta_prior_inf)
       # 2.2.1 Report the Bayes factor for the observed data
       bf_text <- createJaspHtml(text = gettextf("<u>Bayes factor</u> in favor of proportion of defects < <u>%1$.2f</u> is <b>%2$.2f</b>.", rql_inf, bf_inf), position=pos_inf+3, dependencies=paste0(c("data_n", "data_d"), section_infer))
       infContainer[["bf_text"]] <- bf_text
@@ -218,7 +218,7 @@ iso_bf_plans <- function(aql, rql, max_n, min_bf, alpha, beta) {
     return (plans)
 }
 
-makeDistributionPlot <- function(jaspContainer, pos, depend_vars, aql, rql, alpha, beta, type) {
+makeDistributionPlot <- function(jaspContainer, pos, depend_vars, aql, rql, alpha, beta, type, alpha_prior=NULL, beta_prior=NULL) {
   if (!is.null(jaspContainer[[paste0("distPlot", type)]])) {
     return()
   }
@@ -236,8 +236,13 @@ makeDistributionPlot <- function(jaspContainer, pos, depend_vars, aql, rql, alph
                   ggplot2::geom_ribbon(data = subset(df_dist, x <= aql), ggplot2::aes(x=x, ymin=0, ymax=y), fill="green", inherit.aes=FALSE, alpha=0.2, outline.type="both") +
                   ggplot2::geom_ribbon(data = subset(df_dist, x >= aql & x <= rql), ggplot2::aes(x=x, ymin=0, ymax=y), fill="blue", inherit.aes=FALSE, alpha=0.2, outline.type="both") +
                   ggplot2::geom_ribbon(data = subset(df_dist, x >= rql), ggplot2::aes(x=x, ymin=0, ymax=y), fill="red", inherit.aes=FALSE, alpha=0.2, outline.type="both")
+                  # ggplot2::scale_color_manual(name = "Regions", breaks = c("green", "blue", "red"), labels = c("<AQL", "AQL-RQL", ">RQL"), guide = "legend")
                   # ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
-                  # ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))                    
+                  # ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
+  if (type == "Posterior") {
+    df_prior = data.frame(xp=xValue, yp=dbeta(xValue, alpha_prior, beta_prior))
+    plt <- plt + ggplot2::geom_line(data=df_prior, ggplot2::aes(x=xp, y=yp), linetype="dashed")
+  }
   plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw()
   distPlot$plotObject <- plt
   distPlot$position <- pos
@@ -302,3 +307,4 @@ makeBFPlot <- function(jaspContainer, pos, depend_vars, plans) {
   bfPlot$position <- pos
   jaspContainer[["bfPlot"]] <- bfPlot
 }
+

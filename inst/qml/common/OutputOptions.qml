@@ -22,7 +22,7 @@ import "./" as Common
 
 Group
 {
-	title: qsTr("Output options")
+	title: qsTr("Output Options")
 	property string suffix: ""
 	CheckBox { name: "showSummary" + suffix; label: qsTr("Summary table") }
 	CheckBox { name: "showOCCurve" + suffix; label: qsTr("OC curve") }

@@ -27,7 +27,7 @@ Form
 	property string segment: "CreateAttr"
 	IntegerField { name: "lotSize" + createAttr.segment; label: qsTr("Lot size (N)"); defaultValue: 1000; min: 1}
 	Common.RiskPoints { suffix: createAttr.segment }
-	Common.ProbDefect { suffix: createAttr.segment }
 	Common.Distribution { suffix: createAttr.segment }
+	Common.ProbDefect { suffix: createAttr.segment }
 	Common.OutputOptions {suffix: createAttr.segment }
 }

@@ -123,7 +123,7 @@ CreateVariablePlan <- function(jaspResults, dataset = NULL, options, ...) {
   }
   # 2. OC Curve
   if (options[[output_vars[2]]]) {
-    getOCCurve(createVarContainer, pos=4, c(pd_vars, output_vars[2]), df_plan)
+    getOCCurve(createVarContainer, pos=4, c(pd_vars, output_vars[2]), df_plan, options, type)
   }
   # 3. AOQ Curve
   if (options[[output_vars[3]]]) {
