@@ -89,7 +89,7 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 ##----------------------------------------------------------------------------------
 #' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
 #' @param options {list} A named list of interface options selected by the user.
-#' @param depend_vars {vector} Names of variables on which the output element depends.
+#' @param type {string} Analysis type.
 #' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
 #' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
 #' @param pa_prod {numeric} Minimum probability (0 to 1) of accepting the lot at Acceptable Quality Level.
@@ -160,7 +160,6 @@ CreateAttributePlan <- function(jaspResults, dataset = NULL, options, ...) {
 ##             Create and fill the output table(s).             --
 ##----------------------------------------------------------------
 #' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
-#' @param depend_vars {vector} Names of variables on which the output element depends.
 #' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
 #' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
 #' @param pa_prod {numeric} Minimum probability (0 to 1) of accepting the lot at Acceptable Quality Level.

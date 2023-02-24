@@ -15,17 +15,16 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-##---------------------------------------------------------------
-##                    Create attribute plan                    --
-##---------------------------------------------------------------
+##----------------------------------------------------------------
+##       Create Bayesian sampling plans and do inference.       --
+##----------------------------------------------------------------
 #' @param jaspResults {object} Object that will contain all results from the analysis and connect it to the output.
 #' @param dataset {object} (optional) tabular data, if available for the analysis.
 #' @param options {list} A named list of interface options selected by the user.
-#' @seealso .findPlan()
 ##---------------------------------------------------------------
 BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {    
   # 1. Planning: use constraints, generate plans
-  ##---------------------------------------------------------------
+  ##############################################
   section_plan <- "plan"
   depend_vars_plan <- c("max_n", "min_bf", "aql", "rql", "prior")  
   # Check if the container already exists. Create it if it doesn't.
@@ -84,7 +83,7 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
   }
 
   # 2. Inference: take data, create posterior
-  ##---------------------------------------------------------------
+  ##############################################
   section_infer <- "infer"
   if (options[[paste0("inferPosterior", section_infer)]]) {
     depend_vars_inf <- paste0(c("choosePrior", "aql", "rql", "prior", "alpha", "beta"), section_infer)
@@ -144,7 +143,7 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
   }
 
   # 3. Update: use posterior data, generate new plans
-  ##---------------------------------------------------------------
+  ##############################################
   section_update <- "update"
   if (options[[paste0("updatePlan", section_update)]]) {
     pos_update <- 100
@@ -189,6 +188,16 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
   }
 }
 
+##---------------------------------------------------------------
+##                   Calculate Bayes factor.                   --
+##---------------------------------------------------------------
+#' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param n {numeric} Sample size for the plan.
+#' @param c {numeric} Acceptance number for the plan.
+#' @param alpha {numeric} First shape parameter for the Beta distribution.
+#' @param beta {numeric} Second shape parameter for the Beta distribution.
+#' @param prior_odds {numeric} Prior odds for the competing models.
+##---------------------------------------------------------------------------------------
 bf <- function(rql, n, c, alpha, beta, prior_odds) {
     posterior_in_favor <- pbeta(rql, alpha + c, beta + n - c)
     posterior_odds <- posterior_in_favor / (1 - posterior_in_favor)
@@ -196,6 +205,16 @@ bf <- function(rql, n, c, alpha, beta, prior_odds) {
     return (bf)
 }
 
+##-------------------------------------------------------------------------
+##  Generate sampling plans with Bayes factor greater than a threshold.  --
+##-------------------------------------------------------------------------
+#' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param max_n {numeric} Maximum sample size for the plan.
+#' @param min_bf {numeric} Minimum Fayes factor for the plan.
+#' @param alpha {numeric} First shape parameter for the Beta distribution.
+#' @param beta {numeric} Second shape parameter for the Beta distribution.
+##---------------------------------------------------------------------------------------
 iso_bf_plans <- function(aql, rql, max_n, min_bf, alpha, beta) {
     prior_odds <- pbeta(rql, alpha, beta) / (1 - pbeta(rql, alpha, beta))
     plans <- data.frame(n=c(), c=c(), bf=c())
@@ -218,6 +237,16 @@ iso_bf_plans <- function(aql, rql, max_n, min_bf, alpha, beta) {
     return (plans)
 }
 
+##-------------------------------------------------------------------------
+##  Generate sampling plans with Bayes factor greater than a threshold.  --
+##-------------------------------------------------------------------------
+#' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param max_n {numeric} Maximum sample size for the plan.
+#' @param min_bf {numeric} Minimum Fayes factor for the plan.
+#' @param alpha {numeric} First shape parameter for the Beta distribution.
+#' @param beta {numeric} Second shape parameter for the Beta distribution.
+##---------------------------------------------------------------------------------------
 makeDistributionPlot <- function(jaspContainer, pos, depend_vars, aql, rql, alpha, beta, type, alpha_prior=NULL, beta_prior=NULL) {
   if (!is.null(jaspContainer[[paste0("distPlot", type)]])) {
     return()
@@ -249,6 +278,16 @@ makeDistributionPlot <- function(jaspContainer, pos, depend_vars, aql, rql, alph
   jaspContainer[[paste0("distPlot", type)]] <- distPlot
 }
 
+##-------------------------------------------------------------------------
+##  Generate sampling plans with Bayes factor greater than a threshold.  --
+##-------------------------------------------------------------------------
+#' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param max_n {numeric} Maximum sample size for the plan.
+#' @param min_bf {numeric} Minimum Fayes factor for the plan.
+#' @param alpha {numeric} First shape parameter for the Beta distribution.
+#' @param beta {numeric} Second shape parameter for the Beta distribution.
+##---------------------------------------------------------------------------------------
 makePlanTable <- function(jaspContainer, pos, depend_vars, plans) {
   if (!is.null(jaspContainer[["planTable"]])) {
     return()
@@ -266,6 +305,16 @@ makePlanTable <- function(jaspContainer, pos, depend_vars, plans) {
   jaspContainer[["planTable"]] <- planTable
 }
 
+##-------------------------------------------------------------------------
+##  Generate sampling plans with Bayes factor greater than a threshold.  --
+##-------------------------------------------------------------------------
+#' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param max_n {numeric} Maximum sample size for the plan.
+#' @param min_bf {numeric} Minimum Fayes factor for the plan.
+#' @param alpha {numeric} First shape parameter for the Beta distribution.
+#' @param beta {numeric} Second shape parameter for the Beta distribution.
+##---------------------------------------------------------------------------------------
 makeNCPlot <- function(jaspContainer, pos, depend_vars, plans) {
   if (!is.null(jaspContainer[["ncPlot"]])) {
     return()
@@ -287,6 +336,16 @@ makeNCPlot <- function(jaspContainer, pos, depend_vars, plans) {
   jaspContainer[["ncPlot"]] <- ncPlot
 }
 
+##-------------------------------------------------------------------------
+##  Generate sampling plans with Bayes factor greater than a threshold.  --
+##-------------------------------------------------------------------------
+#' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
+#' @param max_n {numeric} Maximum sample size for the plan.
+#' @param min_bf {numeric} Minimum Fayes factor for the plan.
+#' @param alpha {numeric} First shape parameter for the Beta distribution.
+#' @param beta {numeric} Second shape parameter for the Beta distribution.
+##---------------------------------------------------------------------------------------
 makeBFPlot <- function(jaspContainer, pos, depend_vars, plans) {
   if (!is.null(jaspContainer[["bfPlot"]])) {
     return()

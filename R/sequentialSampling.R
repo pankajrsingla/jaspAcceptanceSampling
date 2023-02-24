@@ -16,12 +16,12 @@
 #
 
 ##---------------------------------------------------------------
-##                    Create attribute plan                    --
+##                    Create sequential plan                   --
 ##---------------------------------------------------------------
 #' @param jaspResults {object} Object that will contain all results from the analysis and connect it to the output.
 #' @param dataset {object} (optional) tabular data, if available for the analysis.
 #' @param options {list} A named list of interface options selected by the user.
-#' @seealso .findPlan()
+#' @seealso .findSeqPlan()
 ##---------------------------------------------------------------
 SequentialSampling <- function(jaspResults, dataset = NULL, options, ...) {
   # Constraints to create a plan
@@ -76,12 +76,13 @@ SequentialSampling <- function(jaspResults, dataset = NULL, options, ...) {
 ##----------------------------------------------------------------------------------
 #' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
 #' @param options {list} A named list of interface options selected by the user.
+#' @param type {string} Analysis type.
 #' @param depend_vars {vector} Names of variables on which the output element depends.
 #' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
 #' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
 #' @param pa_prod {numeric} Minimum probability (0 to 1) of accepting the lot at Acceptable Quality Level.
 #' @param pa_cons {numeric} Maximum probability (0 to 1) of accepting the lot at Rejectable Quality Level.
-#' @seealso CreateAttributePlan()
+#' @seealso SequentialSampling()
 ##----------------------------------------------------------------------------------
 .findSeqPlan <- function(jaspContainer, options, type, depend_vars, aql, rql, pa_prod, pa_cons) {
   pd <- getPDValues(jaspContainer, options, type)$PD_Prop
@@ -213,6 +214,16 @@ SequentialSampling <- function(jaspResults, dataset = NULL, options, ...) {
   }
 }
 
+##----------------------------------------------------------------
+##            Create table for the sequential plans.            --
+##----------------------------------------------------------------
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param pos {numeric} Position of the output element in the output display.
+#' @param depend_vars {vector} Names of variables on which the output element depends.
+#' @param plans {dataframe} Dataframe with the sample sizes and acceptance/rejection numbers for the sequential plans.
+#' @param type {string} Analysis type.
+#' @seealso .findSeqPlan()
+##----------------------------------------------------------------------------------
 .getSequentialPlans <- function(jaspContainer, pos, depend_vars, plans, type) {
   if (!is.null(jaspContainer[["plansTable"]])) {
     return ()

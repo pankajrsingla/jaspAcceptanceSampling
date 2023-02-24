@@ -39,7 +39,7 @@ checkPdErrors <- function(jaspContainer, pd_lower, pd_upper, pd_step) {
     abs(x - 0) < tol
   }
   if (is.zero(pd_step) && (pd_upper != pd_lower)) {
-    jaspContainer$setError(gettext("Step size of 0 is allowed only if the lower and upper limits of proportion non-conforming items are identical."))    
+    jaspContainer$setError(gettext("Step size of 0 is allowed only if the lower and upper limits of proportion non-conforming items are identical."))
   }
 }
 
@@ -161,11 +161,11 @@ checkErrorsMultiplePlan <- function(jaspContainer, N, n, c, r) {
 ##----------------------------------------------------------------
 #' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
 #' @param options {list} A named list of interface options selected by the user.
-#' @param type {string} Sampling plan type. Possible values are "Single", "", and "Mult".
+#' @param type {string} Analysis type.
 #' @returns list
 #' @seealso getPlan()
 #' @examples
-#' getPlanValues(jaspContainer, options, "Mult")
+#' getPlanValues(jaspContainer, options, "CreateAttr")
 ##----------------------------------------------------------------
 getPlanValues <- function(jaspContainer, options, type) {
   n <- c <- r <- NULL
@@ -197,24 +197,17 @@ getPlanValues <- function(jaspContainer, options, type) {
   return (list(n=n,c=c,r=r))
 }
 
-##---------------------------------------------------------------
-##            Create and return a plan and its data            --
-##---------------------------------------------------------------
+##---------------------------------------------------------------------------
+##  Get the Title for the Proportion/Percetage/Number of Defective Items.  --
+##---------------------------------------------------------------------------
 #' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
 #' @param options {list} A named list of interface options selected by the user.
-#' @param type {string} Sampling plan type. Possible values are "Single", "", and "Mult".
-#' @param n {vector} Sample size(s) for the plan.
-#' @param c {vector} (optional) Acceptance number(s) for the plan.
-#' @param r {vector} (optional) Rejection number(s) for the plan.
-#' @param k {numeric} (optional) The required distance in terms of standard deviation, between acceptance limits and the sample mean for a variable sampling plan.
-#' @param sd {string} (optional) Status of the historical standard deviation. Possible values are "known" and "unknown".
-#' @returns list
-#' @seealso getPlanValues()
+#' @param type {string} Analysis type.
+#' @returns string
+#' @seealso getPDValues()
 #' @examples
-#' getPlan(jaspContainer, options, "Single", n=20, c=2, r=4)
-#' getPlan(jaspContainer, options, "Single", n=8, k=1.2, sd="known")
-##---------------------------------------------------------------
-
+#' getPDTitle(jaspContainer, options, "CreateAttr")
+##---------------------------------------------------------------------------
 getPDTitle <- function(jaspContainer, options, type) {
   if (is.null(jaspContainer[["pd_title"]])) {
     pd_title <- createJaspState()
@@ -223,7 +216,7 @@ getPDTitle <- function(jaspContainer, options, type) {
     pd_unit <- options[[paste0("pd_unit", type)]]
     title = "Lot Proportion Defective"
     if (pd_unit == "percent") {
-      title <- "Lot Percent Defective"    
+      title <- "Lot Percent Defective"
     } else if (pd_unit == "per_million") {
       title <- "Lot Defectives Per Million"
     }
@@ -232,12 +225,21 @@ getPDTitle <- function(jaspContainer, options, type) {
   return (jaspContainer[["pd_title"]]$object)
 }
 
+##---------------------------------------------------------------------------
+##  Get the Title for the Proportion/Percetage/Number of Defective Items.  --
+##---------------------------------------------------------------------------
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param options {list} A named list of interface options selected by the user.
+#' @param type {string} Analysis type.
+#' @returns string
+#' @seealso getPDTitle()
+#' @examples
+#' getPDValues(jaspContainer, options, "CreateAttr")
+##---------------------------------------------------------------------------
 getPDValues <- function(jaspContainer, options, type) {
   if (is.null(jaspContainer[["pdValues"]])) {
     pdValues <- createJaspState()
     pd_vars <- paste0(c("pd_lower", "pd_upper", "pd_step", "pd_unit"), type)
-    pdValues$dependOn(pd_vars)
-    jaspContainer[["pdValues"]] <- pdValues
     pd_lower <- options[[pd_vars[1]]]
     pd_upper <- options[[pd_vars[2]]]
     pd_step <- options[[pd_vars[3]]]
@@ -261,26 +263,54 @@ getPDValues <- function(jaspContainer, options, type) {
     aql <- tryCatch(options[[paste0("aql", type)]], error = function(x) "error")
     add_risk_points <- (!is.null(aql) && aql != "error")
     if (add_risk_points) {
+      pd_vars <- append(pd_vars, paste0(c("aql", "rql"), type))
       rql <- options[[paste0("rql", type)]]
       pd_prop <- c(pd_prop, aql, rql)
-      pd_orig <- c(pd_orig, aql*factor, rql*factor)            
+      pd_orig <- c(pd_orig, aql*factor, rql*factor)
     }
 
     # If PD has only <= 1 point(s), add 0 and 1 to the range to make the output more interpretable.
     if (length(pd_prop) <= 1) {
       pd_prop <- c(pd_prop, 0, 1)
-      pd_orig <- c(pd_orig, 0, factor)      
+      pd_orig <- c(pd_orig, 0, factor)
     }
     pd_prop <- sort(pd_prop)
     pd_orig <- sort(pd_orig)
+    print("pd_prop before:")
+    print(pd_prop)
+    print("Duplicates")
+    print(pd_prop[duplicated(pd_prop)])
     pd_prop <- pd_prop[!duplicated(pd_prop)]
+    print("pd_prop after:")
+    print(pd_prop)
     pd_orig <- pd_orig[!duplicated(pd_orig)]
     df_PD <- data.frame(PD_Prop = pd_prop, PD_Orig = pd_orig)
-    pdValues$object <- df_PD    
+    # print("Printing df_PD below")
+    # print(df_PD)
+    pdValues$object <- df_PD
+    pdValues$dependOn(pd_vars)
+    jaspContainer[["pdValues"]] <- pdValues    
   }
   return (jaspContainer[["pdValues"]]$object)
 }
 
+##---------------------------------------------------------------
+##            Create and return a plan and its data            --
+##---------------------------------------------------------------
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param options {list} A named list of interface options selected by the user.
+#' @param type {string} Analysis type.
+#' @param n {vector} Sample size(s) for the plan.
+#' @param c {vector} (optional) Acceptance number(s) for the plan.
+#' @param r {vector} (optional) Rejection number(s) for the plan.
+#' @param k {numeric} (optional) The required distance in terms of standard deviation, between acceptance limits and the sample mean for a variable sampling plan.
+#' @param sd {string} (optional) Status of the historical standard deviation. Possible values are "known" and "unknown".
+#' @returns list
+#' @seealso getPlanValues()
+#' @examples
+#' getPlan(jaspContainer, options, "CreateAttr", n=20, c=2, r=4)
+#' getPlan(jaspContainer, options, "CreateVar", n=8, k=1.2, sd="known")
+##---------------------------------------------------------------
 getPlan <- function(jaspContainer, options, type, n, c=NULL, r=NULL, k=NULL, sd=NULL) {
   df_plan <- getPDValues(jaspContainer, options, type)
   if (jaspContainer$getError()) {
@@ -302,7 +332,6 @@ getPlan <- function(jaspContainer, options, type, n, c=NULL, r=NULL, k=NULL, sd=
   } else if (dist == "normal") {
     oc_plan <- AcceptanceSampling::OCvar(n = n, k = k, type = dist, s.type = sd, pd = df_plan$PD_Prop)
   }
-  # df_plan <- data.frame(PD_Orig = df_PD$PD_Orig, PD_Prop = df_PD$PD_Prop, PA = oc_plan@paccept)
   df_plan$PA <- oc_plan@paccept
   df_plan <- na.omit(df_plan)
   if (nrow(df_plan) == 0) {
@@ -320,7 +349,7 @@ getPlan <- function(jaspContainer, options, type, n, c=NULL, r=NULL, k=NULL, sd=
 #' @param depend_vars {vector} Names of variables on which the output element depends.
 #' @param oc_plan {object} An object from the AcceptanceSampling::OC2c class family (OCbinomial / OChypergeom / OCpoisson).
 #' @param options {list} A named list of interface options selected by the user.
-#' @param type {string} Sampling plan type. Possible values are "Single", "", and "Mult".
+#' @param type {string} Analysis type.
 ##---------------------------------------------------------------------------------------
 assessPlan <- function(jaspContainer, pos, depend_vars, oc_plan, options, type) {
   aql <- options[[paste0("aql", type)]]
@@ -381,6 +410,11 @@ assessPlan <- function(jaspContainer, pos, depend_vars, oc_plan, options, type) 
 #' @param pos {numeric} Position of the output element in the output display.
 #' @param depend_vars {vector} Names of variables on which the output element depends.
 #' @param df_plan {data.frame} Dataframe for a plan with quality levels (PD) and the corresponding probabilities of acceptance (PA).
+#' @param options {list} A named list of interface options selected by the user.
+#' @param type {string} Analysis type.
+#' @param n {vector} Sample size(s) for the plan.
+#' @param c {vector} (optional) Acceptance number(s) for the plan.
+#' @param r {vector} (optional) Rejection number(s) for the plan.
 ##---------------------------------------------------------------
 getSummary <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n=NULL, c=NULL, r=NULL) {
   if (!is.null(jaspContainer[["summaryTable"]])) {
@@ -426,6 +460,8 @@ getSummary <- function(jaspContainer, pos, depend_vars, df_plan, options, type, 
 #' @param pos {numeric} Position of the output element in the output display.
 #' @param depend_vars {vector} Names of variables on which the output element depends.
 #' @param df_plan {data.frame} Dataframe for a plan with quality levels (PD) and the corresponding probabilities of acceptance (PA).
+#' @param options {list} A named list of interface options selected by the user.
+#' @param type {string} Analysis type.
 ##----------------------------------------------------------------
 getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type) {
   if (!is.null(jaspContainer[["ocCurve"]])) {
@@ -434,7 +470,7 @@ getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type) 
   pd_title <- getPDTitle(jaspContainer, options, type)
   # df_plan$PD <- round(df_plan$PD, 3)
   # df_plan$PA <- round(df_plan$PA, 3)
-  ocCurve <- createJaspPlot(title = gettext("OC (Operating Characteristics) Curve"),  width = 570, height = 320)
+  ocCurve <- createJaspPlot(title = gettext("OC (Operating Characteristics) Curve"), width = 570, height = 320)
   xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD_Orig), max(df_plan$PD_Orig)))
   yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PA), max(df_plan$PA)))
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD_Orig, y = PA)) +
@@ -449,11 +485,14 @@ getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type) 
   if (add_risk_points) {
     depend_vars <- append(depend_vars, paste0(c("aql", "rql"), type))
     rql <- options[[paste0("rql", type)]]
-    cols <- c("<AQL"="green",">= AQL & <=RQL"="blue",">RQL"="red")
-    plt <- plt + ggplot2::geom_ribbon(data = subset(df_plan, PD_Orig <= aql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=PA, fill="<AQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
-                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Orig >= aql & PD_Orig <= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=PA, fill=">= AQL & <=RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
-                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Orig >= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=PA, fill=">RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
-                 ggplot2::scale_fill_manual(name="Regions",values=cols)
+    cols <- c("<= AQL"="green","AQL < PD <= RQL"="blue","> RQL"="red")
+    print(subset(df_plan, PD_Prop <= aql))
+    print(subset(df_plan, PD_Prop >= aql & PD_Prop <= rql))
+    print(subset(df_plan, PD_Prop >= rql))
+    plt <- plt + ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop <= aql), ggplot2::aes(x=PD_Prop, ymin=0, ymax=PA, fill="<= AQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= aql & PD_Prop <= rql), ggplot2::aes(x=PD_Prop, ymin=0, ymax=PA, fill="AQL < PD <= RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= rql), ggplot2::aes(x=PD_Prop, ymin=0, ymax=PA, fill="> RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::scale_fill_manual(name="PD Range", values=cols)
   }
   plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw(legend.position = "right")
   ocCurve$plotObject <- plt
@@ -462,21 +501,19 @@ getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type) 
   jaspContainer[["ocCurve"]] <- ocCurve
 }
 
-##------------------------------------------------------------------------------
-##  Generate the average outgoing quality curve for plan with rectification.  --
-##------------------------------------------------------------------------------
+##-------------------------------------------------------------------------------
+##  Generate the average outgoing quality values for plan with rectification.  --
+##-------------------------------------------------------------------------------
 #' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
-#' @param pos {numeric} Position of the output element in the output display.
 #' @param depend_vars {vector} Names of variables on which the output element depends.
 #' @param df_plan {data.frame} Dataframe for a plan with quality levels (PD) and the corresponding probabilities of acceptance (PA).
 #' @param options {list} A named list of interface options selected by the user.
-#' @param type {string} Sampling plan type. Possible values are "Single", "", and "Mult".
+#' @param type {string} Analysis type.
 #' @param n {vector} Sample size(s) for the plan.
 #' @param c {vector} (optional) Acceptance number(s) for the plan.
 #' @param r {vector} (optional) Rejection number(s) for the plan.
-#' @seealso getATICurve()
+#' @seealso getAOQCurve()
 ##------------------------------------------------------------------------------
-
 getAOQ <- function(jaspContainer, depend_vars, df_plan, options, type, n, c=NULL, r=NULL) {
   if (is.null(jaspContainer[["aoqValues"]])) {
     aoqValues <- createJaspState()
@@ -489,7 +526,7 @@ getAOQ <- function(jaspContainer, depend_vars, df_plan, options, type, n, c=NULL
 
     # Straightforward calculation for single stage plan.
     if (type != "AnalyzeAttrMult") {
-      AOQ <- df_plan$PA * pd_prop * (N-n) / N    
+      AOQ <- df_plan$PA * pd_prop * (N-n) / N
     } else {
       # Multiple plan - need to compute stagewise probabilities.
       dist <- options[[paste0("distribution", type)]]
@@ -521,6 +558,20 @@ getAOQ <- function(jaspContainer, depend_vars, df_plan, options, type, n, c=NULL
   return (jaspContainer[["aoqValues"]]$object)
 }
 
+##------------------------------------------------------------------------------
+##  Generate the average outgoing quality curve for plan with rectification.  --
+##------------------------------------------------------------------------------
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param pos {numeric} Position of the output element in the output display.
+#' @param depend_vars {vector} Names of variables on which the output element depends.
+#' @param df_plan {data.frame} Dataframe for a plan with quality levels (PD) and the corresponding probabilities of acceptance (PA).
+#' @param options {list} A named list of interface options selected by the user.
+#' @param type {string} Analysis type.
+#' @param n {vector} Sample size(s) for the plan.
+#' @param c {vector} (optional) Acceptance number(s) for the plan.
+#' @param r {vector} (optional) Rejection number(s) for the plan.
+#' @seealso getAOQ()
+##------------------------------------------------------------------------------
 getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n=NULL, c=NULL, r=NULL) {
   if (!is.null(jaspContainer[["aoqCurve"]]) || jaspContainer$getError()) {
     return ()
@@ -556,21 +607,19 @@ getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   aoqCurve$plotObject <- plt
 }
 
-##---------------------------------------------------------------
-##  Generate the average total inspection curve for the plan.  --
-##---------------------------------------------------------------
+##-------------------------------------------------------------------------------
+##  Generate the average total inspection values for plan with rectification.  --
+##-------------------------------------------------------------------------------
 #' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
-#' @param pos {numeric} Position of the output element in the output display.
 #' @param depend_vars {vector} Names of variables on which the output element depends.
 #' @param df_plan {data.frame} Dataframe for a plan with quality levels (PD) and the corresponding probabilities of acceptance (PA).
 #' @param options {list} A named list of interface options selected by the user.
-#' @param type {string} Sampling plan type. Possible values are "Single", "", and "Mult".
+#' @param type {string} Analysis type.
 #' @param n {vector} Sample size(s) for the plan.
 #' @param c {vector} (optional) Acceptance number(s) for the plan.
 #' @param r {vector} (optional) Rejection number(s) for the plan.
-#' @seealso getAOQCurve()
+#' @seealso getATICurve()
 ##---------------------------------------------------------------
-
 getATI <- function(jaspContainer, depend_vars, df_plan, options, type, n, c=NULL, r=NULL) {
   if (is.null(jaspContainer[["atiValues"]])) {
     atiValues <- createJaspState()
@@ -617,6 +666,20 @@ getATI <- function(jaspContainer, depend_vars, df_plan, options, type, n, c=NULL
   return (jaspContainer[["atiValues"]]$object)
 }
 
+##---------------------------------------------------------------
+##  Generate the average total inspection curve for the plan.  --
+##---------------------------------------------------------------
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param pos {numeric} Position of the output element in the output display.
+#' @param depend_vars {vector} Names of variables on which the output element depends.
+#' @param df_plan {data.frame} Dataframe for a plan with quality levels (PD) and the corresponding probabilities of acceptance (PA).
+#' @param options {list} A named list of interface options selected by the user.
+#' @param type {string} Analysis type.
+#' @param n {vector} Sample size(s) for the plan.
+#' @param c {vector} (optional) Acceptance number(s) for the plan.
+#' @param r {vector} (optional) Rejection number(s) for the plan.
+#' @seealso getATI()
+##---------------------------------------------------------------
 getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n=NULL, c=NULL, r=NULL) {
   if (!is.null(jaspContainer[["atiCurve"]])) {
     return ()
@@ -645,19 +708,18 @@ getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
   atiCurve$plotObject <- plt
 }
 
-##---------------------------------------------------------------------------------------------------------
-##  Generate the average sample number curve for the plan. Only applicable for multiple sampling plans.  --
-##---------------------------------------------------------------------------------------------------------
+##-------------------------------------------------------------------------------------------------------------------------
+##  Generate the average sample number values for the plan. Only applicable for multiple and sequential sampling plans.  --
+##-------------------------------------------------------------------------------------------------------------------------
 #' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
-#' @param pos {numeric} Position of the output element in the output display.
 #' @param depend_vars {vector} Names of variables on which the output element depends.
 #' @param df_plan {data.frame} Dataframe for a plan with quality levels (PD) and the corresponding probabilities of acceptance (PA).
 #' @param options {list} A named list of interface options selected by the user.
+#' @param type {string} Analysis type.
 #' @param n {vector} Sample sizes for the plan.
 #' @param c {vector} Acceptance numbers for the plan.
 #' @param r {vector} Rejection numbers for the plan.
 ##---------------------------------------------------------------------------------------------------------
-
 getASN <- function(jaspContainer, depend_vars, df_plan, options, type, n, c, r) {
   if (is.null(jaspContainer[["asnValues"]])) {
     asnValues <- createJaspState()
@@ -694,6 +756,19 @@ getASN <- function(jaspContainer, depend_vars, df_plan, options, type, n, c, r) 
   return (jaspContainer[["asnValues"]]$object)
 }
 
+##------------------------------------------------------------------------------------------------------------------------
+##  Generate the average sample number curve for the plan. Only applicable for multiple and sequential sampling plans.  --
+##------------------------------------------------------------------------------------------------------------------------
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param pos {numeric} Position of the output element in the output display.
+#' @param depend_vars {vector} Names of variables on which the output element depends.
+#' @param df_plan {data.frame} Dataframe for a plan with quality levels (PD) and the corresponding probabilities of acceptance (PA).
+#' @param options {list} A named list of interface options selected by the user.
+#' @param type {string} Analysis type.
+#' @param n {vector} Sample sizes for the plan.
+#' @param c {vector} Acceptance numbers for the plan.
+#' @param r {vector} Rejection numbers for the plan.
+##---------------------------------------------------------------------------------------------------------
 getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type, n=NULL, c=NULL, r=NULL) {
   if (!is.null(jaspContainer[["asnCurve"]])) {
     return ()
