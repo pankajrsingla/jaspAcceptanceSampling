@@ -86,7 +86,7 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
   ##############################################
   section_infer <- "infer"
   if (options[[paste0("inferPosterior", section_infer)]]) {
-    depend_vars_inf <- paste0(c("choosePrior", "aql", "rql", "prior", "alpha", "beta"), section_infer)
+    depend_vars_inf <- paste0(c("inferPosterior", "choosePrior", "aql", "rql", "prior", "alpha", "beta"), section_infer)
     pos_inf <- 10
     # Check if the container already exists. Create it if it doesn't.
     if (is.null(jaspResults[["infContainer"]]) || jaspResults[["infContainer"]]$getError()) {
@@ -145,12 +145,12 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
   # 3. Update: use posterior data, generate new plans
   ##############################################
   section_update <- "update"
-  if (options[[paste0("updatePlan", section_update)]]) {
+  if (options[[paste0("inferPosterior", section_infer)]] && options[[paste0("updatePlan", section_update)]]) {
     pos_update <- 100
     # Check if the container already exists. Create it if it doesn't.
     if (is.null(jaspResults[["updateContainer"]]) || jaspResults[["updateContainer"]]$getError()) {
       updateContainer <- createJaspContainer(title = "Update")
-      updateContainer$dependOn(depend_vars_inf)
+      updateContainer$dependOn(c(depend_vars_inf, paste0(c("updatePlan", "min_bf"), section_update)))
       jaspResults[["updateContainer"]] <- updateContainer
     } else {
       updateContainer <- jaspResults[["updateContainer"]]
@@ -166,24 +166,57 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
     
     output_vars_update <- paste0(c("showPlans", "priorPlot", "ncPlot", "bfPlot"), section_update)
 
-    # 1.1 Create a table of the plans from above
+    # 3.1 Create a table of the plans from above
     if (options[[output_vars_update[1]]]) {
       makePlanTable(updateContainer, pos_update+1, output_vars_update[1], inf_plans)
     }
     
-    # 1.2 Prior distribution plot
+    # 3.2 Prior distribution plot
     if (options[[output_vars_update[2]]]) {
       makeDistributionPlot(updateContainer, pos_update+2, output_vars_update[2], aql_inf, rql_inf, alpha_post_inf, beta_post_inf, "Prior")
     }
 
-    # 1.3 Plot of n vs c
+    # 3.3 Plot of n vs c
     if (options[[output_vars_update[3]]]) {
       makeNCPlot(updateContainer, pos_update+3, output_vars_update[3], inf_plans)
     }
 
-    # 1.4 Plot of n vs BF
+    # 3.4 Plot of n vs BF
     if (options[[output_vars_update[4]]]) {
       makeBFPlot(updateContainer, pos_update+4, output_vars_update[4], inf_plans)
+    }
+  }
+
+  # 4. Projection: predict the number of defects and BF for future stages
+  ##############################################
+  section_project <- "projection"
+  if (options[[paste0("projectPlan", section_project)]]) {
+    pos_project <- 1000
+    depend_vars_proj <- paste0(c("projectPlan", "alpha", "beta", "proj_n", "proj_m", "rql"), section_project)
+    # Check if the container already exists. Create it if it doesn't.
+    if (is.null(jaspResults[["projectContainer"]]) || jaspResults[["projectContainer"]]$getError()) {
+      projectContainer <- createJaspContainer(title = "Projection")
+      projectContainer$dependOn(depend_vars_proj)
+      jaspResults[["projectContainer"]] <- projectContainer
+    } else {
+      projectContainer <- jaspResults[["projectContainer"]]
+    }
+    alpha_proj <- options[[paste0("alpha", section_project)]]
+    beta_proj <- options[[paste0("beta", section_project)]]
+    proj_n <- options[[paste0("proj_n", section_project)]]
+    proj_m <- options[[paste0("proj_m", section_project)]]
+    rql_proj <- options[[paste0("rql", section_project)]]
+    
+    future_proj <- project_bf(alpha_proj, beta_proj, proj_n, proj_m, rql_proj)
+    
+    # 4.1 Plot of d vs n
+    if (options[[paste0("showDefects", section_project)]]) {      
+      makeProjectedDPlot(projectContainer, pos_project+1, paste0("showDefects", section_project), future_proj)
+    }
+
+    # 3.4 Plot of BF vs n
+    if (options[[paste0("showBF", section_project)]]) {
+      makeProjectedBFPlot(projectContainer, pos_project+2, paste0("showBF", section_project), future_proj)
     }
   }
 }
@@ -237,15 +270,51 @@ iso_bf_plans <- function(aql, rql, max_n, min_bf, alpha, beta) {
     return (plans)
 }
 
+##---------------------------------------------------------------
+##            Project Bayes factor into the future.            --
+##---------------------------------------------------------------
+#' @param alpha {numeric} First shape parameter for the Beta distribution.
+#' @param beta {numeric} Second shape parameter for the Beta distribution.
+#' @param n_current {numeric} Current sample size for the plan.
+#' @param m_future {numeric} Number of stages to project into the future.
+#' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
+##---------------------------------------------------------------------------------------
+project_bf <- function(alpha, beta, n_current, m_future, rql) {
+    data <- data.frame(n=c(), d=c(), d_prob=c(), bf=c(), log_bf=c())
+    prior_odds <- pbeta(rql, alpha, beta) / (1 - pbeta(rql, alpha, beta))
+    for (m in 1:m_future) {
+        n_val <- n_current + m
+        d_vals <- alpha:(alpha+m)        
+        d_probs <- VGAM::dbetabinom.ab(d_vals, n_val, alpha, beta)
+        posterior_in_favor <- pbeta(rql, d_vals, beta + n_val - d_vals)
+        posterior_odds <- posterior_in_favor / (1 - posterior_in_favor)
+        bf_vals <- posterior_odds / prior_odds
+        log_bf_vals <- log(bf_vals)
+        n_vals <- rep(n_val, times=m_future+1)
+        d_vals <- append(d_vals, rep(NA, times = m_future - m))
+        d_probs <- append(d_probs, rep(NA, times = m_future - m))
+        bf_vals <- append(bf_vals, rep(NA, times = m_future - m))
+        log_bf_vals <- append(log_bf_vals, rep(NA, times = m_future - m))
+        data <- rbind(data, list(n=n_vals, d=d_vals, d_prob=d_probs, bf=bf_vals, log_bf=log_bf_vals))
+    }
+    data <- data[complete.cases(data), ]
+    data$prob_level <- floor((data$d_prob * 100 ) %% 10)
+    return (data)
+}
+
 ##-------------------------------------------------------------------------
 ##  Generate sampling plans with Bayes factor greater than a threshold.  --
 ##-------------------------------------------------------------------------
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param pos {numeric} Position of the output element in the output display.
+#' @param depend_vars {vector} Names of variables on which the output element depends.
 #' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
 #' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
-#' @param max_n {numeric} Maximum sample size for the plan.
-#' @param min_bf {numeric} Minimum Fayes factor for the plan.
 #' @param alpha {numeric} First shape parameter for the Beta distribution.
 #' @param beta {numeric} Second shape parameter for the Beta distribution.
+#' @param type {string} Analysis type.
+#' @param alpha_prior {numeric} First shape parameter for the Beta prior distribution.
+#' @param beta_prior {numeric} Second shape parameter for the Beta prior distribution.
 ##---------------------------------------------------------------------------------------
 makeDistributionPlot <- function(jaspContainer, pos, depend_vars, aql, rql, alpha, beta, type, alpha_prior=NULL, beta_prior=NULL) {
   if (!is.null(jaspContainer[[paste0("distPlot", type)]])) {
@@ -281,12 +350,10 @@ makeDistributionPlot <- function(jaspContainer, pos, depend_vars, aql, rql, alph
 ##-------------------------------------------------------------------------
 ##  Generate sampling plans with Bayes factor greater than a threshold.  --
 ##-------------------------------------------------------------------------
-#' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
-#' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
-#' @param max_n {numeric} Maximum sample size for the plan.
-#' @param min_bf {numeric} Minimum Fayes factor for the plan.
-#' @param alpha {numeric} First shape parameter for the Beta distribution.
-#' @param beta {numeric} Second shape parameter for the Beta distribution.
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param pos {numeric} Position of the output element in the output display.
+#' @param depend_vars {vector} Names of variables on which the output element depends.
+#' @param plans {data.frame} Dataframe for the plans.
 ##---------------------------------------------------------------------------------------
 makePlanTable <- function(jaspContainer, pos, depend_vars, plans) {
   if (!is.null(jaspContainer[["planTable"]])) {
@@ -308,12 +375,10 @@ makePlanTable <- function(jaspContainer, pos, depend_vars, plans) {
 ##-------------------------------------------------------------------------
 ##  Generate sampling plans with Bayes factor greater than a threshold.  --
 ##-------------------------------------------------------------------------
-#' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
-#' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
-#' @param max_n {numeric} Maximum sample size for the plan.
-#' @param min_bf {numeric} Minimum Fayes factor for the plan.
-#' @param alpha {numeric} First shape parameter for the Beta distribution.
-#' @param beta {numeric} Second shape parameter for the Beta distribution.
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param pos {numeric} Position of the output element in the output display.
+#' @param depend_vars {vector} Names of variables on which the output element depends.
+#' @param plans {data.frame} Dataframe for the plans.
 ##---------------------------------------------------------------------------------------
 makeNCPlot <- function(jaspContainer, pos, depend_vars, plans) {
   if (!is.null(jaspContainer[["ncPlot"]])) {
@@ -339,12 +404,10 @@ makeNCPlot <- function(jaspContainer, pos, depend_vars, plans) {
 ##-------------------------------------------------------------------------
 ##  Generate sampling plans with Bayes factor greater than a threshold.  --
 ##-------------------------------------------------------------------------
-#' @param aql {numeric} Acceptable Quality Level (AQL), specified as the proportion (0 to 1) of non-conforming items.
-#' @param rql {numeric} Rejectable Quality Level (RQL), specified as the proportion (0 to 1) of non-conforming items.
-#' @param max_n {numeric} Maximum sample size for the plan.
-#' @param min_bf {numeric} Minimum Fayes factor for the plan.
-#' @param alpha {numeric} First shape parameter for the Beta distribution.
-#' @param beta {numeric} Second shape parameter for the Beta distribution.
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param pos {numeric} Position of the output element in the output display.
+#' @param depend_vars {vector} Names of variables on which the output element depends.
+#' @param plans {data.frame} Dataframe for the plans.
 ##---------------------------------------------------------------------------------------
 makeBFPlot <- function(jaspContainer, pos, depend_vars, plans) {
   if (!is.null(jaspContainer[["bfPlot"]])) {
@@ -367,3 +430,50 @@ makeBFPlot <- function(jaspContainer, pos, depend_vars, plans) {
   jaspContainer[["bfPlot"]] <- bfPlot
 }
 
+##---------------------------------------------------------------
+##        Generate plot of projected number of defects.        --
+##---------------------------------------------------------------
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param pos {numeric} Position of the output element in the output display.
+#' @param depend_vars {vector} Names of variables on which the output element depends.
+#' @param plans {data.frame} Dataframe for the plans.
+##---------------------------------------------------------------------------------------
+makeProjectedDPlot <- function(jaspContainer, pos, depend_vars, plans) {
+  if (!is.null(jaspContainer[["projectedDPlot"]])) {
+    return()
+  }
+  projectedDPlot <- createJaspPlot(title = gettext("Projected Number of Defects"),  width = 570, height = 320)
+  projectedDPlot$dependOn(depend_vars)
+  # xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(plans$n), max(plans$n)))
+  # yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(plans$d), max(plans$d)))
+  plt <- ggplot2::ggplot(data = plans, mapping = ggplot2::aes(x = factor(n), y = factor(d), fill = factor(prob_level))) + 
+                  ggplot2::geom_tile() + ggplot2::labs(x = gettext("Stage"), y = gettext("Projected number of defects"), fill = gettext("Probability Level"))
+  plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw(legend.position = "right")
+  projectedDPlot$plotObject <- plt
+  projectedDPlot$position <- pos
+  jaspContainer[["projectedDPlot"]] <- projectedDPlot
+}
+
+##----------------------------------------------------------------
+##           Generate plot of projected Bayes Factor.           --
+##----------------------------------------------------------------
+#' @param jaspContainer {list} A functional grouping of different output elements such as plots, tables, etc.
+#' @param pos {numeric} Position of the output element in the output display.
+#' @param depend_vars {vector} Names of variables on which the output element depends.
+#' @param plans {data.frame} Dataframe for the plans.
+##---------------------------------------------------------------------------------------
+makeProjectedBFPlot <- function(jaspContainer, pos, depend_vars, plans) {
+  if (!is.null(jaspContainer[["projectedBFPlot"]])) {
+    return()
+  }
+  projectedBFPlot <- createJaspPlot(title = gettext("Projected log(BF)"),  width = 570, height = 320)
+  projectedBFPlot$dependOn(depend_vars)
+  # xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(plans$n), max(plans$n)))
+  # yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(floor(plans$log_bf)+10), max(floor(plans$log_bf)+10)))
+  plt <- ggplot2::ggplot(data = plans, mapping = ggplot2::aes(x = factor(n), y = floor(log_bf)+10, fill = factor(prob_level))) + 
+                  ggplot2::geom_tile() + ggplot2::labs(x = gettext("Stage"), y = gettext("Projected log(BF)+10"), fill = gettext("Probability Level"))
+  plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw(legend.position = "right")
+  projectedBFPlot$plotObject <- plt
+  projectedBFPlot$position <- pos
+  jaspContainer[["projectedBFPlot"]] <- projectedBFPlot
+}

@@ -37,16 +37,21 @@ Group
 			{ label: qsTr("Percent non-conforming"),		value: "percent"},
 			{ label: qsTr("Non-conforming items per million"), 		value: "per_million"}
 		]
+		onValueChanged: {
+			pd_lower.value = pd_lower.defaultValue
+			pd_upper.value = pd_upper.defaultValue
+			pd_step.value = pd_step.defaultValue			
+		}
 	}	
 	
 	Group
 	{
 		columns: 2
 		Text { text: qsTr("From") }
-		DoubleField{ name: "pd_lower" + suffix; label: ""; negativeValues: false; defaultValue: 0; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
+		DoubleField{ id: pd_lower; name: "pd_lower" + suffix; label: ""; negativeValues: false; defaultValue: 0; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
 		Text { text: qsTr("To") }
-		DoubleField{ name: "pd_upper" + suffix; label: ""; negativeValues: false; defaultValue: pd_unit.maxPd; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
+		DoubleField{ id: pd_upper; name: "pd_upper" + suffix; label: ""; negativeValues: false; defaultValue: pd_unit.maxPd; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
 		Text { text: qsTr("Step size") }
-		DoubleField{ name: "pd_step" + suffix; label: ""; negativeValues: false; defaultValue: pd_unit.maxPd/10; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
+		DoubleField{ id: pd_step; name: "pd_step" + suffix; label: ""; negativeValues: false; defaultValue: pd_unit.maxPd/10; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
 	}
 }

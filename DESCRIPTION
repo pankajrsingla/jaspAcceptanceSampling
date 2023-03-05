@@ -21,7 +21,8 @@ Imports:
   vcd,
   vcdExtra,
   AcceptanceSampling,
-  nleqslv
+  nleqslv,
+  VGAM
 Remotes:
   jasp-stats/jaspBase,
   jasp-stats/jaspGraphs,
