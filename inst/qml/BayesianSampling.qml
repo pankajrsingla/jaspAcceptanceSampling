@@ -129,7 +129,7 @@ Form
 		{
 			enabled: projectPlan.checked
 			DoubleField{ name: "alpha" + projection.segment; label: qsTr("\u03B1"); defaultValue: 1; min: 0 }
-			DoubleField { name: "beta" + projection.segment; label: qsTr("\u03B2"); defaultValue: 10; min: 0 }
+			DoubleField { name: "beta" + projection.segment; label: qsTr("\u03B2"); defaultValue: 39; min: 0 }
 			IntegerField { name: "proj_n" + projection.segment; label: qsTr("Current sample size"); defaultValue: 40; min: 1; max: 1000 }
 			IntegerField { name: "proj_m" + projection.segment; label: qsTr("Number of future stages to predict"); defaultValue: 10; min: 1; max: 100 }
 			DoubleField { name: "rql" + projection.segment; label: qsTr("Rejectable Quality Level (RQL / LTPD)"); defaultValue: 0.15; min: 0; max: 1; inclusive: JASP.MaxOnly; decimals: 6 }			

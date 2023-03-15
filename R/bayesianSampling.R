@@ -284,21 +284,26 @@ project_bf <- function(alpha, beta, n_current, m_future, rql) {
     prior_odds <- pbeta(rql, alpha, beta) / (1 - pbeta(rql, alpha, beta))
     for (m in 1:m_future) {
         n_val <- n_current + m
-        d_vals <- alpha:(alpha+m)        
-        d_probs <- VGAM::dbetabinom.ab(d_vals, n_val, alpha, beta)
-        posterior_in_favor <- pbeta(rql, d_vals, beta + n_val - d_vals)
+        d_vals <- 0:m
+        cum_d_vals <- alpha + d_vals
+        # d_vals <- alpha:(alpha+m)    
+        d_probs <- VGAM::dbetabinom.ab(d_vals, m, alpha, beta)
+        # d_probs <- VGAM::dbetabinom.ab(d_vals, n_val, alpha, beta)
+        posterior_in_favor <- pbeta(rql, d_vals, beta + m - d_vals)
+        # posterior_in_favor <- pbeta(rql, d_vals, beta + n_val - d_vals)
         posterior_odds <- posterior_in_favor / (1 - posterior_in_favor)
         bf_vals <- posterior_odds / prior_odds
         log_bf_vals <- log(bf_vals)
         n_vals <- rep(n_val, times=m_future+1)
         d_vals <- append(d_vals, rep(NA, times = m_future - m))
+        cum_d_vals <- append(cum_d_vals, rep(NA, times = m_future - m))
         d_probs <- append(d_probs, rep(NA, times = m_future - m))
         bf_vals <- append(bf_vals, rep(NA, times = m_future - m))
         log_bf_vals <- append(log_bf_vals, rep(NA, times = m_future - m))
-        data <- rbind(data, list(n=n_vals, d=d_vals, d_prob=d_probs, bf=bf_vals, log_bf=log_bf_vals))
+        data <- rbind(data, list(n=n_vals, d=cum_d_vals, d_prob=d_probs, bf=bf_vals, log_bf=log_bf_vals))
     }
     data <- data[complete.cases(data), ]
-    data$prob_level <- floor((data$d_prob * 100 ) %% 10)
+    data$prob_level <- floor((data$d_prob * 10))
     return (data)
 }
 
