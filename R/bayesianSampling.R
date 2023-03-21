@@ -283,9 +283,8 @@ project_bf <- function(alpha, beta, n_current, m_future, rql) {
     data <- data.frame(n=c(), d=c(), d_prob=c(), bf=c(), log_bf=c())
     prior_odds <- pbeta(rql, alpha, beta) / (1 - pbeta(rql, alpha, beta))
     for (m in 1:m_future) {
-        n_val <- n_current + m
         d_vals <- 0:m
-        cum_d_vals <- alpha + d_vals
+        # cum_d_vals <- alpha + d_vals
         # d_vals <- alpha:(alpha+m)    
         d_probs <- VGAM::dbetabinom.ab(d_vals, m, alpha, beta)
         # d_probs <- VGAM::dbetabinom.ab(d_vals, n_val, alpha, beta)
@@ -294,13 +293,13 @@ project_bf <- function(alpha, beta, n_current, m_future, rql) {
         posterior_odds <- posterior_in_favor / (1 - posterior_in_favor)
         bf_vals <- posterior_odds / prior_odds
         log_bf_vals <- log(bf_vals)
-        n_vals <- rep(n_val, times=m_future+1)
+        m_vals <- rep(m, times=m_future+1)
         d_vals <- append(d_vals, rep(NA, times = m_future - m))
-        cum_d_vals <- append(cum_d_vals, rep(NA, times = m_future - m))
+        # cum_d_vals <- append(cum_d_vals, rep(NA, times = m_future - m))
         d_probs <- append(d_probs, rep(NA, times = m_future - m))
         bf_vals <- append(bf_vals, rep(NA, times = m_future - m))
         log_bf_vals <- append(log_bf_vals, rep(NA, times = m_future - m))
-        data <- rbind(data, list(n=n_vals, d=cum_d_vals, d_prob=d_probs, bf=bf_vals, log_bf=log_bf_vals))
+        data <- rbind(data, list(n=m_vals, d=d_vals, d_prob=d_probs, bf=bf_vals, log_bf=log_bf_vals))
     }
     data <- data[complete.cases(data), ]
     data$prob_level <- floor((data$d_prob * 10))
@@ -452,7 +451,8 @@ makeProjectedDPlot <- function(jaspContainer, pos, depend_vars, plans) {
   # xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(plans$n), max(plans$n)))
   # yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(plans$d), max(plans$d)))
   plt <- ggplot2::ggplot(data = plans, mapping = ggplot2::aes(x = factor(n), y = factor(d), fill = factor(prob_level))) + 
-                  ggplot2::geom_tile() + ggplot2::labs(x = gettext("Stage"), y = gettext("Projected number of defects"), fill = gettext("Probability Level"))
+                  ggplot2::geom_tile() + ggplot2::labs(x = gettext("Future Stage"), y = gettext("Projected number of defects"), fill = gettext("Probability Level")) +
+                  ggplot2::scale_fill_grey(start = 0, end = .9)
   plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw(legend.position = "right")
   projectedDPlot$plotObject <- plt
   projectedDPlot$position <- pos
