@@ -485,14 +485,10 @@ getOCCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type) 
   if (add_risk_points) {
     depend_vars <- append(depend_vars, paste0(c("aql", "rql"), type))
     rql <- options[[paste0("rql", type)]]
-    cols <- c("<= AQL"="green","AQL < PD <= RQL"="blue","> RQL"="red")
-    print(subset(df_plan, PD_Prop <= aql))
-    print(subset(df_plan, PD_Prop >= aql & PD_Prop <= rql))
-    print(subset(df_plan, PD_Prop >= rql))
-    plt <- plt + ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop <= aql), ggplot2::aes(x=PD_Prop, ymin=0, ymax=PA, fill="<= AQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
-                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= aql & PD_Prop <= rql), ggplot2::aes(x=PD_Prop, ymin=0, ymax=PA, fill="AQL < PD <= RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
-                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= rql), ggplot2::aes(x=PD_Prop, ymin=0, ymax=PA, fill="> RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
-                 ggplot2::scale_fill_manual(name="PD Range", values=cols)
+    plt <- plt + ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop <= aql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=PA, fill="<= AQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= aql & PD_Prop <= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=PA, fill="AQL < PD <= RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=PA, fill="> RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::scale_fill_manual(name="PD Range", breaks=c("<= AQL", "AQL < PD <= RQL", "> RQL"), values=c("green", "blue", "red"))
   }
   plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw(legend.position = "right")
   ocCurve$plotObject <- plt
@@ -577,7 +573,6 @@ getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
     return ()
   }
   aoqCurve <- createJaspPlot(title = gettext("AOQ (Average Outgoing Quality) Curve"), width = 570, height = 320)
-  aoqCurve$dependOn(depend_vars)
   jaspContainer[["aoqCurve"]] <- aoqCurve
   
   if (!"AOQ" %in% colnames(df_plan)) {
@@ -602,8 +597,20 @@ getAOQCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
          ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
          ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
         # ggplot2::ylim(0.0,round(aoql*1.2, 2))
+  # Highlight regions < AQL, > RQL
+  aql <- tryCatch(options[[paste0("aql", type)]], error = function(x) "error")
+  add_risk_points <- (!is.null(aql) && aql != "error")
+  if (add_risk_points) {
+    depend_vars <- append(depend_vars, paste0(c("aql", "rql"), type))
+    rql <- options[[paste0("rql", type)]]
+    plt <- plt + ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop <= aql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=AOQ, fill="<= AQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= aql & PD_Prop <= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=AOQ, fill="AQL < PD <= RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=AOQ, fill="> RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::scale_fill_manual(name="PD Range", breaks=c("<= AQL", "AQL < PD <= RQL", "> RQL"), values=c("green", "blue", "red"))
+  }
   plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw()
   plt$position <- pos
+  aoqCurve$dependOn(depend_vars)  
   aoqCurve$plotObject <- plt
 }
 
@@ -685,7 +692,6 @@ getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
     return ()
   }
   atiCurve <- createJaspPlot(title = gettext("ATI (Average Total Inspection) Curve"), width = 570, height = 320)
-  atiCurve$dependOn(depend_vars)
   jaspContainer[["atiCurve"]] <- atiCurve
   if (!"ATI" %in% colnames(df_plan)) {
     df_plan <- getATI(jaspContainer, depend_vars, df_plan, options, type, n, c, r)
@@ -703,8 +709,20 @@ getATICurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
          ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
          ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
          # ggplot2::scale_y_continuous(breaks = pretty(df_plan$ATI))
+  # Highlight regions < AQL, > RQL
+  aql <- tryCatch(options[[paste0("aql", type)]], error = function(x) "error")
+  add_risk_points <- (!is.null(aql) && aql != "error")
+  if (add_risk_points) {
+    depend_vars <- append(depend_vars, paste0(c("aql", "rql"), type))
+    rql <- options[[paste0("rql", type)]]
+    plt <- plt + ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop <= aql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=ATI, fill="<= AQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= aql & PD_Prop <= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=ATI, fill="AQL < PD <= RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=ATI, fill="> RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::scale_fill_manual(name="PD Range", breaks=c("<= AQL", "AQL < PD <= RQL", "> RQL"), values=c("green", "blue", "red"))
+  }
   plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw()
   plt$position <- pos
+  atiCurve$dependOn(depend_vars)
   atiCurve$plotObject <- plt
 }
 
@@ -774,7 +792,6 @@ getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
     return ()
   }
   asnCurve <- createJaspPlot(title = gettext("ASN (Average Sample Number) Curve"), width = 570, height = 320)
-  asnCurve$dependOn(depend_vars)
   jaspContainer[["asnCurve"]] <- asnCurve
 
   if (!"ASN" %in% colnames(df_plan)) {
@@ -784,17 +801,29 @@ getASNCurve <- function(jaspContainer, pos, depend_vars, df_plan, options, type,
     return ()
   }
   # Draw ASN plot
-  xBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$PD_Orig), max(df_plan$PD_Orig)))
-  yBreaks <- jaspGraphs::getPrettyAxisBreaks(c(min(df_plan$ASN), max(df_plan$ASN)))
+  xBreaks <- jaspGraphs::getPrettyAxisBreaks(df_plan$PD_Orig)
+  yBreaks <- jaspGraphs::getPrettyAxisBreaks(df_plan$ASN)
   pd_title <- getPDTitle(jaspContainer, options, type)
   plt <- ggplot2::ggplot(data = df_plan, ggplot2::aes(x = PD_Orig, y = ASN)) +
          ggplot2::geom_point(color = "black", shape = 19) +
          ggplot2::geom_line(color = "black", linetype = "dashed") +
          ggplot2::labs(x = pd_title, y = "Average Sample Number") +
-         ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks)) +
-         ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks))
+         ggplot2::scale_x_continuous(breaks = xBreaks, limits = range(xBreaks))
+        #  ggplot2::scale_y_continuous(breaks = yBreaks, limits = range(yBreaks)) # Enabling this makes the ribbons not work for AQL and RQL.
+  # Highlight regions < AQL, > RQL
+  aql <- tryCatch(options[[paste0("aql", type)]], error = function(x) "error")
+  add_risk_points <- (!is.null(aql) && aql != "error")
+  if (add_risk_points) {
+    depend_vars <- append(depend_vars, paste0(c("aql", "rql"), type))
+    rql <- options[[paste0("rql", type)]]
+    plt <- plt + ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop <= aql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=ASN, fill="<= AQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= aql & PD_Prop <= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=ASN, fill="AQL < PD <= RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::geom_ribbon(data = subset(df_plan, PD_Prop >= rql), ggplot2::aes(x=PD_Orig, ymin=0, ymax=ASN, fill="> RQL"), inherit.aes=FALSE, alpha=0.2, outline.type="both") +
+                 ggplot2::scale_fill_manual(name="PD Range", breaks=c("<= AQL", "AQL < PD <= RQL", "> RQL"), values=c("green", "blue", "red"))
+  }
   plt <- plt + jaspGraphs::geom_rangeframe() + jaspGraphs::themeJaspRaw()
   plt$position <- pos
+  asnCurve$dependOn(depend_vars)
   asnCurve$plotObject <- plt
 }
 

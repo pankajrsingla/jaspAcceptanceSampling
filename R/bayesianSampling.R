@@ -25,8 +25,8 @@
 BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {    
   # 1. Planning: use constraints, generate plans
   ##############################################
-  section_plan <- "plan"
-  depend_vars_plan <- c("max_n", "min_bf", "aql", "rql", "prior")  
+  section_plan <- "_plan"
+  depend_vars_plan <- paste0(c("max_n", "min_bf", "aql", "rql", "prior"), section_plan)
   # Check if the container already exists. Create it if it doesn't.
   if (is.null(jaspResults[["planContainer"]]) || jaspResults[["planContainer"]]$getError()) {
     planContainer <- createJaspContainer(title = "Planning")
@@ -84,7 +84,7 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
 
   # 2. Inference: take data, create posterior
   ##############################################
-  section_infer <- "infer"
+  section_infer <- "_infer"
   if (options[[paste0("inferPosterior", section_infer)]]) {
     depend_vars_inf <- paste0(c("inferPosterior", "choosePrior", "aql", "rql", "prior", "alpha", "beta"), section_infer)
     pos_inf <- 10
@@ -144,7 +144,7 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
 
   # 3. Update: use posterior data, generate new plans
   ##############################################
-  section_update <- "update"
+  section_update <- "_update"
   if (options[[paste0("inferPosterior", section_infer)]] && options[[paste0("updatePlan", section_update)]]) {
     pos_update <- 100
     # Check if the container already exists. Create it if it doesn't.
@@ -189,7 +189,7 @@ BayesianSampling <- function(jaspResults, dataset = NULL, options, ...) {
 
   # 4. Projection: predict the number of defects and BF for future stages
   ##############################################
-  section_project <- "projection"
+  section_project <- "_projection"
   if (options[[paste0("projectPlan", section_project)]]) {
     pos_project <- 1000
     depend_vars_proj <- paste0(c("projectPlan", "alpha", "beta", "proj_n", "proj_m", "rql"), section_project)

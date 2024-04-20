@@ -86,6 +86,7 @@ SequentialSampling <- function(jaspResults, dataset = NULL, options, ...) {
 ##----------------------------------------------------------------------------------
 .findSeqPlan <- function(jaspContainer, options, type, depend_vars, aql, rql, pa_prod, pa_cons) {
   pd <- getPDValues(jaspContainer, options, type)$PD_Prop
+  pd <- pd[pd != 0]
   # dist <- options$distribution
   N <- options[[paste0("lotSize", type)]]
 
@@ -108,6 +109,7 @@ SequentialSampling <- function(jaspResults, dataset = NULL, options, ...) {
   fn <- function(h) {
     x <- ((1-rql)/(1-aql))^h
     y <- (rql/aql)^h
+    expr <- (1- x)/(y-x)
     (1- x)/(y-x) - pd    
   }
   h <- nleqslv::nleqslv(pd, fn)$x
@@ -131,11 +133,11 @@ SequentialSampling <- function(jaspResults, dataset = NULL, options, ...) {
   # Calculate the defect probability levels in the specified unit
   pd_unit <- options[[paste0("pd_unit", type)]]
   factor <- 1
-    if (pd_unit == "percent") {
-      factor <- 10^2 
-    } else if (pd_unit == "per_million") {
-      factor <- 10^6
-    }
+  if (pd_unit == "percent") {
+    factor <- 10^2 
+  } else if (pd_unit == "per_million") {
+    factor <- 10^6
+  }
   p_orig <- p * factor
   df_plan <- data.frame(PD_Prop=p, PD_Orig=p_orig, PA=PA, AOQ=AOQ, ATI=ATI, ASN=ASN)
   df_plan <- na.omit(df_plan)

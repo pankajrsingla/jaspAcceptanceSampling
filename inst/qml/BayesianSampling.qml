@@ -28,7 +28,7 @@ Form
 		title: qsTr("1. Planning")
 		columns: 1
 		id: plan
-		property string segment: "plan"
+		property string segment: "_plan"
 		Group
 		{
 			title: qsTr("Quality Constraints")
@@ -59,7 +59,7 @@ Form
 		title: qsTr("2. Inference")
 		columns: 1
 		id: infer
-		property string segment: "infer"
+		property string segment: "_infer"
 		CheckBox { id: inferPosterior; name: "inferPosterior" + infer.segment; label: qsTr("Use data to create posterior distribution") }		
 		Group
 		{
@@ -85,13 +85,13 @@ Form
 			{
 				title: qsTr("Specify Data")
 				IntegerField { name: "data_n" + infer.segment; id: data_n; label: qsTr("Sample size (n)"); defaultValue: 40; min: 1; max: 1000 }
-				IntegerField { name: "data_d" + infer.segment; label: qsTr("Observed number of defects (d)"); defaultValue: 1; min: 0; max: parseInt(data_n.value) }			
+				IntegerField { name: "data_d" + infer.segment; label: qsTr("Observed number of defects (d)"); defaultValue: 1; min: 0; max: parseInt(data_n.value) }
 			}
 			Group
 			{
 				title: qsTr("Output Options")
 				CheckBox { name: "priorPlot" + infer.segment; label: qsTr("Prior plot") }
-				CheckBox { name: "posteriorPlot" + infer.segment; label: qsTr("Posterior plot") }			
+				CheckBox { name: "posteriorPlot" + infer.segment; label: qsTr("Posterior plot") }
 			}
 		}
 	}
@@ -101,7 +101,7 @@ Form
 		title: qsTr("3. Update")
 		columns: 1
 		id: update
-		property string segment: "update"
+		property string segment: "_update"
 		CheckBox { id: updatePlan; name: "updatePlan" + update.segment; label: qsTr("Use posterior data to generate new plans") }
 		Group
 		{
@@ -123,7 +123,7 @@ Form
 		title: qsTr("4. Projection")
 		columns: 1
 		id: projection
-		property string segment: "projection"
+		property string segment: "_projection"
 		CheckBox { id: projectPlan; name: "projectPlan" + projection.segment; label: qsTr("Predict number of defects and BF for future stages") }
 		Group
 		{

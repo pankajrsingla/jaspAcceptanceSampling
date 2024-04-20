@@ -18,6 +18,7 @@
 import QtQuick 2.8
 import QtQuick.Layouts 1.3
 import JASP.Controls 1.0
+import JASP
 
 Group
 {
@@ -49,6 +50,7 @@ Group
 		columns: 2
 		Text { text: qsTr("From") }
 		DoubleField{ id: pd_lower; name: "pd_lower" + suffix; label: ""; negativeValues: false; defaultValue: 0; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
+		// inclusive: JASP.MaxOnly;
 		Text { text: qsTr("To") }
 		DoubleField{ id: pd_upper; name: "pd_upper" + suffix; label: ""; negativeValues: false; defaultValue: pd_unit.maxPd; min: 0; max: pd_unit.maxPd; decimals: 6; fieldWidth: 60 }
 		Text { text: qsTr("Step size") }
